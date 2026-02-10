@@ -8,7 +8,7 @@
 import { AXPObj } from './js/axpobj.js';
 import { getDictionaryJSON } from './js/lang.js';
 import { createCustomAlert } from './js/alert.js';
-import { getBrowserType, inRange } from './js/etc.js';
+import { getBrowserType, inRange, isColor } from './js/etc.js';
 // htmlデータ
 import htmldata from './html/main.txt';
 // css適用
@@ -138,6 +138,26 @@ export default class {
 
             // 拡張機能タブ
             this.axpObj.expansionTab = option.expansionTab || null;
+
+            // 初期色設定
+            if (option.defaultColor) {
+                try {
+                    const { main, sub, palette } = option.defaultColor
+
+                    if (!isColor(main) || !isColor(sub) || !palette.every(isColor)) {
+                        throw Error(JSON.stringify(option.defaultColor))
+                    }
+
+                    this.axpObj.defaultColor = { main, sub, palette }
+                } catch (e) {
+                    const msg = 'ERROR:\n起動オプションdefaultColorの指定が正しくありません。';
+                    console.warn(msg, e);
+                    alert(msg);
+                    return;
+                }
+            } else {
+                this.axpObj.defaultColor = {}
+            }
 
             // 投稿フォームカスタマイズ
             let isErrorDetected = false;

@@ -154,6 +154,14 @@ body {
   text-overflow: ellipsis;
 }
 
+/* ヘッダー右端のアンドゥ／リドゥボタン */
+.axpc_main_headerButton {
+  width: 36px;
+  font-size: 18px;
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
 /* タブ横のテキストクリック時、全文表示 */
 #axp_main_div_headerText:active {
   overflow: visible;

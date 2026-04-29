@@ -79,11 +79,13 @@ export class LayerSystem extends ToolWindow {
         Y_LAYER_MAX: 40,
         // スクロールバーを表示する閾値（このレイヤー数を超えるとスクロールバー表示）
         LAYER_SCROLL_THRESHOLD: 8,
-        // 1レイヤー要素の高さ（px）：cell 42px + border 1px*2
-        LAYER_ITEM_HEIGHT: 44,
+        // スクロールバーつまみの最小高さ（px）：視覚幅32pxと一致
+        SCROLL_THUMB_MIN_HEIGHT: 32,
     }
     // レイヤーUIの内部スクロール位置
     layerScrollY = 0;
+    // レイヤーUIスクロール用のDOM参照（initLayerScrollで設定）
+    layerScrollEl = null;
     // 描画処理用の一時保存イメージ
     imageForUndo;
     // カラータグリスト
@@ -354,13 +356,19 @@ export class LayerSystem extends ToolWindow {
     }
     // レイヤーUIの内部スクロール初期化
     initLayerScroll() {
-        const container = document.getElementById('axp_layer_div_layerBoxContainer');
-        const thumb = document.getElementById('axp_layer_div_scrollThumb');
+        this.layerScrollEl = {
+            container: document.getElementById('axp_layer_div_layerBoxContainer'),
+            ul: document.getElementById('axp_layer_ul_layerBox'),
+            thumb: document.getElementById('axp_layer_div_scrollThumb'),
+        };
+        const { container, thumb } = this.layerScrollEl;
 
         // PC：マウスホイールでスクロール（スクロールバー表示時のみ）
+        // stopPropagationで裏側キャンバス（document側のmouseWheel）への伝搬を止める
         container.addEventListener('wheel', (e) => {
-            if (container.dataset.scrollable !== 'true') return;
+            if (!this.isLayerScrollable()) return;
             e.preventDefault();
+            e.stopPropagation();
             this.setLayerScrollY(this.layerScrollY + e.deltaY);
         }, { passive: false });
 
@@ -371,21 +379,15 @@ export class LayerSystem extends ToolWindow {
             e.stopPropagation();
             e.preventDefault();
             thumb.setPointerCapture(e.pointerId);
-            thumbDrag = {
-                startClientY: e.clientY,
-                startScrollY: this.layerScrollY,
-            };
+            thumbDrag = { startClientY: e.clientY, startScrollY: this.layerScrollY };
         });
         thumb.addEventListener('pointermove', (e) => {
             if (!thumbDrag) return;
-            const ul = document.getElementById('axp_layer_ul_layerBox');
-            const containerHeight = container.offsetHeight;
-            const contentHeight = ul.scrollHeight;
-            const trackHeight = containerHeight - thumb.offsetHeight;
-            if (trackHeight <= 0 || contentHeight <= containerHeight) return;
-            const ratio = (contentHeight - containerHeight) / trackHeight;
+            const trackHeight = container.offsetHeight - thumb.offsetHeight;
+            const scrollRange = this.getLayerScrollMax();
+            if (trackHeight <= 0 || scrollRange <= 0) return;
             const dy = e.clientY - thumbDrag.startClientY;
-            this.setLayerScrollY(thumbDrag.startScrollY + dy * ratio);
+            this.setLayerScrollY(thumbDrag.startScrollY + dy * (scrollRange / trackHeight));
         });
         const endThumbDrag = (e) => {
             if (!thumbDrag) return;
@@ -397,53 +399,48 @@ export class LayerSystem extends ToolWindow {
         thumb.addEventListener('pointerup', endThumbDrag);
         thumb.addEventListener('pointercancel', endThumbDrag);
     }
-    // スクロール位置の設定（範囲チェック含む）
+    // スクロールバーが表示されている（＝スクロール可能な）状態か
+    isLayerScrollable() {
+        return this.layerScrollEl?.container.dataset.scrollable === 'true';
+    }
+    // スクロール可能な最大量（コンテンツ高 - 表示領域高）
+    getLayerScrollMax() {
+        const { container, ul } = this.layerScrollEl;
+        return Math.max(0, ul.scrollHeight - container.offsetHeight);
+    }
+    // スクロール位置の設定（範囲クランプ＋つまみ更新）
     setLayerScrollY(y) {
-        const container = document.getElementById('axp_layer_div_layerBoxContainer');
-        const ul = document.getElementById('axp_layer_ul_layerBox');
-        const max = Math.max(0, ul.scrollHeight - container.offsetHeight);
-        this.layerScrollY = Math.max(0, Math.min(max, y));
-        ul.style.top = `-${this.layerScrollY}px`;
+        if (!this.layerScrollEl) return;
+        this.layerScrollY = Math.max(0, Math.min(this.getLayerScrollMax(), y));
+        this.layerScrollEl.ul.style.top = `-${this.layerScrollY}px`;
         this.updateLayerScrollThumb();
     }
     // スクロールバー表示状態の更新（レイヤー追加・削除・初期化時に呼び出す）
     updateLayerScrollbar() {
-        const container = document.getElementById('axp_layer_div_layerBoxContainer');
-        if (!container) return;
-        const ul = document.getElementById('axp_layer_ul_layerBox');
+        if (!this.layerScrollEl) return;
         const scrollable = this.layerObj.length > this.CONST.LAYER_SCROLL_THRESHOLD;
-        container.dataset.scrollable = scrollable ? 'true' : '';
-        if (!scrollable) {
-            this.layerScrollY = 0;
-            ul.style.top = '0';
-        } else {
-            // 範囲を超えていた場合の補正
-            const max = Math.max(0, ul.scrollHeight - container.offsetHeight);
-            if (this.layerScrollY > max) {
-                this.layerScrollY = max;
-                ul.style.top = `-${this.layerScrollY}px`;
-            }
-        }
-        this.updateLayerScrollThumb();
+        // CSS側 [data-scrollable="true"] と整合させるため空文字でOFFを表現
+        this.layerScrollEl.container.dataset.scrollable = scrollable ? 'true' : '';
+        // 表示状態が変わった結果として、現スクロール量をクランプし直して反映
+        this.setLayerScrollY(this.layerScrollY);
     }
     // スクロールバーつまみの位置・サイズを再計算
     updateLayerScrollThumb() {
-        const container = document.getElementById('axp_layer_div_layerBoxContainer');
-        if (!container || container.dataset.scrollable !== 'true') return;
-        const ul = document.getElementById('axp_layer_ul_layerBox');
-        const thumb = document.getElementById('axp_layer_div_scrollThumb');
+        if (!this.isLayerScrollable()) return;
+        const { container, ul, thumb } = this.layerScrollEl;
         const containerHeight = container.offsetHeight;
-        const contentHeight = ul.scrollHeight;
-        if (contentHeight <= containerHeight) {
+        const scrollRange = this.getLayerScrollMax();
+        if (scrollRange <= 0) {
             thumb.style.height = '0';
             return;
         }
-        const thumbHeight = Math.max(32, containerHeight * containerHeight / contentHeight);
+        const thumbHeight = Math.max(
+            this.CONST.SCROLL_THUMB_MIN_HEIGHT,
+            containerHeight * containerHeight / ul.scrollHeight
+        );
         const trackHeight = containerHeight - thumbHeight;
-        const max = contentHeight - containerHeight;
-        const top = max > 0 ? (this.layerScrollY / max) * trackHeight : 0;
         thumb.style.height = `${thumbHeight}px`;
-        thumb.style.top = `${top}px`;
+        thumb.style.top = `${(this.layerScrollY / scrollRange) * trackHeight}px`;
     }
     // 重複しない新規レイヤー名を取得
     getNewLayerName() {
@@ -1002,17 +999,14 @@ export class LayerSystem extends ToolWindow {
     }
     // 指定レイヤー要素が表示領域に収まるようにスクロール
     scrollLayerIntoView(layerElement) {
-        const container = document.getElementById('axp_layer_div_layerBoxContainer');
-        if (!container || container.dataset.scrollable !== 'true') return;
-        const ul = document.getElementById('axp_layer_ul_layerBox');
+        if (!this.isLayerScrollable()) return;
+        const containerHeight = this.layerScrollEl.container.offsetHeight;
         const itemTop = layerElement.offsetTop;
         const itemBottom = itemTop + layerElement.offsetHeight;
-        const viewTop = this.layerScrollY;
-        const viewBottom = this.layerScrollY + container.offsetHeight;
-        if (itemTop < viewTop) {
+        if (itemTop < this.layerScrollY) {
             this.setLayerScrollY(itemTop);
-        } else if (itemBottom > viewBottom) {
-            this.setLayerScrollY(itemBottom - container.offsetHeight);
+        } else if (itemBottom > this.layerScrollY + containerHeight) {
+            this.setLayerScrollY(itemBottom - containerHeight);
         }
     }
     // レイヤーの不透明度に応じた表示切替用のボタンの背景を取得

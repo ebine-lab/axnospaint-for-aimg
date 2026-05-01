@@ -219,6 +219,10 @@ export class PenObj {
     }
     // レイヤー更新
     write() {
+        // 1 pointermove 内で getCoalescedEvents の中間イベントが処理されている場合、
+        // ブラシ path への積み増しは各 draw() で完了しているため、ここでの重い layer 反映は遅延し
+        // フレーム末尾（lastEventInFrame===true）のイベントでのみ実行する。
+        if (this.axpObj.lastEventInFrame === false) return;
         // 描画した線に透明度を適用して、元画像と合成する
         this.CANVAS.draw_ctx.putImageData(this.axpObj.layerSystem.load(), 0, 0);
         this.CANVAS.draw_ctx.drawImage(this.CANVAS.brush, 0, 0);

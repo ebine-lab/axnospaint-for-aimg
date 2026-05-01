@@ -96,6 +96,9 @@ export class AXPObj {
     isDrawing = false; // 描画中である
     isDrawn = false; // 描画処理が行われた
     isDrawCancel = false; // 描画処理がキャンセルされた
+    // pointermove 内で coalesced events をループ処理する際に、最終要素のみ true となるフラグ。
+    // 共通描画経路（PenObj.write）はこのフラグを見て、サブフレームイベントでの重い layer 反映を遅延させる。
+    lastEventInFrame = true;
     isLine;
     isRect;
     // ----------------------------------------------------
@@ -639,11 +642,17 @@ export class AXPObj {
                     }
                 }
                 if (coalescedEvents && coalescedEvents.length > 1) {
-                    for (const ce of coalescedEvents) {
+                    // 最終イベントだけ lastEventInFrame=true にして共通描画経路で layer 反映を行う。
+                    // 中間イベントは入力点の蓄積とブラシ path 累積のみ行い、重い getImageData は行わない。
+                    const last = coalescedEvents.length - 1;
+                    for (let i = 0; i <= last; i++) {
+                        const ce = coalescedEvents[i];
                         const cpos = this.calcScaleCoordinates(ce);
+                        this.lastEventInFrame = (i === last);
                         this.penSystem.move(cpos.x, cpos.y, ce);
                     }
                 } else {
+                    this.lastEventInFrame = true;
                     this.penSystem.move(pos.x, pos.y, e);
                 }
             }

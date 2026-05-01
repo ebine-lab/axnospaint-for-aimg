@@ -99,6 +99,9 @@ export class AXPObj {
     // pointermove 内で coalesced events をループ処理する際に、最終要素のみ true となるフラグ。
     // 共通描画経路（PenObj.write）はこのフラグを見て、サブフレームイベントでの重い layer 反映を遅延させる。
     lastEventInFrame = true;
+    // PenObj.write が lastEventInFrame=false で早期 return した場合に立つフラグ。
+    // 最終イベントが stabilizer 等で弾かれた場合でも、pointermove 末尾で確実に commit するための保険。
+    pendingPenFlush = false;
     isLine;
     isRect;
     // ----------------------------------------------------
@@ -654,6 +657,16 @@ export class AXPObj {
                 } else {
                     this.lastEventInFrame = true;
                     this.penSystem.move(pos.x, pos.y, e);
+                }
+                // 最終イベントが stabilizer フィルタなどで早期 return された場合、
+                // 中間イベントで遅延された write() が commit されないままになる。
+                // pendingPenFlush が立っていれば、ここで強制 flush して 1 pointermove に必ず 1 回は commit する。
+                if (this.pendingPenFlush && this.isDrawing && !this.isDrawCancel && this.penSystem.exec_pen_mode) {
+                    const pen = this.penSystem.penObj[this.penSystem.exec_pen_mode];
+                    if (pen && typeof pen.write === 'function') {
+                        this.lastEventInFrame = true;
+                        pen.write();
+                    }
                 }
             }
 

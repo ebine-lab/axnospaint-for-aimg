@@ -42,6 +42,8 @@ export class Layerdata {
         this.name = layerData.name; // レイヤー名
         this.tag = layerData.tag; // カラータグ
         this.image = layerData.image; // 画像データ（imageData）
+        // 描画スキップ用キャッシュ（true: 全画素が透明であることが既知。誤って true を設定すると描画抜けが起きるため、保守的に false 寄りに保つ）
+        this.isBlank = layerData.isBlank === true;
     }
 }
 
@@ -73,11 +75,19 @@ export class LayerSystem extends ToolWindow {
     };
     CONST = {
         // 最大レイヤー数
-        LAYER_MAX: 8,
+        LAYER_MAX: 100,
         // レイヤーのサムネイル表示のサイズ
         X_LAYER_MAX: 40,
         Y_LAYER_MAX: 40,
+        // スクロールバーを表示する閾値（このレイヤー数を超えるとスクロールバー表示）
+        LAYER_SCROLL_THRESHOLD: 8,
+        // スクロールバーつまみの最小高さ（px）：視覚幅32pxと一致
+        SCROLL_THUMB_MIN_HEIGHT: 32,
     }
+    // レイヤーUIの内部スクロール位置
+    layerScrollY = 0;
+    // レイヤーUIスクロール用のDOM参照（initLayerScrollで設定）
+    layerScrollEl = null;
     // 描画処理用の一時保存イメージ
     imageForUndo;
     // カラータグリスト
@@ -151,6 +161,9 @@ export class LayerSystem extends ToolWindow {
         while (elem_layerbox.firstChild) {
             elem_layerbox.removeChild(elem_layerbox.firstChild);
         }
+        // スクロール状態リセット
+        this.layerScrollY = 0;
+        this.updateLayerScrollbar();
     }
     // イベント受付開始
     startEvent() {
@@ -339,6 +352,97 @@ export class LayerSystem extends ToolWindow {
                 id: this.axpObj.layerSystem.getId(),
             });
         });
+
+        // レイヤーUIの内部スクロール（カスタムスクロールバー）
+        this.initLayerScroll();
+    }
+    // レイヤーUIの内部スクロール初期化
+    initLayerScroll() {
+        this.layerScrollEl = {
+            container: document.getElementById('axp_layer_div_layerBoxContainer'),
+            ul: document.getElementById('axp_layer_ul_layerBox'),
+            thumb: document.getElementById('axp_layer_div_scrollThumb'),
+        };
+        const { container, thumb } = this.layerScrollEl;
+
+        // PC：マウスホイールでスクロール（スクロールバー表示時のみ）
+        // stopPropagationで裏側キャンバス（document側のmouseWheel）への伝搬を止める
+        container.addEventListener('wheel', (e) => {
+            if (!this.isLayerScrollable()) return;
+            e.preventDefault();
+            e.stopPropagation();
+            this.setLayerScrollY(this.layerScrollY + e.deltaY);
+        }, { passive: false });
+
+        // スマホ等：スクロールバーつまみのドラッグ
+        let thumbDrag = null;
+        thumb.addEventListener('pointerdown', (e) => {
+            // レイヤー入れ替えのpointerdownへ伝搬させない
+            e.stopPropagation();
+            e.preventDefault();
+            thumb.setPointerCapture(e.pointerId);
+            thumbDrag = { startClientY: e.clientY, startScrollY: this.layerScrollY };
+        });
+        thumb.addEventListener('pointermove', (e) => {
+            if (!thumbDrag) return;
+            const trackHeight = container.offsetHeight - thumb.offsetHeight;
+            const scrollRange = this.getLayerScrollMax();
+            if (trackHeight <= 0 || scrollRange <= 0) return;
+            const dy = e.clientY - thumbDrag.startClientY;
+            this.setLayerScrollY(thumbDrag.startScrollY + dy * (scrollRange / trackHeight));
+        });
+        const endThumbDrag = (e) => {
+            if (!thumbDrag) return;
+            thumbDrag = null;
+            if (thumb.hasPointerCapture(e.pointerId)) {
+                thumb.releasePointerCapture(e.pointerId);
+            }
+        };
+        thumb.addEventListener('pointerup', endThumbDrag);
+        thumb.addEventListener('pointercancel', endThumbDrag);
+    }
+    // スクロールバーが表示されている（＝スクロール可能な）状態か
+    isLayerScrollable() {
+        return this.layerScrollEl?.container.dataset.scrollable === 'true';
+    }
+    // スクロール可能な最大量（コンテンツ高 - 表示領域高）
+    getLayerScrollMax() {
+        const { container, ul } = this.layerScrollEl;
+        return Math.max(0, ul.scrollHeight - container.offsetHeight);
+    }
+    // スクロール位置の設定（範囲クランプ＋つまみ更新）
+    setLayerScrollY(y) {
+        if (!this.layerScrollEl) return;
+        this.layerScrollY = Math.max(0, Math.min(this.getLayerScrollMax(), y));
+        this.layerScrollEl.ul.style.top = `-${this.layerScrollY}px`;
+        this.updateLayerScrollThumb();
+    }
+    // スクロールバー表示状態の更新（レイヤー追加・削除・初期化時に呼び出す）
+    updateLayerScrollbar() {
+        if (!this.layerScrollEl) return;
+        const scrollable = this.layerObj.length > this.CONST.LAYER_SCROLL_THRESHOLD;
+        // CSS側 [data-scrollable="true"] と整合させるため空文字でOFFを表現
+        this.layerScrollEl.container.dataset.scrollable = scrollable ? 'true' : '';
+        // 表示状態が変わった結果として、現スクロール量をクランプし直して反映
+        this.setLayerScrollY(this.layerScrollY);
+    }
+    // スクロールバーつまみの位置・サイズを再計算
+    updateLayerScrollThumb() {
+        if (!this.isLayerScrollable()) return;
+        const { container, ul, thumb } = this.layerScrollEl;
+        const containerHeight = container.offsetHeight;
+        const scrollRange = this.getLayerScrollMax();
+        if (scrollRange <= 0) {
+            thumb.style.height = '0';
+            return;
+        }
+        const thumbHeight = Math.max(
+            this.CONST.SCROLL_THUMB_MIN_HEIGHT,
+            containerHeight * containerHeight / ul.scrollHeight
+        );
+        const trackHeight = containerHeight - thumbHeight;
+        thumb.style.height = `${thumbHeight}px`;
+        thumb.style.top = `${(this.layerScrollY / scrollRange) * trackHeight}px`;
     }
     // 重複しない新規レイヤー名を取得
     getNewLayerName() {
@@ -496,12 +600,17 @@ export class LayerSystem extends ToolWindow {
             // 選択中のレイヤーを削除した場合、削除レイヤーの１つ上を自動選択する
             this.setCurrentLayer(elements[idx_delete]);
         }
+        // スクロールバー表示更新
+        this.updateLayerScrollbar();
     }
     clear(id) {
         // 引数で指定されたIDのimageDataを初期化
         // アンドゥ時に元のimagedataが必要となるため、更新ではなく新規のimagedataを作成する
-        this.layerObj[this.getLayerIndex(id)].image =
+        const idx = this.getLayerIndex(id);
+        this.layerObj[idx].image =
             this.CANVAS.tmp_ctx.createImageData(this.axpObj.x_size, this.axpObj.y_size);
+        // クリア後は空レイヤー
+        this.layerObj[idx].isBlank = true;
     }
     getLocked(index = null) {
         if (index) {
@@ -633,10 +742,16 @@ export class LayerSystem extends ToolWindow {
     }
     write(imageData) {
         // imagedataの更新
-        this.layerObj[this.getLayerIndex(this.currentLayer.dataset.id)].image = imageData;
+        const idx = this.getLayerIndex(this.currentLayer.dataset.id);
+        this.layerObj[idx].image = imageData;
+        // 内容が書き換わったため、空レイヤー扱いを解除（描画されたとみなす）
+        this.layerObj[idx].isBlank = false;
     }
     setImageId(imageData, id) {
-        this.layerObj[this.getLayerIndex(id)].image = imageData;
+        const idx = this.getLayerIndex(id);
+        this.layerObj[idx].image = imageData;
+        // 内容が書き換わったため、空レイヤー扱いを解除（保守的に false）
+        this.layerObj[idx].isBlank = false;
     }
     setName(name) {
         this.layerObj[this.getLayerIndex(this.currentLayer.dataset.id)].name = name;
@@ -786,6 +901,7 @@ export class LayerSystem extends ToolWindow {
             tag: -1,
             // 空のイメージを生成
             image: this.CANVAS.tmp_ctx.createImageData(this.axpObj.x_size, this.axpObj.y_size),
+            isBlank: true,
             // 挿入位置：カレントレイヤーの一つ上に追加
             insert_idx: this.getIndex(),
         }
@@ -815,6 +931,8 @@ export class LayerSystem extends ToolWindow {
         }
         // imageDataオブジェクトのコピー
         layerData.image.data.set(sourceObj.image.data);
+        // 複製元が空ならコピーも空
+        layerData.isBlank = sourceObj.isBlank === true;
 
         this.createLayer(layerData);
         return layerData.id;
@@ -886,7 +1004,24 @@ export class LayerSystem extends ToolWindow {
         // 合成モード表示更新
         this.displayBlendMode(newLayer);
 
+        // スクロールバー表示更新
+        this.updateLayerScrollbar();
+        // 追加されたレイヤーが見えるようにスクロール
+        this.scrollLayerIntoView(newLayer);
+
         return layerData.id;
+    }
+    // 指定レイヤー要素が表示領域に収まるようにスクロール
+    scrollLayerIntoView(layerElement) {
+        if (!this.isLayerScrollable()) return;
+        const containerHeight = this.layerScrollEl.container.offsetHeight;
+        const itemTop = layerElement.offsetTop;
+        const itemBottom = itemTop + layerElement.offsetHeight;
+        if (itemTop < this.layerScrollY) {
+            this.setLayerScrollY(itemTop);
+        } else if (itemBottom > this.layerScrollY + containerHeight) {
+            this.setLayerScrollY(itemBottom - containerHeight);
+        }
     }
     // レイヤーの不透明度に応じた表示切替用のボタンの背景を取得
     getEyeBackground(alpha) {
@@ -1239,7 +1374,7 @@ export class LayerSystem extends ToolWindow {
             this.layerObj[i].index = i;
         }
     }
-    draw() {
+    draw(changedLayerId = null) {
         let ctx = this.axpObj.CANVAS.main_ctx;
         //console.log('ここで描画', this.x_size, this.y_size);
         // 表示領域をクリア
@@ -1251,6 +1386,11 @@ export class LayerSystem extends ToolWindow {
         for (let idx = this.layerObj.length - 1; idx >= 0; idx--) {
             let item = this.layerObj[idx];
 
+            // 描画スキップ条件：非表示・空レイヤー（imagedata 自体は保持されており undo/redo で変更可能）
+            const isInvisible = (!item.checked) || item.isBlank;
+            // サムネ更新対象：全更新時(null) または 変動が発生したレイヤーのみ
+            const wantThumbUpdate = (changedLayerId === null) || (item.id === changedLayerId);
+
             // imagedataを仮想キャンバスに描画
             let tmp_ctx;
             // safari
@@ -1259,16 +1399,23 @@ export class LayerSystem extends ToolWindow {
             } else {
                 tmp_ctx = this.CANVAS.tmp_ctx;
             }
-            tmp_ctx.putImageData(item.image, 0, 0);
+            // 非表示・空レイヤーは putImageData をスキップ（合成時にも不要）
+            if (!isInvisible) {
+                tmp_ctx.putImageData(item.image, 0, 0);
+            }
 
-            // レイヤー毎のサムネイル描画
-            const clearRect = Math.max(this.axpObj.x_size, this.axpObj.y_size);
-            this.CANVAS.thumbnail_ctx[idx].clearRect(0, 0, clearRect, clearRect);
-            this.CANVAS.thumbnail_ctx[idx].drawImage(
-                tmp_ctx.canvas,
-                this.axpObj.ctx_map_shift_x,
-                this.axpObj.ctx_map_shift_y
-            );
+            // レイヤー毎のサムネイル描画（変動レイヤーのみ更新）
+            if (wantThumbUpdate) {
+                const clearRect = Math.max(this.axpObj.x_size, this.axpObj.y_size);
+                this.CANVAS.thumbnail_ctx[idx].clearRect(0, 0, clearRect, clearRect);
+                if (!isInvisible) {
+                    this.CANVAS.thumbnail_ctx[idx].drawImage(
+                        tmp_ctx.canvas,
+                        this.axpObj.ctx_map_shift_x,
+                        this.axpObj.ctx_map_shift_y
+                    );
+                }
+            }
 
             // クリッピング合成により描画済みの子レイヤーの場合、処理をスキップする
             if (skipIdx < idx) {
@@ -1340,8 +1487,9 @@ export class LayerSystem extends ToolWindow {
                     }
 
                 }
-                // レイヤーが「表示」の場合、そのレイヤーをキャンバスに描画する
-                if (item.checked) {
+                // レイヤーが「表示」かつ非空の場合、そのレイヤーをキャンバスに描画する
+                // （isInvisible 時は tmp_ctx に当該レイヤーの内容を putImageData していないため drawImage 不可）
+                if (!isInvisible) {
                     //console.log('idx=', idx, this.layerObj[idx].name);
                     this.CANVAS.backscreen_trans_ctx.globalCompositeOperation = item.mode;
                     this.CANVAS.backscreen_trans_ctx.globalAlpha = item.alpha / 100;
@@ -1404,9 +1552,10 @@ export class LayerSystem extends ToolWindow {
         }
 
     }
-    updateCanvas() {
+    updateCanvas(changedLayerId = null) {
         // キャンバス更新が影響する表示を一括処理
-        this.draw();
+        // changedLayerId が指定された場合、そのレイヤーのサムネのみ更新（他レイヤーのサムネ再描画を省略）
+        this.draw(changedLayerId);
         this.drawThumbnail();
     }
     // 画像をダウンロード

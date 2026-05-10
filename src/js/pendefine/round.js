@@ -77,8 +77,9 @@ export class Round extends PenObj {
         this.start_draw(x, y);
     }
     start_draw(x, y) {
-        this.CANVAS.brush_ctx.beginPath();
-        this.CANVAS.brush_ctx.moveTo(x, y);
+        // 蓄積パスを Path2D で保持（暫定描画でクローン可能にするため）
+        this.brushPath = new Path2D();
+        this.brushPath.moveTo(x, y);
     }
     // 描画中
     move(x, y) {
@@ -103,6 +104,9 @@ export class Round extends PenObj {
         let currentPoint = this.input_position[this.input_position.length - 1];
         let midPoint = calcMidPointBetween(lastPoint, currentPoint);
 
+        // このフレームでストロークするパス（蓄積 or 都度生成）
+        let strokePath = null;
+
         switch (this.drawmode) {
             case this.axpObj.CONST.DRAW_FREEHAND: {
                 let isStabilizer = false;
@@ -115,29 +119,28 @@ export class Round extends PenObj {
                         isStabilizer = true;
                     }
                 }
-                // 直線モードの場合、始点を最初の入力座標にする
                 if (this.axpObj.isLine) {
-                    this.CANVAS.brush_ctx.beginPath();
-                    this.CANVAS.brush_ctx.moveTo(
-                        firstPoint.x,
-                        firstPoint.y
-                    );
-                }
-                if (isStabilizer) {
+                    // 直線モード: 蓄積パスを汚染しないよう毎回作り直す
+                    strokePath = new Path2D();
+                    strokePath.moveTo(firstPoint.x, firstPoint.y);
+                    strokePath.lineTo(currentPoint.x, currentPoint.y);
+                } else if (isStabilizer) {
                     // 手ぶれ補正
                     // 2次ベジェ曲線（前回の入力座標を制御点とし、入力から計算した終点までの曲線を描く）
-                    this.CANVAS.brush_ctx.quadraticCurveTo(
+                    this.brushPath.quadraticCurveTo(
                         lastPoint.x,
                         lastPoint.y,
                         midPoint.x,
                         midPoint.y,
                     );
+                    strokePath = this.brushPath;
                 } else {
-                    // 補正なし
-                    this.CANVAS.brush_ctx.lineTo(
+                    // 補正なし（または終点）
+                    this.brushPath.lineTo(
                         currentPoint.x,
                         currentPoint.y
                     );
+                    strokePath = this.brushPath;
                 }
                 break;
             }
@@ -156,8 +159,8 @@ export class Round extends PenObj {
                     currentPoint.x,
                     currentPoint.y
                 );
-                this.CANVAS.brush_ctx.beginPath();
-                this.CANVAS.brush_ctx.arc(
+                strokePath = new Path2D();
+                strokePath.arc(
                     firstPoint.x,
                     firstPoint.y,
                     r,
@@ -168,7 +171,28 @@ export class Round extends PenObj {
                 break;
             }
         }
-        this.CANVAS.brush_ctx.stroke();
+        if (strokePath !== null) {
+            this.CANVAS.brush_ctx.stroke(strokePath);
+        }
+        this.write();
+    }
+    // 暫定描画（手ぶれ補正の確定点間で「ペンの直下」を表示するためのプレビュー）
+    // 蓄積パス this.brushPath はクローンして触らず、暫定区間だけ追加してストロークする
+    previewDraw(x, y) {
+        if (this.drawmode !== this.axpObj.CONST.DRAW_FREEHAND) return;
+        if (this.axpObj.isLine || this.isLastDrawing) return;
+        if (!this.brushPath) return;
+        if (!this.axpObj.isDrawing || this.axpObj.isDrawCancel) return;
+        if (this.input_position.length === 0) return;
+
+        const lastPoint = this.input_position[this.input_position.length - 1];
+        // 蓄積パスを汚染しないようクローンして暫定区間を append
+        const previewPath = new Path2D(this.brushPath);
+        previewPath.quadraticCurveTo(lastPoint.x, lastPoint.y, x, y);
+
+        this.CANVAS.brush_ctx.globalCompositeOperation = 'source-over';
+        this.CANVAS.brush_ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
+        this.CANVAS.brush_ctx.stroke(previewPath);
         this.write();
     }
     // 描画終了

@@ -96,6 +96,12 @@ export class AXPObj {
     isDrawing = false; // 描画中である
     isDrawn = false; // 描画処理が行われた
     isDrawCancel = false; // 描画処理がキャンセルされた
+    // pointermove 内で coalesced events をループ処理する際に、最終要素のみ true となるフラグ。
+    // 共通描画経路（PenObj.write）はこのフラグを見て、サブフレームイベントでの重い layer 反映を遅延させる。
+    lastEventInFrame = true;
+    // PenObj.write が lastEventInFrame=false で早期 return した場合に立つフラグ。
+    // 最終イベントが stabilizer 等で弾かれた場合でも、pointermove 末尾で確実に commit するための保険。
+    pendingPenFlush = false;
     isLine;
     isRect;
     // ----------------------------------------------------
@@ -628,7 +634,40 @@ export class AXPObj {
                 // 座標表示
                 document.getElementById('axp_canvas_div_pointerPosition').textContent = textDisplayPositon;
                 // 機能呼び出し
-                this.penSystem.move(pos.x, pos.y, e);
+                // フレーム落ち時の中間点欠落を防ぐため、coalescedEvents があれば全て処理する
+                // （フレーム落ちが起きないライト負荷時は要素1つのみとなり挙動は従来と同等）
+                let coalescedEvents = null;
+                if (typeof e.getCoalescedEvents === 'function') {
+                    try {
+                        coalescedEvents = e.getCoalescedEvents();
+                    } catch {
+                        coalescedEvents = null;
+                    }
+                }
+                if (coalescedEvents && coalescedEvents.length > 1) {
+                    // 最終イベントだけ lastEventInFrame=true にして共通描画経路で layer 反映を行う。
+                    // 中間イベントは入力点の蓄積とブラシ path 累積のみ行い、重い getImageData は行わない。
+                    const last = coalescedEvents.length - 1;
+                    for (let i = 0; i <= last; i++) {
+                        const ce = coalescedEvents[i];
+                        const cpos = this.calcScaleCoordinates(ce);
+                        this.lastEventInFrame = (i === last);
+                        this.penSystem.move(cpos.x, cpos.y, ce);
+                    }
+                } else {
+                    this.lastEventInFrame = true;
+                    this.penSystem.move(pos.x, pos.y, e);
+                }
+                // 最終イベントが stabilizer フィルタなどで早期 return された場合、
+                // 中間イベントで遅延された write() が commit されないままになる。
+                // pendingPenFlush が立っていれば、ここで強制 flush して 1 pointermove に必ず 1 回は commit する。
+                if (this.pendingPenFlush && this.isDrawing && !this.isDrawCancel && this.penSystem.exec_pen_mode) {
+                    const pen = this.penSystem.penObj[this.penSystem.exec_pen_mode];
+                    if (pen && typeof pen.write === 'function') {
+                        this.lastEventInFrame = true;
+                        pen.write();
+                    }
+                }
             }
 
             // タッチ処理

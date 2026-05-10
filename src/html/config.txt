@@ -51,8 +51,8 @@
                 </div>
                 <div class="axpc_config_group" data-title="キャンバス全体のぼかし（アンチエイリアシング）">
                     <form id="axp_config_form_antialiasing" class="axpc_radio">
-                        <span data-msg="@CFG0020" data-value="off" data-default="y">なし</span>
-                        <span data-msg="@CFG0021" data-value="on">あり</span>
+                        <span data-msg="@CFG0020" data-value="off">なし</span>
+                        <span data-msg="@CFG0021" data-value="on" data-default="y">あり</span>
                     </form>
                 </div>
                 <div class="axpc_config_group" data-title="ポインタ座標の表示">
@@ -106,7 +106,7 @@
                     <div class="axpc_checkbox axpc_MSG" data-msg="@CFG0041">
                         <label>
                             <input id="axp_config_checkbox_stabilize" class="axpc_SAVE"
-                                type="checkbox">ペンツールウィンドウ内にレンジスライダーを表示する
+                                type="checkbox" checked>ペンツールウィンドウ内にレンジスライダーを表示する
                         </label>
                     </div>
                 </div>
@@ -163,14 +163,14 @@
                 <div class="axpc_config_group" data-title="使用する色作成ツール">
                     <u>混色パレット</u>
                     <form id="axp_config_form_makeColorTypeMixed" class="axpc_radio">
-                        <span data-msg="@CFG0053" data-value="off" data-default="y">なし</span>
-                        <span data-msg="@CFG0054" data-value="on">あり</span>
+                        <span data-msg="@CFG0053" data-value="off">なし</span>
+                        <span data-msg="@CFG0054" data-value="on" data-default="y">あり</span>
                     </form>
                     <br>
                     <u>RGBスライダー</u>
                     <form id="axp_config_form_makeColorTypeRGB" class="axpc_radio">
-                        <span data-msg="@CFG0055" data-value="off">なし</span>
-                        <span data-msg="@CFG0056" data-value="on" data-default="y">あり</span>
+                        <span data-msg="@CFG0055" data-value="off" data-default="y">なし</span>
+                        <span data-msg="@CFG0056" data-value="on">あり</span>
                     </form>
                     <br>
                     <u>カラーピッカー</u>

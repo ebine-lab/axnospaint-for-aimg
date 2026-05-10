@@ -68,7 +68,7 @@ export class PenSystem extends ToolWindow {
 
     stabilizerX = 0;
     stabilizerY = 0;
-    // 暫定描画: 直近の確定点 (stabilizerX/Y) からカーソルまでの整数距離。変動時に previewDraw を呼ぶ
+    // 暫定描画: 直近の確定点 (stabilizerX/Y) からカーソルまでの整数距離。
     lastPreviewIntDistance = 0;
 
     constructor(axpObj) {
@@ -489,7 +489,8 @@ export class PenSystem extends ToolWindow {
         // 手ぶれ補正用記録
         this.stabilizerX = e.clientX;
         this.stabilizerY = e.clientY;
-        this.lastPreviewIntDistance = 0;
+        this.lastPreviewX = null;
+        this.lastPreviewY = null;
     }
     move(x, y, e) {
         let name = this.getName();
@@ -532,12 +533,15 @@ export class PenSystem extends ToolWindow {
                     e.clientY
                 )
                 if (distance < stabilizer_value) {
-                    // 確定点としては採用しないが、整数距離が変わったタイミングで暫定描画して
+                    // 確定点としては採用しないが、整数xyが変わったタイミングで暫定描画して
                     // ペン直下に「暫定的なベジェ終端」を表示する（ラグの体感を軽減）
                     if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
-                        const intDist = Math.floor(distance);
-                        if (intDist !== this.lastPreviewIntDistance) {
-                            this.lastPreviewIntDistance = intDist;
+                        const shouldRefreshPreview =
+                            x !== this.lastPreviewX ||
+                            y !== this.lastPreviewY;
+                        if (shouldRefreshPreview) {
+                            this.lastPreviewX = x;
+                            this.lastPreviewY = y;
                             const pen = this.penObj[exec_mode];
                             if (typeof pen.previewDraw === 'function') {
                                 pen.previewDraw(x, y);
@@ -548,7 +552,6 @@ export class PenSystem extends ToolWindow {
                 }
                 this.stabilizerX = e.clientX;
                 this.stabilizerY = e.clientY;
-                this.lastPreviewIntDistance = 0;
             }
         }
         this.penObj[exec_mode].move(x, y, e);

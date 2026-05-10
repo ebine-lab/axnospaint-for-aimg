@@ -5,9 +5,12 @@
 //      ※ 初めてのオリジンの場合、先に AxnosPaint を一度起動して DB スキーマを作成しておくこと
 //   2. ブラウザの DevTools を開きコンソールタブを表示
 //   3. このファイルの中身を全選択してコンソールに貼り付け、Enter で実行
-//   4. ファイル選択ダイアログで axnospaint_backup_*.axp を選ぶ
-//   5. 確認ダイアログで OK を押すと既存の IndexedDB を上書きで復元
-//   6. 完了後、必ずページをリロード（メモリ上の AxnosPaint 状態をクリアするため）
+//   4. ページ右下に表示される「.axp を選んで復元」ボタンをクリック
+//      （ブラウザのファイル選択ダイアログはユーザー操作が必要なため、
+//        コンソールから直接開けない仕様）
+//   5. ファイル選択ダイアログで axnospaint_backup_*.axp を選ぶ
+//   6. 確認ダイアログで OK を押すと既存の IndexedDB を上書きで復元
+//   7. 完了後、必ずページをリロード（メモリ上の AxnosPaint 状態をクリアするため）
 //
 // 注意:
 //   - 復元は破壊的操作（既存スロットを clear() してから書き戻す）。実行前に確認ダイアログが 1 度出る
@@ -38,10 +41,16 @@
         return o;
     };
 
+    // 既存の起動 UI があれば一度撤去（連続実行対策）
+    const PANEL_ID = 'axp-backup-import-panel';
+    const existing = document.getElementById(PANEL_ID);
+    if (existing) existing.remove();
+
     const input = Object.assign(document.createElement('input'), {
         type: 'file',
         accept: '.axp,application/json',
     });
+    input.style.display = 'none';
 
     input.onchange = async () => {
         const file = input.files && input.files[0];
@@ -121,7 +130,55 @@
             ? `\n\n※ 次のストアはスキップされました（DB スキーマに無いため）:\n  ${skipped.join(', ')}\n  AxnosPaint を一度開いてから再度インポートしてください。`
             : '';
         alert('復元完了。ページをリロードしてください。' + note);
+        document.getElementById(PANEL_ID)?.remove();
     };
 
-    input.click();
+    // ファイル選択ダイアログはユーザー操作が無いと開けないため、
+    // ページ右下にボタンを表示してクリックを待つ。
+    const panel = document.createElement('div');
+    panel.id = PANEL_ID;
+    panel.style.cssText = [
+        'position:fixed', 'right:16px', 'bottom:16px', 'z-index:2147483647',
+        'background:#fff', 'color:#000', 'border:2px solid #c33',
+        'border-radius:8px', 'padding:12px 14px',
+        'box-shadow:0 4px 16px rgba(0,0,0,.3)',
+        'font:14px/1.4 sans-serif',
+    ].join(';');
+
+    const title = document.createElement('div');
+    title.textContent = 'AxnosPaint データ復元';
+    title.style.cssText = 'font-weight:bold;margin-bottom:6px;color:#c33';
+
+    const desc = document.createElement('div');
+    desc.textContent = '下のボタンを押して .axp ファイルを選んでください。';
+    desc.style.cssText = 'margin-bottom:8px';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = '.axp を選んで復元';
+    btn.style.cssText = [
+        'padding:8px 14px', 'font:bold 14px sans-serif',
+        'background:#c33', 'color:#fff', 'border:none',
+        'border-radius:4px', 'cursor:pointer', 'margin-right:6px',
+    ].join(';');
+    btn.onclick = () => input.click();
+
+    const cancel = document.createElement('button');
+    cancel.type = 'button';
+    cancel.textContent = '中止';
+    cancel.style.cssText = [
+        'padding:8px 12px', 'font:14px sans-serif',
+        'background:#eee', 'color:#000', 'border:1px solid #999',
+        'border-radius:4px', 'cursor:pointer',
+    ].join(';');
+    cancel.onclick = () => panel.remove();
+
+    panel.appendChild(title);
+    panel.appendChild(desc);
+    panel.appendChild(btn);
+    panel.appendChild(cancel);
+    panel.appendChild(input);
+    document.body.appendChild(panel);
+
+    console.log('[AxnosPaint backup] 右下のボタンをクリックして .axp を選択してください。');
 })();

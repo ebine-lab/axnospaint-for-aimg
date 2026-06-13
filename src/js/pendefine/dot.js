@@ -11,6 +11,8 @@ export class Dot extends Round {
         this.name = this.axpObj._('@PENNAME.DOT');
         this.toneLevel = null;
         // 制御
+        this.useStabilizerPipeline = false;
+        this.usePressure = false;
         // 描画
         this.borderRadius = 0;
         this.borderStyle = 'normal';

@@ -7,7 +7,7 @@ import html_pen_subwindow from '../html/penmode.txt';
 // css適用
 import '../css/window_pen.css';
 
-import { createTonePattern, UTIL, rgb2hex, calcDistance } from './etc.js';
+import { createTonePattern, UTIL, rgb2hex } from './etc.js';
 import { range_index, range_value } from './pendefine/rangeindex.js';
 
 // メイン
@@ -65,11 +65,6 @@ export class PenSystem extends ToolWindow {
     old_y;
     preview_dragstart_x;
     preview_dragstart_y;
-
-    stabilizerX = 0;
-    stabilizerY = 0;
-    // 暫定描画: 直近の確定点 (stabilizerX/Y) からカーソルまでの整数距離。
-    lastPreviewIntDistance = 0;
 
     constructor(axpObj) {
         super(axpObj);
@@ -486,11 +481,6 @@ export class PenSystem extends ToolWindow {
         // 実行する処理のタイプを記憶
         this.exec_pen_mode = mode;
         this.penObj[this.exec_pen_mode].start(x, y, e, option);
-        // 手ぶれ補正用記録
-        this.stabilizerX = e.clientX;
-        this.stabilizerY = e.clientY;
-        this.lastPreviewX = null;
-        this.lastPreviewY = null;
     }
     move(x, y, e) {
         let name = this.getName();
@@ -517,43 +507,8 @@ export class PenSystem extends ToolWindow {
             this.penObj[exec_mode].drawCursor(e);
         }
         //console.log('exec_mode:', exec_mode);
-        // ペンと消しゴムの場合、手ぶれ補正を判定（描画開始を判定するため、ピンチズームにも影響する）
-        if (this.penObj[exec_mode].type === 'draw' ||
-            this.penObj[exec_mode].type === 'eraser'
-        ) {
-            const stabilizer_value = Number(document.getElementById('axp_config_form_stabilizerValue').volume.value);
-            if (stabilizer_value !== 0) {
-                // 手ぶれ補正あり
-                // 前回の位置からの距離によって、入力を間引きする
-                // ２点間の距離の算出（三平方の定理）
-                const distance = calcDistance(
-                    this.stabilizerX,
-                    this.stabilizerY,
-                    e.clientX,
-                    e.clientY
-                )
-                if (distance < stabilizer_value) {
-                    // 確定点としては採用しないが、整数xyが変わったタイミングで暫定描画して
-                    // ペン直下に「暫定的なベジェ終端」を表示する（ラグの体感を軽減）
-                    if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
-                        const shouldRefreshPreview =
-                            x !== this.lastPreviewX ||
-                            y !== this.lastPreviewY;
-                        if (shouldRefreshPreview) {
-                            this.lastPreviewX = x;
-                            this.lastPreviewY = y;
-                            const pen = this.penObj[exec_mode];
-                            if (typeof pen.previewDraw === 'function') {
-                                pen.previewDraw(x, y);
-                            }
-                        }
-                    }
-                    return;
-                }
-                this.stabilizerX = e.clientX;
-                this.stabilizerY = e.clientY;
-            }
-        }
+        // 手ぶれ補正は各ペン (描画系) 内部の Stabilizer (1€ + LPF) が担当する。
+        // ここでは点を流すだけ。
         this.penObj[exec_mode].move(x, y, e);
 
     }

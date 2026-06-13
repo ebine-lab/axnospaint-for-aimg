@@ -28,8 +28,10 @@ export class Eraser extends Round {
         this.CANVAS.brush_ctx.lineWidth = this.size;
         // トーンパターンをリセット
         this.CANVAS.brush_ctx.strokeStyle = 'black';
+        this.CANVAS.brush_ctx.fillStyle = 'black';
         this.CANVAS.brush_ctx.lineCap = this.lineCap;
         this.CANVAS.brush_ctx.lineJoin = this.lineJoin;
+        this.CANVAS.brush_ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
         //this.blur();
     }
 }

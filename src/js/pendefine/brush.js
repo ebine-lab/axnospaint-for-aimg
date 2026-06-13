@@ -13,6 +13,8 @@ export class Brush extends Round {
         this.toneLevel = null;
         // 制御
         this.usePenStyle = false;
+        this.useStabilizerPipeline = false;
+        this.usePressure = false;
         // 描画
 
         this.init_save();

@@ -13,6 +13,7 @@ export class Eraser extends Round {
         this.toneLevel = null;
         this.blurLevel = null;
         // 制御
+        this.usePressureControl = false; // 消しゴムにはペン別の筆圧チェックを表示しない
         // 描画
         this.borderStyle = 'dashed';
 

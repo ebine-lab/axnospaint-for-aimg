@@ -18,7 +18,7 @@ export class Round extends PenObj {
         this.index = range_index(this.size);
         this.alpha = 100;
         this.toneLevel = 16;
-        this.blurLevel = 0;
+        this.blurLevel = 1;
         // 制御
         this.usePenGuide = true;
         this.usePenPreview = true;

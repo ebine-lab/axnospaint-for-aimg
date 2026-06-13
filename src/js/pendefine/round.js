@@ -190,9 +190,8 @@ export class Round extends PenObj {
     _radiusAt(cp) {
         const halfWidth = (this.size - 0.25) / 2;
         if (!this.usePressure) return halfWidth;
-        // 筆圧 0 でも線が完全には消えないように下限を持たせる
-        const minScale = 0.08;
-        return halfWidth * (minScale + (1 - minScale) * cp.pressure);
+        // 筆圧をそのまま半径に乗算 (下限なし → curve の不感地帯と終端テーパが正しく機能)
+        return halfWidth * cp.pressure;
     }
 
     // 円スタンプ
@@ -220,7 +219,8 @@ export class Round extends PenObj {
             this._drawStamp(p2);
             return;
         }
-        const sinA = (r1 - r2) / d;
+        // 外接共通接線の傾き: sin α = (r2 - r1) / d
+        const sinA = (r2 - r1) / d;
         if (Math.abs(sinA) >= 0.999) {
             // 一方の円が他方を完全に包含 → 大きい方だけ塗って終わり
             const big = (r1 > r2) ? p1 : p2;
@@ -231,12 +231,12 @@ export class Round extends PenObj {
         const cosA = Math.sqrt(1 - sinA * sinA);
         const ux = dx / d;
         const uy = dy / d;
-        // 上側接線における垂線方向 (p を α 回転)
+        // 上側接線における外向き垂線 (p_up = (-uy, ux) を α 回転)
         const nUx = -uy * cosA - ux * sinA;
         const nUy =  ux * cosA - uy * sinA;
-        // 下側 (p を -α 回転)
-        const nLx = -uy * cosA + ux * sinA;
-        const nLy =  uy * sinA + ux * cosA;
+        // 下側接線における外向き垂線 (p_down = (uy, -ux) を α 回転)
+        const nLx =  uy * cosA + ux * sinA;
+        const nLy =  uy * sinA - ux * cosA;
         const ctx = this.CANVAS.brush_ctx;
         ctx.beginPath();
         ctx.moveTo(p1.x + r1 * nUx, p1.y + r1 * nUy);

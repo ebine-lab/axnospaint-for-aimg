@@ -1,5 +1,5 @@
 /*!
- * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-13T06:55:42.248Z)
+ * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-13T08:05:56.207Z)
  * (c) 2026- nijiurachan contributors
  * (c) 2022「悪の巣」部屋番号13番：「趣味の悪い大衆酒場[Mad end dance hall]」
  * Licensed under MPL 2.0
@@ -7903,7 +7903,7 @@ class ConfigSystem {
         let targetElement = document.getElementById('axp_config');
         targetElement.insertAdjacentHTML('afterbegin', this.axpObj.translateHTML(_html_config_txt__WEBPACK_IMPORTED_MODULE_2__));
         // バージョン情報の表示
-        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-13T06:55:42.248Z"})`
+        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-13T08:05:56.207Z"})`
     }
     // HTML展開
     deployHTML() {
@@ -12644,14 +12644,25 @@ class Round extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
         return halfWidth * cp.pressure;
     }
 
+    // サブピクセル幅 (直径 < 1px) のエミュレーション:
+    // 形状は半径 0.5 にクランプし、不透明度を真半径/0.5 で減衰させる
+    _subPxAlpha(rTrue) {
+        return (rTrue < 0.5) ? Math.max(0, rTrue) / 0.5 : 1.0;
+    }
+
     // 円スタンプ
     _drawStamp(cp) {
-        const r = this._radiusAt(cp);
-        if (r <= 0) return;
+        const rTrue = this._radiusAt(cp);
+        if (rTrue <= 0) return;
+        const r = Math.max(rTrue, 0.5);
+        const alphaScale = this._subPxAlpha(rTrue);
         const ctx = this.CANVAS.brush_ctx;
+        const saved = ctx.globalAlpha;
+        ctx.globalAlpha = saved * alphaScale;
         ctx.beginPath();
         ctx.arc(cp.x, cp.y, r, 0, Math.PI * 2);
         ctx.fill();
+        ctx.globalAlpha = saved;
     }
 
     // ２点間の塗り（半径可変の外接共通接線で構成した凸多角形）
@@ -12660,8 +12671,14 @@ class Round extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
             this._drawStamp(p2);
             return;
         }
-        const r1 = this._radiusAt(p1);
-        const r2 = this._radiusAt(p2);
+        const r1True = this._radiusAt(p1);
+        const r2True = this._radiusAt(p2);
+        // 両端ともゼロ → 何も描けない
+        if (r1True <= 0 && r2True <= 0) return;
+        // サブピクセル幅対応: 形状は >= 0.5 にクランプ、不透明度で減衰
+        const r1 = Math.max(r1True, 0.5);
+        const r2 = Math.max(r2True, 0.5);
+        const segAlpha = (this._subPxAlpha(r1True) + this._subPxAlpha(r2True)) / 2;
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
         const d = Math.hypot(dx, dy);
@@ -12688,6 +12705,8 @@ class Round extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
         const nLx =  uy * cosA + ux * sinA;
         const nLy =  uy * sinA - ux * cosA;
         const ctx = this.CANVAS.brush_ctx;
+        const saved = ctx.globalAlpha;
+        ctx.globalAlpha = saved * segAlpha;
         ctx.beginPath();
         ctx.moveTo(p1.x + r1 * nUx, p1.y + r1 * nUy);
         ctx.lineTo(p2.x + r2 * nUx, p2.y + r2 * nUy);
@@ -12695,7 +12714,8 @@ class Round extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
         ctx.lineTo(p1.x + r1 * nLx, p1.y + r1 * nLy);
         ctx.closePath();
         ctx.fill();
-        // 終端のキャップ円
+        ctx.globalAlpha = saved;
+        // 終端のキャップ円 (こちらは p2 自身の真半径でアルファ補正)
         this._drawStamp(p2);
     }
 
@@ -14425,6 +14445,7 @@ class OneEuroStabilizer {
         this.prevY = null;
         this.prevFiltX = null;
         this.prevFiltY = null;
+        this.cumDist = 0; // ストローク開始からの累積距離 (筆圧 LPF の起動遅延に使用)
         this.lastCommitted = null;
         this.params = mapStabilizerToParams(0);
         this.d_cutoff = 1.0;
@@ -14470,7 +14491,17 @@ class OneEuroStabilizer {
 
         // 筆圧: 空間LPF (フィルタ後の位置を基準に進行距離を測る)
         const ds = Math.hypot(xHat - this.prevFiltX, yHat - this.prevFiltY);
-        const pHat = this.pressLpf.filter(pMed, ds, this.params.pressureLambda);
+        this.cumDist += ds;
+        let pHat;
+        // ストローク開始 2px は LPF を素通し: ペンタブ初動の段付きを残すと
+        // 高筆圧の書き出しが入らないため、生の median をそのまま採用しつつ
+        // LPF 状態は追従させておく (2px 通過後に滑らかに引き継ぐ)。
+        if (this.cumDist < 2.0) {
+            pHat = pMed;
+            this.pressLpf.y = pMed;
+        } else {
+            pHat = this.pressLpf.filter(pMed, ds, this.params.pressureLambda);
+        }
 
         this.prevT = t;
         this.prevX = x;
@@ -14493,6 +14524,7 @@ class OneEuroStabilizer {
         this.prevY = null;
         this.prevFiltX = null;
         this.prevFiltY = null;
+        this.cumDist = 0;
         this.lastCommitted = null;
 
         const fp = this._filterPoint(raw);
@@ -20681,7 +20713,7 @@ __webpack_require__.r(__webpack_exports__);
     axpObj;
     constructor(option) {
         console.log('version:', "3.0.0-alpha");
-        console.log('build:', "2026-06-13T06:55:42.248Z");
+        console.log('build:', "2026-06-13T08:05:56.207Z");
         (async () => {
             // 追加辞書オプションチェック
             let additionalDictionaryJSON = null;
@@ -21062,7 +21094,7 @@ __webpack_require__.r(__webpack_exports__);
     }
     // バージョン
     version() {
-        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-13T06:55:42.248Z"})`;
+        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-13T08:05:56.207Z"})`;
     }
     // 画面の表示／非表示
     on() {
@@ -21074,7 +21106,7 @@ __webpack_require__.r(__webpack_exports__);
         this.axpObj.isClose = true;
     }
     static ver() {
-        return `version ${"3.0.0-alpha"} (${"2026-06-13T06:55:42.248Z"})`;
+        return `version ${"3.0.0-alpha"} (${"2026-06-13T08:05:56.207Z"})`;
     }
 });
 

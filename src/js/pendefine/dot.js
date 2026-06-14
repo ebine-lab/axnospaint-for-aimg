@@ -1,18 +1,16 @@
-// @description ペン定義：親クラス＞ドットペン
+// @description ペン定義：蓄積系共通＞ドットペン
 
-import { Round } from './round.js';
+import { AccumulativePenBase } from './_accumulativepen.js';
 
 // ドット
-export class Dot extends Round {
+export class Dot extends AccumulativePenBase {
     img_draw;
     constructor(option) {
         super(option);
-        // 値（Roundからの差分）
+        // 値（蓄積系共通からの差分）
         this.name = this.axpObj._('@PENNAME.DOT');
         this.toneLevel = null;
         // 制御
-        this.useStabilizerPipeline = false;
-        this.usePressure = false;
         // 描画
         this.borderRadius = 0;
         this.borderStyle = 'normal';

@@ -1,14 +1,14 @@
-// @description ペン定義：親クラス＞丸ペン＞角ペン
+// @description ペン定義：スタンプ系共通＞角ペン
 //
 // 「正方形ペン」: 軸合わせの正方形ニブが軌跡に沿って動く描画。
 // 各確定点でフィルレクト (軸合わせ正方形) を打ち、区間は2 つの正方形を
 // 結ぶ凸 6 角形 (= 軸合わせ正方形の Minkowski sum) で塗る。
 // 筆圧は使わない (常に halfWidth 固定)。
 
-import { Round } from './round.js';
+import { StampPenBase } from './_stamppen.js';
 
 // 角ペン
-export class Square extends Round {
+export class Square extends StampPenBase {
     constructor(option) {
         super(option);
         // 値（Roundからの差分）
@@ -28,9 +28,9 @@ export class Square extends Round {
 
     // 軸合わせ正方形のスタンプ
     _drawStamp(cp) {
-        const rTrue = (this.size - 0.25) / 2;
+        const rTrue = this._halfWidth();
         if (rTrue <= 0) return;
-        const r = Math.max(rTrue, 0.5);
+        const r = Math.max(rTrue, this.subPxFloor);
         const alphaScale = this._subPxAlpha(rTrue);
         const ctx = this.CANVAS.brush_ctx;
         const saved = ctx.globalAlpha;
@@ -45,9 +45,9 @@ export class Square extends Round {
             this._drawStamp(p2);
             return;
         }
-        const rTrue = (this.size - 0.25) / 2;
+        const rTrue = this._halfWidth();
         if (rTrue <= 0) return;
-        const r = Math.max(rTrue, 0.5);
+        const r = Math.max(rTrue, this.subPxFloor);
         const alphaScale = this._subPxAlpha(rTrue);
 
         const dx = p2.x - p1.x;

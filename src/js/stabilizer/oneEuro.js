@@ -78,10 +78,17 @@ export class OneEuroStabilizer {
         this.lastCommitted = null;
         this.params = mapStabilizerToParams(0);
         this.d_cutoff = 1.0;
+        // ペンごとに調節できるピクセル単位パラメータ (StrokePipeline 経由で設定)
+        this.startPx = 2.0;  // 開幕この距離までは筆圧 LPF を素通し
+        this.taperPx = 2.0;  // 終端この距離で筆圧 0 までテーパ
     }
 
-    setStabilizerValue(stabilizerValue) {
+    // ストローク開始時に一括設定する。
+    // stabilizerValue: 0-10 スライダー値 / startPx,taperPx: px 単位
+    configure({ stabilizerValue = 0, startPx = 2.0, taperPx = 2.0 } = {}) {
         this.params = mapStabilizerToParams(stabilizerValue);
+        this.startPx = startPx;
+        this.taperPx = taperPx;
     }
 
     _filterPoint(raw) {
@@ -122,10 +129,10 @@ export class OneEuroStabilizer {
         const ds = Math.hypot(xHat - this.prevFiltX, yHat - this.prevFiltY);
         this.cumDist += ds;
         let pHat;
-        // ストローク開始 2px は LPF を素通し: ペンタブ初動の段付きを残すと
+        // ストローク開始 startPx は LPF を素通し: ペンタブ初動の段付きを残すと
         // 高筆圧の書き出しが入らないため、生の median をそのまま採用しつつ
-        // LPF 状態は追従させておく (2px 通過後に滑らかに引き継ぐ)。
-        if (this.cumDist < 2.0) {
+        // LPF 状態は追従させておく (startPx 通過後に滑らかに引き継ぐ)。
+        if (this.cumDist < this.startPx) {
             pHat = pMed;
             this.pressLpf.y = pMed;
         } else {
@@ -203,9 +210,9 @@ export class OneEuroStabilizer {
         return out;
     }
 
-    // 終端 2px テーパ: 末尾点を「2px 手前 knee + 末尾 tip(pressure=0)」に展開
+    // 終端テーパ: 末尾点を「taperPx 手前 knee + 末尾 tip(pressure=0)」に展開
     _appendTaper(out) {
-        const taperLen = 2.0;
+        const taperLen = this.taperPx;
         if (out.length === 0) return;
         const last = out[out.length - 1];
         // 方向ベクトル: out 内の直前点 → last。なければ stabilizer の lastCommitted 直前

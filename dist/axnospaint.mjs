@@ -1,5 +1,5 @@
 /*!
- * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-13T11:43:23.951Z)
+ * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-14T02:41:38.093Z)
  * (c) 2026- nijiurachan contributors
  * (c) 2022「悪の巣」部屋番号13番：「趣味の悪い大衆酒場[Mad end dance hall]」
  * Licensed under MPL 2.0
@@ -7903,7 +7903,7 @@ class ConfigSystem {
         let targetElement = document.getElementById('axp_config');
         targetElement.insertAdjacentHTML('afterbegin', this.axpObj.translateHTML(_html_config_txt__WEBPACK_IMPORTED_MODULE_2__));
         // バージョン情報の表示
-        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-13T11:43:23.951Z"})`
+        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-14T02:41:38.093Z"})`
     }
     // HTML展開
     deployHTML() {
@@ -10520,6 +10520,164 @@ class Message {
 
 /***/ }),
 
+/***/ "./src/js/pendefine/_accumulativepen.js":
+/*!**********************************************!*\
+  !*** ./src/js/pendefine/_accumulativepen.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AccumulativePenBase: () => (/* binding */ AccumulativePenBase)
+/* harmony export */ });
+/* harmony import */ var _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_drawingpen.js */ "./src/js/pendefine/_drawingpen.js");
+// @description ペン定義：描画ペン共通＞蓄積系ペン共通クラス
+//
+// 共通パイプライン (手ブレ補正・筆圧) を通さず、入力座標をそのまま蓄積して
+// 描画するペン (ドット/筆/エアブラシ等) の共通基底。
+// 各ペンは move()/draw() を override して独自の描画モデルを実装する。
+//
+// ※ 将来的には StampPenBase と同じ確定点群を入力に切り替える余地があるが、
+//    現状は配管 (Round 継承からの切り離し) のみで、描画挙動は従来どおり。
+
+
+
+class AccumulativePenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPenBase {
+    // 描画開始 (パイプラインは使わず共通前段のみ)
+    start(x, y, e, option) {
+        this._startCommon(x, y, option);
+    }
+
+    // 描画中 (既定: 入力座標を蓄積して draw()。各ペンで override 可)
+    move(x, y) {
+        if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
+            this.axpObj.isDrawn = true;
+            this.input_position.push({ x, y });
+            this.draw();
+        }
+    }
+
+    // 描画終了
+    end(x, y) {
+        if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
+            this.isLastDrawing = true;
+            this.input_position.push({ x, y });
+            this.draw();
+        }
+        this.end_common();
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/js/pendefine/_drawingpen.js":
+/*!*****************************************!*\
+  !*** ./src/js/pendefine/_drawingpen.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DrawingPenBase: () => (/* binding */ DrawingPenBase)
+/* harmony export */ });
+/* harmony import */ var _penobj_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_penobj.js */ "./src/js/pendefine/_penobj.js");
+/* harmony import */ var _rangeindex_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./rangeindex.js */ "./src/js/pendefine/rangeindex.js");
+/* harmony import */ var _etc_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../etc.js */ "./src/js/etc.js");
+// @description ペン定義：親クラス(PenObj)＞描画ペン共通クラス
+//
+// スタンプ系 (StampPenBase) と蓄積系 (AccumulativePenBase) の双方が共有する、
+// 「キャンバスに描画するペン」共通の値の既定・ブラシ初期化・描画開始の前段処理を持つ。
+// パイプライン駆動か否か (start/move/end の中身) は各サブ基底クラスで定義する。
+
+
+
+
+
+class DrawingPenBase extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
+    constructor(option) {
+        super();
+        this.axpObj = option.axpObj;
+        this.CANVAS = option.CANVAS;
+        // 値の既定 (各ペンで差分上書き)
+        this.type = 'draw';
+        this.size = 1;
+        this.index = (0,_rangeindex_js__WEBPACK_IMPORTED_MODULE_1__.range_index)(this.size);
+        this.alpha = 100;
+        this.toneLevel = 16;
+        this.blurLevel = 1;
+        // 制御
+        this.usePenGuide = true;
+        this.usePenPreview = true;
+        this.usePenLock = true;
+        this.usePenStyle = true;
+        this.canUndo = true;
+        this.usePressure = false;        // 既定: 筆圧なし (Round のみ true)
+        this.usePressureControl = false; // 既定: 筆圧チェック非表示 (Round のみ true)
+        // 描画
+        this.borderRadius = 50;
+        this.borderStyle = 'normal';
+        this.lineCap = 'round';
+        this.lineJoin = 'round';
+    }
+
+    // ニブ半幅 (描画半径やブラシ線幅の基準)。サブピクセル幅対策で 0.25 引く。
+    _halfWidth() {
+        return (this.size - 0.25) / 2;
+    }
+
+    // ブラシ初期化 (既定: 通常色 / トーン濃度対応)。
+    // 消しゴム・ブラシ等は destination-out やグラデのため override する。
+    init_brush(option) {
+        // 合成モードと不透明度
+        this.init_globalCompositeOperation(option);
+        this.CANVAS.draw_ctx.globalAlpha = this.alpha / 100;
+        // ブラシ
+        this.CANVAS.brush_ctx.globalCompositeOperation = 'source-over';
+        this.CANVAS.brush_ctx.globalAlpha = 1; // 先に不透明度100%の描画データを作成する
+        this.CANVAS.brush_ctx.lineWidth = this.size - 0.25;
+        let style;
+        if (this.axpObj.config('axp_config_form_ToneLevel') === 'on' &&
+            this.toneLevel !== null &&
+            this.toneLevel !== 16) {
+            // トーン濃度使用時トーンパターン生成して色指定
+            style = (0,_etc_js__WEBPACK_IMPORTED_MODULE_2__.createTonePattern)(this.toneLevel, this.getColor());
+        } else {
+            // 通常時の色指定
+            style = this.getColor();
+        }
+        this.CANVAS.brush_ctx.strokeStyle = style;
+        this.CANVAS.brush_ctx.fillStyle = style;
+        this.CANVAS.brush_ctx.lineCap = this.lineCap;
+        this.CANVAS.brush_ctx.lineJoin = this.lineJoin;
+        this.CANVAS.brush_ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
+        this.blur();
+    }
+
+    // 累積系子クラスのみ意味あり (Dot: ImageData 初期化、Fude: lineWidth 初期化など)。
+    start_draw() { }
+
+    // 描画開始の共通前段 (書込禁止チェック → モード設定 → 座標記憶 → 保存 → ブラシ初期化)。
+    // 書込禁止なら false を返す。
+    _startCommon(x, y, option) {
+        if (this.axpObj.layerSystem.isWriteProtection()) {
+            return false;
+        }
+        this.set_modeflag();
+        // 入力座標の記憶
+        this.input_position = [];
+        this.input_position.push({ x, y });
+        // 描画開始時のイメージ記憶
+        this.axpObj.layerSystem.save();
+        this.init_brush(option);
+        this.start_draw(x, y);
+        return true;
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/js/pendefine/_penobj.js":
 /*!*************************************!*\
   !*** ./src/js/pendefine/_penobj.js ***!
@@ -10926,6 +11084,252 @@ class PenObj {
 
 /***/ }),
 
+/***/ "./src/js/pendefine/_stamppen.js":
+/*!***************************************!*\
+  !*** ./src/js/pendefine/_stamppen.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StampPenBase: () => (/* binding */ StampPenBase)
+/* harmony export */ });
+/* harmony import */ var _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_drawingpen.js */ "./src/js/pendefine/_drawingpen.js");
+/* harmony import */ var _etc_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../etc.js */ "./src/js/etc.js");
+/* harmony import */ var _stabilizer_strokePipeline_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../stabilizer/strokePipeline.js */ "./src/js/stabilizer/strokePipeline.js");
+// @description ペン定義：描画ペン共通＞スタンプ系ペン共通クラス
+//
+// 共通パイプライン (StrokePipeline) が出力する確定点群を受け取り、
+// 「各確定点にニブを打ち (_drawStamp)、確定点間を塗る (_drawSegment)」描画を行う。
+// ニブ形状は _drawStamp / _drawSegment の override で差し替える (既定は円スタンプ)。
+// 筆圧採用のありなしは usePressure フラグで切り替わる (_radiusAt がフラグ駆動)。
+
+
+
+
+
+class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPenBase {
+    constructor(option) {
+        super(option);
+        // ピクセル単位の調節パラメータ (ペンごとに override 可)
+        this.endTaperPx = 2;   // 終端テーパ長 (意図しない強点の抑制)
+        this.startRawPx = 2;   // 開幕この距離まで筆圧フィルタを素通し
+        this.subPxFloor = 0.5; // サブピクセル幅の形状下限
+    }
+
+    // 描画開始
+    start(x, y, e, option) {
+        if (!this._startCommon(x, y, option)) return;
+
+        this.pipeline = new _stabilizer_strokePipeline_js__WEBPACK_IMPORTED_MODULE_2__.StrokePipeline();
+        this.pipeline.configure({
+            ...(0,_stabilizer_strokePipeline_js__WEBPACK_IMPORTED_MODULE_2__.readStrokeSettings)(),
+            usePressure: this.usePressure,
+            startPx: this.startRawPx,
+            endTaperPx: this.endTaperPx,
+        });
+        this.lastCommitted = null;
+
+        if (this.drawmode === this.axpObj.CONST.DRAW_FREEHAND && !this.axpObj.isLine) {
+            const commits = this.pipeline.onStart(this._toInput(x, y, e));
+            for (const cp of commits) {
+                this._drawStamp(cp);
+                this.lastCommitted = cp;
+            }
+        }
+    }
+
+    // 描画中
+    move(x, y, e) {
+        if (!this.axpObj.isDrawing || this.axpObj.isDrawCancel) return;
+        this.axpObj.isDrawn = true;
+        this.input_position.push({ x, y });
+
+        if (this.drawmode === this.axpObj.CONST.DRAW_FREEHAND && !this.axpObj.isLine) {
+            // FREEHAND: 累積描画 (ブラシキャンバスは clear せず、新しい区間のみ追加)
+            const commits = this.pipeline.onMove(this._toInput(x, y, e), this._gap());
+            for (const cp of commits) {
+                this._drawSegment(this.lastCommitted, cp);
+                this.lastCommitted = cp;
+            }
+            this.write();
+        } else {
+            // RECT/CIRCLE/直線モード: 従来通り全体再描画
+            this._drawShapeFull();
+        }
+    }
+
+    // 描画終了
+    end(x, y, e) {
+        if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
+            this.isLastDrawing = true;
+            this.input_position.push({ x, y });
+
+            if (this.drawmode === this.axpObj.CONST.DRAW_FREEHAND && !this.axpObj.isLine) {
+                const commits = this.pipeline.onEnd(this._toInput(x, y, e), this._gap());
+                for (const cp of commits) {
+                    this._drawSegment(this.lastCommitted, cp);
+                    this.lastCommitted = cp;
+                }
+                this.write();
+            } else {
+                this._drawShapeFull();
+            }
+        }
+        this.end_common();
+    }
+
+    // ── 内部ヘルパ ───────────────────────────────
+
+    // 入力イベント → パイプライン入力 (生筆圧のまま。カーブ変換はパイプライン側)
+    _toInput(x, y, e) {
+        const rawPressure = (e && typeof e.pressure === 'number') ? e.pressure : 1.0;
+        const pointerType = e ? e.pointerType : 'mouse';
+        const t = (e && typeof e.timeStamp === 'number') ? e.timeStamp : performance.now();
+        return { x, y, rawPressure, pointerType, t };
+    }
+
+    // 確定点間隔: 太いほど粗く打てる (細部の取りこぼし防止に下限 2px)
+    _gap() {
+        return Math.max(2, this._halfWidth());
+    }
+
+    // 描画半径: usePressure のとき筆圧に比例、それ以外は固定半幅。
+    _radiusAt(cp) {
+        const half = this._halfWidth();
+        // 筆圧をそのまま半径に乗算 (下限なし → curve の不感地帯と終端テーパが機能)
+        return this.usePressure ? half * cp.pressure : half;
+    }
+
+    // サブピクセル幅 (直径 < 1px) のエミュレーション:
+    // 形状は subPxFloor にクランプし、不透明度を真半径/subPxFloor で減衰させる
+    _subPxAlpha(rTrue) {
+        const f = this.subPxFloor;
+        return (rTrue < f) ? Math.max(0, rTrue) / f : 1.0;
+    }
+
+    // 円スタンプ (既定ニブ)
+    _drawStamp(cp) {
+        const rTrue = this._radiusAt(cp);
+        if (rTrue <= 0) return;
+        const r = Math.max(rTrue, this.subPxFloor);
+        const alphaScale = this._subPxAlpha(rTrue);
+        const ctx = this.CANVAS.brush_ctx;
+        const saved = ctx.globalAlpha;
+        ctx.globalAlpha = saved * alphaScale;
+        ctx.beginPath();
+        ctx.arc(cp.x, cp.y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = saved;
+    }
+
+    // ２点間の塗り (半径可変の外接共通接線で構成した凸多角形)
+    _drawSegment(p1, p2) {
+        if (!p1) {
+            this._drawStamp(p2);
+            return;
+        }
+        const r1True = this._radiusAt(p1);
+        const r2True = this._radiusAt(p2);
+        // 両端ともゼロ → 何も描けない
+        if (r1True <= 0 && r2True <= 0) return;
+        // サブピクセル幅対応: 形状は >= subPxFloor にクランプ、不透明度で減衰
+        const r1 = Math.max(r1True, this.subPxFloor);
+        const r2 = Math.max(r2True, this.subPxFloor);
+        const segAlpha = (this._subPxAlpha(r1True) + this._subPxAlpha(r2True)) / 2;
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const d = Math.hypot(dx, dy);
+        if (d < 0.5) {
+            this._drawStamp(p2);
+            return;
+        }
+        // 外接共通接線の傾き: sin α = (r2 - r1) / d
+        const sinA = (r2 - r1) / d;
+        if (Math.abs(sinA) >= 0.999) {
+            // 一方の円が他方を完全に包含 → 大きい方だけ塗って終わり
+            const big = (r1 > r2) ? p1 : p2;
+            this._drawStamp(big);
+            this._drawStamp(p2);
+            return;
+        }
+        const cosA = Math.sqrt(1 - sinA * sinA);
+        const ux = dx / d;
+        const uy = dy / d;
+        // 上側接線における外向き垂線 (p_up = (-uy, ux) を α 回転)
+        const nUx = -uy * cosA - ux * sinA;
+        const nUy =  ux * cosA - uy * sinA;
+        // 下側接線における外向き垂線 (p_down = (uy, -ux) を α 回転)
+        const nLx =  uy * cosA + ux * sinA;
+        const nLy =  uy * sinA - ux * cosA;
+        const ctx = this.CANVAS.brush_ctx;
+        const saved = ctx.globalAlpha;
+        ctx.globalAlpha = saved * segAlpha;
+        ctx.beginPath();
+        ctx.moveTo(p1.x + r1 * nUx, p1.y + r1 * nUy);
+        ctx.lineTo(p2.x + r2 * nUx, p2.y + r2 * nUy);
+        ctx.lineTo(p2.x + r2 * nLx, p2.y + r2 * nLy);
+        ctx.lineTo(p1.x + r1 * nLx, p1.y + r1 * nLy);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = saved;
+        // 終端のキャップ円 (こちらは p2 自身の真半径でアルファ補正)
+        this._drawStamp(p2);
+    }
+
+    // RECT / CIRCLE / 直線モード: 毎フレーム全体を再描画
+    _drawShapeFull() {
+        const ctx = this.CANVAS.brush_ctx;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
+
+        const firstPoint = this.input_position[0];
+        const currentPoint = this.input_position[this.input_position.length - 1];
+
+        switch (this.drawmode) {
+            case this.axpObj.CONST.DRAW_FREEHAND: {
+                // ここに来るのは isLine モードのみ
+                if (this.axpObj.isLine) {
+                    this._drawStraight(firstPoint, currentPoint);
+                }
+                break;
+            }
+            case this.axpObj.CONST.DRAW_RECT:
+                ctx.strokeRect(
+                    firstPoint.x,
+                    firstPoint.y,
+                    currentPoint.x - firstPoint.x,
+                    currentPoint.y - firstPoint.y
+                );
+                break;
+            case this.axpObj.CONST.DRAW_CIRCLE: {
+                const r = (0,_etc_js__WEBPACK_IMPORTED_MODULE_1__.calcDistance)(
+                    firstPoint.x,
+                    firstPoint.y,
+                    currentPoint.x,
+                    currentPoint.y
+                );
+                ctx.beginPath();
+                ctx.arc(firstPoint.x, firstPoint.y, r, 0, Math.PI * 2, true);
+                ctx.stroke();
+                break;
+            }
+        }
+        this.write();
+    }
+
+    // 直線モードの描画 (始点→終点を 1 区間として円スタンプ＋多角形塗り)
+    _drawStraight(p1, p2) {
+        const a = { x: p1.x, y: p1.y, pressure: 1.0 };
+        const b = { x: p2.x, y: p2.y, pressure: 1.0 };
+        this._drawStamp(a);
+        this._drawSegment(a, b);
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/js/pendefine/brush.js":
 /*!***********************************!*\
   !*** ./src/js/pendefine/brush.js ***!
@@ -10936,24 +11340,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Brush: () => (/* binding */ Brush)
 /* harmony export */ });
-/* harmony import */ var _round_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./round.js */ "./src/js/pendefine/round.js");
-// @description ペン定義：親クラス＞丸ペン＞エアブラシ
+/* harmony import */ var _accumulativepen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_accumulativepen.js */ "./src/js/pendefine/_accumulativepen.js");
+// @description ペン定義：蓄積系共通＞エアブラシ
 
 
 
 // ブラシ
-class Brush extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
+class Brush extends _accumulativepen_js__WEBPACK_IMPORTED_MODULE_0__.AccumulativePenBase {
     constructor(option) {
         super(option);
-        // 値（Roundからの差分）
+        // 値（蓄積系共通からの差分）
         this.name = this.axpObj._('@PENNAME.AIRBRUSH');
         this.size = 100;
         this.alpha = 30;
         this.toneLevel = null;
         // 制御
         this.usePenStyle = false;
-        this.useStabilizerPipeline = false;
-        this.usePressure = false;
         // 描画
 
         this.init_save();
@@ -10968,18 +11370,7 @@ class Brush extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
         this.CANVAS.brush_ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
         this.blur();
     }
-    // 描画中
-    move(x, y) {
-        // 描画継続中
-        if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
-            // 描画確定済み
-            this.axpObj.isDrawn = true;
-            // 入力座標の記憶
-            this.input_position.push({ x, y });
-            // 描画
-            this.draw();
-        }
-    }
+    // 描画中の move() は蓄積系共通 (AccumulativePenBase) の既定を使用
     draw() {
         var radius = this.size / 2; // 半径指定
         var grad = this.CANVAS.brush_ctx.createRadialGradient(
@@ -11217,22 +11608,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Dot: () => (/* binding */ Dot)
 /* harmony export */ });
-/* harmony import */ var _round_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./round.js */ "./src/js/pendefine/round.js");
-// @description ペン定義：親クラス＞ドットペン
+/* harmony import */ var _accumulativepen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_accumulativepen.js */ "./src/js/pendefine/_accumulativepen.js");
+// @description ペン定義：蓄積系共通＞ドットペン
 
 
 
 // ドット
-class Dot extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
+class Dot extends _accumulativepen_js__WEBPACK_IMPORTED_MODULE_0__.AccumulativePenBase {
     img_draw;
     constructor(option) {
         super(option);
-        // 値（Roundからの差分）
+        // 値（蓄積系共通からの差分）
         this.name = this.axpObj._('@PENNAME.DOT');
         this.toneLevel = null;
         // 制御
-        this.useStabilizerPipeline = false;
-        this.usePressure = false;
         // 描画
         this.borderRadius = 0;
         this.borderStyle = 'normal';
@@ -11479,22 +11868,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Eraser: () => (/* binding */ Eraser)
 /* harmony export */ });
-/* harmony import */ var _round_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./round.js */ "./src/js/pendefine/round.js");
-// @description ペン定義：親クラス＞丸ペン＞消しゴム
+/* harmony import */ var _stamppen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_stamppen.js */ "./src/js/pendefine/_stamppen.js");
+// @description ペン定義：スタンプ系共通＞消しゴム
+//
+// 丸ニブの消しゴム。形状は StampPenBase 既定の円スタンプをそのまま使い、
+// 合成のみ destination-out にする。筆圧は使わない。
 
 
 
 // 消しゴム
-class Eraser extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
+class Eraser extends _stamppen_js__WEBPACK_IMPORTED_MODULE_0__.StampPenBase {
     constructor(option) {
         super(option);
-        // 値（Roundからの差分）
+        // 値（StampPenBase からの差分）
         this.name = this.axpObj._('@PENNAME.ERASER');
         this.type = 'eraser';
         this.size = 5;
         this.toneLevel = null;
         this.blurLevel = null;
         // 制御
+        this.usePressure = false;        // 消しゴムは筆圧で太さを変えない
         this.usePressureControl = false; // 消しゴムにはペン別の筆圧チェックを表示しない
         // 描画
         this.borderStyle = 'dashed';
@@ -12152,25 +12545,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Fude: () => (/* binding */ Fude)
 /* harmony export */ });
-/* harmony import */ var _round_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./round.js */ "./src/js/pendefine/round.js");
+/* harmony import */ var _accumulativepen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_accumulativepen.js */ "./src/js/pendefine/_accumulativepen.js");
 /* harmony import */ var _etc_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../etc.js */ "./src/js/etc.js");
-// @description ペン定義：親クラス＞丸ペン＞筆ペン
+// @description ペン定義：蓄積系共通＞筆ペン
 
 
 
 
 // 筆ペン
-class Fude extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
+class Fude extends _accumulativepen_js__WEBPACK_IMPORTED_MODULE_0__.AccumulativePenBase {
     constructor(option) {
         super(option);
-        // 値（PenObjからの差分）
+        // 値（蓄積系共通からの差分）
         this.name = this.axpObj._('@PENNAME.CALLIGRAPHY');
         this.size = 5;
         this.toneLevel = null;
         // 制御
         this.usePenStyle = false;
-        this.useStabilizerPipeline = false;
-        this.usePressure = false;
         // 描画
 
         this.init_save();
@@ -12179,18 +12570,7 @@ class Fude extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
         // 筆用サイズ調整
         this.CANVAS.brush_ctx.lineWidth = this.size / 2;
     }
-    // 描画中
-    move(x, y) {
-        // 描画継続中
-        if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
-            // 描画確定済み
-            this.axpObj.isDrawn = true;
-            // 入力座標の記憶
-            this.input_position.push({ x, y });
-            // 描画
-            this.draw();
-        }
-    }
+    // 描画中の move() は蓄積系共通 (AccumulativePenBase) の既定を使用
     draw() {
         // 筆の場合ブラシエリアを初期化しない
         let old_x = this.input_position[this.input_position.length - 2].x;
@@ -12452,330 +12832,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Round: () => (/* binding */ Round)
 /* harmony export */ });
-/* harmony import */ var _penobj_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_penobj.js */ "./src/js/pendefine/_penobj.js");
+/* harmony import */ var _stamppen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_stamppen.js */ "./src/js/pendefine/_stamppen.js");
 /* harmony import */ var _rangeindex_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./rangeindex.js */ "./src/js/pendefine/rangeindex.js");
-/* harmony import */ var _etc_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../etc.js */ "./src/js/etc.js");
-/* harmony import */ var _stabilizer_oneEuro_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../stabilizer/oneEuro.js */ "./src/js/stabilizer/oneEuro.js");
-// @description ペン定義：親クラス＞丸ペン
-
-
+// @description ペン定義：スタンプ系共通＞丸ペン
+//
+// いまのところ唯一の筆圧反応ペン。フィルタ後筆圧に比例して半径を増減し、
+// 半径 0.5px 未満は半径 0.5 の透過線に変換する (実装は StampPenBase 側)。
 
 
 
 
 // 丸ペン
-class Round extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
+class Round extends _stamppen_js__WEBPACK_IMPORTED_MODULE_0__.StampPenBase {
     constructor(option) {
-        super();
-        this.axpObj = option.axpObj;
-        this.CANVAS = option.CANVAS;
-        // 値（PenObjからの差分）
+        super(option);
+        // 値（StampPenBase からの差分）
         this.name = this.axpObj._('@PENNAME.ROUND');
-        this.type = 'draw';
         this.size = 1;
         this.index = (0,_rangeindex_js__WEBPACK_IMPORTED_MODULE_1__.range_index)(this.size);
-        this.alpha = 100;
-        this.toneLevel = 16;
-        this.blurLevel = 1;
         // 制御
-        this.usePenGuide = true;
-        this.usePenPreview = true;
-        this.usePenLock = true;
-        this.usePenStyle = true;
-        this.canUndo = true;
-        this.usePressure = true;
-        this.usePressureControl = true; // 丸ペン: 筆圧 ON/OFF をユーザーが切替可能
-        // Phase A: Round/Square/Eraser のみ新 Stabilizer + 円スタンプ系で描画する。
-        // 累積系 (Brush/Fude/Dot/Crayon/EraserDot) は constructor で false に上書きする。
-        this.useStabilizerPipeline = true;
-        // 描画
-        this.borderRadius = 50;
-        this.borderStyle = 'normal';
-        this.lineCap = 'round';
-        this.lineJoin = 'round';
+        this.usePressure = true;         // 唯一の筆圧反応ペン
+        this.usePressureControl = true;  // 筆圧 ON/OFF をユーザーが切替可能
 
         this.init_save();
-    }
-
-    init_brush(option) {
-        // 合成モードと不透明度
-        this.init_globalCompositeOperation(option);
-        this.CANVAS.draw_ctx.globalAlpha = this.alpha / 100;
-        // ブラシ
-        this.CANVAS.brush_ctx.globalCompositeOperation = 'source-over';
-        this.CANVAS.brush_ctx.globalAlpha = 1; // 先に不透明度100%の描画データを作成する
-        this.CANVAS.brush_ctx.lineWidth = this.size - 0.25;
-        let style;
-        if (this.axpObj.config('axp_config_form_ToneLevel') === 'on' &&
-            this.toneLevel !== null &&
-            this.toneLevel !== 16) {
-            // トーン濃度使用時トーンパターン生成して色指定
-            style = (0,_etc_js__WEBPACK_IMPORTED_MODULE_2__.createTonePattern)(this.toneLevel, this.getColor());
-        } else {
-            // 通常時の色指定
-            style = this.getColor();
-        }
-        this.CANVAS.brush_ctx.strokeStyle = style;
-        this.CANVAS.brush_ctx.fillStyle = style;
-        this.CANVAS.brush_ctx.lineCap = this.lineCap;
-        this.CANVAS.brush_ctx.lineJoin = this.lineJoin;
-        this.CANVAS.brush_ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
-        this.blur();
-    }
-
-    // 描画開始
-    start(x, y, e, option) {
-        // 書き込み禁止状態
-        if (this.axpObj.layerSystem.isWriteProtection()) {
-            return;
-        }
-        // モード設定
-        this.set_modeflag();
-
-        // 入力座標の記憶
-        this.input_position = [];
-        this.input_position.push({ x, y });
-
-        // 描画開始時のイメージ記憶
-        this.axpObj.layerSystem.save();
-
-        this.init_brush(option);
-        this.start_draw(x, y); // 累積系の子クラス用フック (Dot/Fude が override)
-
-        if (this.useStabilizerPipeline) {
-            this.stabilizer = new _stabilizer_oneEuro_js__WEBPACK_IMPORTED_MODULE_3__.OneEuroStabilizer();
-            this.stabilizer.setStabilizerValue(this._getStabilizerValue());
-            this.lastCommitted = null;
-
-            if (this.drawmode === this.axpObj.CONST.DRAW_FREEHAND && !this.axpObj.isLine) {
-                const raw = this._toRaw(x, y, e);
-                const commits = this.stabilizer.onStart(raw);
-                for (const cp of commits) {
-                    this._drawStamp(cp);
-                    this.lastCommitted = cp;
-                }
-            }
-        }
-    }
-
-    // 累積系子クラスのみ意味あり (Dot: ImageData 初期化、Fude: lineWidth 初期化など)。
-    // Round/Square/Eraser では何もしない。
-    start_draw() { }
-
-    // 描画中
-    move(x, y, e) {
-        if (!this.axpObj.isDrawing || this.axpObj.isDrawCancel) return;
-        this.axpObj.isDrawn = true;
-        this.input_position.push({ x, y });
-
-        if (!this.useStabilizerPipeline) {
-            // 累積系の旧経路: 子クラス draw() に委譲
-            this.draw();
-            return;
-        }
-
-        if (this.drawmode === this.axpObj.CONST.DRAW_FREEHAND && !this.axpObj.isLine) {
-            // FREEHAND: 累積描画（ブラシキャンバスは clear せず、新しい区間のみ追加）
-            const raw = this._toRaw(x, y, e);
-            const gap = Math.max(2, (this.size - 0.25) * 0.5);
-            const commits = this.stabilizer.onMove(raw, gap);
-            for (const cp of commits) {
-                this._drawSegment(this.lastCommitted, cp);
-                this.lastCommitted = cp;
-            }
-            this.write();
-        } else {
-            // RECT/CIRCLE/直線モード: 従来通り全体再描画
-            this._drawShapeFull();
-        }
-    }
-
-    // 描画終了
-    end(x, y, e) {
-        if (this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
-            this.isLastDrawing = true;
-            this.input_position.push({ x, y });
-
-            if (!this.useStabilizerPipeline) {
-                this.draw();
-            } else if (this.drawmode === this.axpObj.CONST.DRAW_FREEHAND && !this.axpObj.isLine) {
-                const raw = this._toRaw(x, y, e);
-                const gap = Math.max(2, (this.size - 0.25) * 0.5);
-                const commits = this.stabilizer.onEnd(raw, gap);
-                for (const cp of commits) {
-                    this._drawSegment(this.lastCommitted, cp);
-                    this.lastCommitted = cp;
-                }
-                this.write();
-            } else {
-                this._drawShapeFull();
-            }
-        }
-        this.end_common();
-    }
-
-    // ── 内部ヘルパ ───────────────────────────────
-
-    _getStabilizerValue() {
-        const el = document.getElementById('axp_config_form_stabilizerValue');
-        if (!el || !el.volume) return 0;
-        return Number(el.volume.value) || 0;
-    }
-
-    _getPressureCurveParams() {
-        // 設定 UI から a/b/c を取得。要素が無い場合は線形 (a=1, b=1, c=0)。
-        const formA = document.getElementById('axp_config_form_pressureA');
-        const formB = document.getElementById('axp_config_form_pressureB');
-        const formC = document.getElementById('axp_config_form_pressureC');
-        const aRaw = formA && formA.volume ? Number(formA.volume.value) : 0;
-        const b = formB && formB.volume ? Number(formB.volume.value) : 1;
-        const c = formC && formC.volume ? Number(formC.volume.value) : 0;
-        const a = Math.pow(2, aRaw); // 内部値域 -2〜2 → 実値 0.25〜4
-        return { a, b, c };
-    }
-
-    _toRaw(x, y, e) {
-        let p = 1.0;
-        // 筆圧は pen 系のみ採用する (mouse は 0.5 固定、touch はデバイス依存で信頼できないため)。
-        if (this.usePressure && e && e.pointerType === 'pen'
-            && typeof e.pressure === 'number' && e.pressure > 0) {
-            const { a, b, c } = this._getPressureCurveParams();
-            p = (0,_etc_js__WEBPACK_IMPORTED_MODULE_2__.getAdjustedPressure)(e.pressure, a, b, c);
-        }
-        const t = (e && typeof e.timeStamp === 'number') ? e.timeStamp : performance.now();
-        return { x, y, pressure: p, t };
-    }
-
-    _radiusAt(cp) {
-        const halfWidth = (this.size - 0.25) / 2;
-        if (!this.usePressure) return halfWidth;
-        // 筆圧をそのまま半径に乗算 (下限なし → curve の不感地帯と終端テーパが正しく機能)
-        return halfWidth * cp.pressure;
-    }
-
-    // サブピクセル幅 (直径 < 1px) のエミュレーション:
-    // 形状は半径 0.5 にクランプし、不透明度を真半径/0.5 で減衰させる
-    _subPxAlpha(rTrue) {
-        return (rTrue < 0.5) ? Math.max(0, rTrue) / 0.5 : 1.0;
-    }
-
-    // 円スタンプ
-    _drawStamp(cp) {
-        const rTrue = this._radiusAt(cp);
-        if (rTrue <= 0) return;
-        const r = Math.max(rTrue, 0.5);
-        const alphaScale = this._subPxAlpha(rTrue);
-        const ctx = this.CANVAS.brush_ctx;
-        const saved = ctx.globalAlpha;
-        ctx.globalAlpha = saved * alphaScale;
-        ctx.beginPath();
-        ctx.arc(cp.x, cp.y, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = saved;
-    }
-
-    // ２点間の塗り（半径可変の外接共通接線で構成した凸多角形）
-    _drawSegment(p1, p2) {
-        if (!p1) {
-            this._drawStamp(p2);
-            return;
-        }
-        const r1True = this._radiusAt(p1);
-        const r2True = this._radiusAt(p2);
-        // 両端ともゼロ → 何も描けない
-        if (r1True <= 0 && r2True <= 0) return;
-        // サブピクセル幅対応: 形状は >= 0.5 にクランプ、不透明度で減衰
-        const r1 = Math.max(r1True, 0.5);
-        const r2 = Math.max(r2True, 0.5);
-        const segAlpha = (this._subPxAlpha(r1True) + this._subPxAlpha(r2True)) / 2;
-        const dx = p2.x - p1.x;
-        const dy = p2.y - p1.y;
-        const d = Math.hypot(dx, dy);
-        if (d < 0.5) {
-            this._drawStamp(p2);
-            return;
-        }
-        // 外接共通接線の傾き: sin α = (r2 - r1) / d
-        const sinA = (r2 - r1) / d;
-        if (Math.abs(sinA) >= 0.999) {
-            // 一方の円が他方を完全に包含 → 大きい方だけ塗って終わり
-            const big = (r1 > r2) ? p1 : p2;
-            this._drawStamp(big);
-            this._drawStamp(p2);
-            return;
-        }
-        const cosA = Math.sqrt(1 - sinA * sinA);
-        const ux = dx / d;
-        const uy = dy / d;
-        // 上側接線における外向き垂線 (p_up = (-uy, ux) を α 回転)
-        const nUx = -uy * cosA - ux * sinA;
-        const nUy =  ux * cosA - uy * sinA;
-        // 下側接線における外向き垂線 (p_down = (uy, -ux) を α 回転)
-        const nLx =  uy * cosA + ux * sinA;
-        const nLy =  uy * sinA - ux * cosA;
-        const ctx = this.CANVAS.brush_ctx;
-        const saved = ctx.globalAlpha;
-        ctx.globalAlpha = saved * segAlpha;
-        ctx.beginPath();
-        ctx.moveTo(p1.x + r1 * nUx, p1.y + r1 * nUy);
-        ctx.lineTo(p2.x + r2 * nUx, p2.y + r2 * nUy);
-        ctx.lineTo(p2.x + r2 * nLx, p2.y + r2 * nLy);
-        ctx.lineTo(p1.x + r1 * nLx, p1.y + r1 * nLy);
-        ctx.closePath();
-        ctx.fill();
-        ctx.globalAlpha = saved;
-        // 終端のキャップ円 (こちらは p2 自身の真半径でアルファ補正)
-        this._drawStamp(p2);
-    }
-
-    // RECT / CIRCLE / 直線モード: 毎フレーム全体を再描画
-    _drawShapeFull() {
-        const ctx = this.CANVAS.brush_ctx;
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
-
-        const firstPoint = this.input_position[0];
-        const currentPoint = this.input_position[this.input_position.length - 1];
-
-        switch (this.drawmode) {
-            case this.axpObj.CONST.DRAW_FREEHAND: {
-                // ここに来るのは isLine モードのみ
-                if (this.axpObj.isLine) {
-                    this._drawStraight(firstPoint, currentPoint);
-                }
-                break;
-            }
-            case this.axpObj.CONST.DRAW_RECT:
-                ctx.strokeRect(
-                    firstPoint.x,
-                    firstPoint.y,
-                    currentPoint.x - firstPoint.x,
-                    currentPoint.y - firstPoint.y
-                );
-                break;
-            case this.axpObj.CONST.DRAW_CIRCLE: {
-                const r = (0,_etc_js__WEBPACK_IMPORTED_MODULE_2__.calcDistance)(
-                    firstPoint.x,
-                    firstPoint.y,
-                    currentPoint.x,
-                    currentPoint.y
-                );
-                ctx.beginPath();
-                ctx.arc(firstPoint.x, firstPoint.y, r, 0, Math.PI * 2, true);
-                ctx.stroke();
-                break;
-            }
-        }
-        this.write();
-    }
-
-    // 直線モードの描画 (始点→終点を 1 区間として円スタンプ＋多角形塗り)
-    _drawStraight(p1, p2) {
-        const fixed = { pressure: 1.0 };
-        const a = { x: p1.x, y: p1.y, pressure: fixed.pressure };
-        const b = { x: p2.x, y: p2.y, pressure: fixed.pressure };
-        this._drawStamp(a);
-        this._drawSegment(a, b);
     }
 }
 
@@ -12927,8 +13006,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Square: () => (/* binding */ Square)
 /* harmony export */ });
-/* harmony import */ var _round_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./round.js */ "./src/js/pendefine/round.js");
-// @description ペン定義：親クラス＞丸ペン＞角ペン
+/* harmony import */ var _stamppen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_stamppen.js */ "./src/js/pendefine/_stamppen.js");
+// @description ペン定義：スタンプ系共通＞角ペン
 //
 // 「正方形ペン」: 軸合わせの正方形ニブが軌跡に沿って動く描画。
 // 各確定点でフィルレクト (軸合わせ正方形) を打ち、区間は2 つの正方形を
@@ -12938,7 +13017,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // 角ペン
-class Square extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
+class Square extends _stamppen_js__WEBPACK_IMPORTED_MODULE_0__.StampPenBase {
     constructor(option) {
         super(option);
         // 値（Roundからの差分）
@@ -12958,9 +13037,9 @@ class Square extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
 
     // 軸合わせ正方形のスタンプ
     _drawStamp(cp) {
-        const rTrue = (this.size - 0.25) / 2;
+        const rTrue = this._halfWidth();
         if (rTrue <= 0) return;
-        const r = Math.max(rTrue, 0.5);
+        const r = Math.max(rTrue, this.subPxFloor);
         const alphaScale = this._subPxAlpha(rTrue);
         const ctx = this.CANVAS.brush_ctx;
         const saved = ctx.globalAlpha;
@@ -12975,9 +13054,9 @@ class Square extends _round_js__WEBPACK_IMPORTED_MODULE_0__.Round {
             this._drawStamp(p2);
             return;
         }
-        const rTrue = (this.size - 0.25) / 2;
+        const rTrue = this._halfWidth();
         if (rTrue <= 0) return;
-        const r = Math.max(rTrue, 0.5);
+        const r = Math.max(rTrue, this.subPxFloor);
         const alphaScale = this._subPxAlpha(rTrue);
 
         const dx = p2.x - p1.x;
@@ -14517,10 +14596,17 @@ class OneEuroStabilizer {
         this.lastCommitted = null;
         this.params = mapStabilizerToParams(0);
         this.d_cutoff = 1.0;
+        // ペンごとに調節できるピクセル単位パラメータ (StrokePipeline 経由で設定)
+        this.startPx = 2.0;  // 開幕この距離までは筆圧 LPF を素通し
+        this.taperPx = 2.0;  // 終端この距離で筆圧 0 までテーパ
     }
 
-    setStabilizerValue(stabilizerValue) {
+    // ストローク開始時に一括設定する。
+    // stabilizerValue: 0-10 スライダー値 / startPx,taperPx: px 単位
+    configure({ stabilizerValue = 0, startPx = 2.0, taperPx = 2.0 } = {}) {
         this.params = mapStabilizerToParams(stabilizerValue);
+        this.startPx = startPx;
+        this.taperPx = taperPx;
     }
 
     _filterPoint(raw) {
@@ -14561,10 +14647,10 @@ class OneEuroStabilizer {
         const ds = Math.hypot(xHat - this.prevFiltX, yHat - this.prevFiltY);
         this.cumDist += ds;
         let pHat;
-        // ストローク開始 2px は LPF を素通し: ペンタブ初動の段付きを残すと
+        // ストローク開始 startPx は LPF を素通し: ペンタブ初動の段付きを残すと
         // 高筆圧の書き出しが入らないため、生の median をそのまま採用しつつ
-        // LPF 状態は追従させておく (2px 通過後に滑らかに引き継ぐ)。
-        if (this.cumDist < 2.0) {
+        // LPF 状態は追従させておく (startPx 通過後に滑らかに引き継ぐ)。
+        if (this.cumDist < this.startPx) {
             pHat = pMed;
             this.pressLpf.y = pMed;
         } else {
@@ -14642,9 +14728,9 @@ class OneEuroStabilizer {
         return out;
     }
 
-    // 終端 2px テーパ: 末尾点を「2px 手前 knee + 末尾 tip(pressure=0)」に展開
+    // 終端テーパ: 末尾点を「taperPx 手前 knee + 末尾 tip(pressure=0)」に展開
     _appendTaper(out) {
-        const taperLen = 2.0;
+        const taperLen = this.taperPx;
         if (out.length === 0) return;
         const last = out[out.length - 1];
         // 方向ベクトル: out 内の直前点 → last。なければ stabilizer の lastCommitted 直前
@@ -14680,6 +14766,92 @@ class OneEuroStabilizer {
     _taperOnly(fp) {
         return { x: fp.x, y: fp.y, pressure: 0, t: fp.t };
     }
+}
+
+
+/***/ }),
+
+/***/ "./src/js/stabilizer/strokePipeline.js":
+/*!*********************************************!*\
+  !*** ./src/js/stabilizer/strokePipeline.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StrokePipeline: () => (/* binding */ StrokePipeline),
+/* harmony export */   readStrokeSettings: () => (/* binding */ readStrokeSettings)
+/* harmony export */ });
+/* harmony import */ var _oneEuro_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./oneEuro.js */ "./src/js/stabilizer/oneEuro.js");
+/* harmony import */ var _etc_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../etc.js */ "./src/js/etc.js");
+// @description ストローク共通前処理パイプライン (ペン非依存)
+//
+//   raw 点群 {x, y, rawPressure, pointerType, t}
+//     ↓ 筆圧カーブ変換 (入力筆圧 → 出力筆圧)
+//     ↓ 手ブレ補正 (位置: 1€ / 筆圧: median5 + 空間LPF、開幕 startPx は素通し)
+//     ↓ 終端テーパ (endTaperPx)
+//     ↓ 確定点ストリーム {x, y, pressure, t} を emit (gap で線形補間)
+//
+// 設定 (手ブレ強度・筆圧カーブ) の DOM 読み取りは readStrokeSettings() に集約し、
+// パイプライン本体・各ペンクラスからは document を触らないようにしている。
+
+
+
+
+// 設定 UI からストローク共通設定を読み取る。
+// 要素が無い場合は無補正 (手ブレ 0 / 線形カーブ) を返す。
+function readStrokeSettings() {
+    // 手ブレ補正スライダー (0-10)
+    const elS = document.getElementById('axp_config_form_stabilizerValue');
+    const stabilizerValue = (elS && elS.volume) ? (Number(elS.volume.value) || 0) : 0;
+    // 筆圧カーブ a/b/c
+    const formA = document.getElementById('axp_config_form_pressureA');
+    const formB = document.getElementById('axp_config_form_pressureB');
+    const formC = document.getElementById('axp_config_form_pressureC');
+    const aRaw = formA && formA.volume ? Number(formA.volume.value) : 0;
+    const b = formB && formB.volume ? Number(formB.volume.value) : 1;
+    const c = formC && formC.volume ? Number(formC.volume.value) : 0;
+    const a = Math.pow(2, aRaw); // 内部値域 -2〜2 → 実値 0.25〜4
+    return { stabilizerValue, pressureCurve: { a, b, c } };
+}
+
+class StrokePipeline {
+    constructor() {
+        this.smoother = new _oneEuro_js__WEBPACK_IMPORTED_MODULE_0__.OneEuroStabilizer();
+        this.usePressure = false;
+        this.pressureCurve = { a: 1, b: 1, c: 0 };
+    }
+
+    // ストローク開始時に一括設定。
+    //   stabilizerValue / pressureCurve … readStrokeSettings() の戻り値
+    //   usePressure … 筆圧を採用するか (ペン側のフラグ)
+    //   startPx / endTaperPx … ペンごとに調節可能なピクセル単位パラメータ
+    configure({ stabilizerValue = 0, pressureCurve, usePressure = false, startPx = 2, endTaperPx = 2 } = {}) {
+        this.usePressure = usePressure;
+        if (pressureCurve) this.pressureCurve = pressureCurve;
+        this.smoother.configure({ stabilizerValue, startPx, taperPx: endTaperPx });
+    }
+
+    // 入力筆圧 → 出力筆圧。
+    // 筆圧は pen 系のみ採用する (mouse は 0.5 固定相当の 1.0、touch はデバイス依存で
+    // 信頼できないため 1.0)。usePressure=false のペンも常に 1.0。
+    _pressure(input) {
+        if (this.usePressure && input.pointerType === 'pen'
+            && typeof input.rawPressure === 'number' && input.rawPressure > 0) {
+            const { a, b, c } = this.pressureCurve;
+            return (0,_etc_js__WEBPACK_IMPORTED_MODULE_1__.getAdjustedPressure)(input.rawPressure, a, b, c);
+        }
+        return 1.0;
+    }
+
+    _raw(input) {
+        return { x: input.x, y: input.y, pressure: this._pressure(input), t: input.t };
+    }
+
+    // いずれも確定点 {x, y, pressure, t} の配列を返す
+    onStart(input) { return this.smoother.onStart(this._raw(input)); }
+    onMove(input, gapPx) { return this.smoother.onMove(this._raw(input), gapPx); }
+    onEnd(input, gapPx) { return this.smoother.onEnd(this._raw(input), gapPx); }
 }
 
 
@@ -20801,7 +20973,7 @@ __webpack_require__.r(__webpack_exports__);
     axpObj;
     constructor(option) {
         console.log('version:', "3.0.0-alpha");
-        console.log('build:', "2026-06-13T11:43:23.951Z");
+        console.log('build:', "2026-06-14T02:41:38.093Z");
         (async () => {
             // 追加辞書オプションチェック
             let additionalDictionaryJSON = null;
@@ -21182,7 +21354,7 @@ __webpack_require__.r(__webpack_exports__);
     }
     // バージョン
     version() {
-        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-13T11:43:23.951Z"})`;
+        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-14T02:41:38.093Z"})`;
     }
     // 画面の表示／非表示
     on() {
@@ -21194,7 +21366,7 @@ __webpack_require__.r(__webpack_exports__);
         this.axpObj.isClose = true;
     }
     static ver() {
-        return `version ${"3.0.0-alpha"} (${"2026-06-13T11:43:23.951Z"})`;
+        return `version ${"3.0.0-alpha"} (${"2026-06-14T02:41:38.093Z"})`;
     }
 });
 

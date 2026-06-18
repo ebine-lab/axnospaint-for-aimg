@@ -41,10 +41,12 @@ export class StrokePipeline {
     //   stabilizerValue / pressureCurve … readStrokeSettings() の戻り値
     //   usePressure … 筆圧を採用するか (ペン側のフラグ)
     //   startPx … 開幕の筆圧フィルタ素通し距離 (ペンごとに調節可能)
-    configure({ stabilizerValue = 0, pressureCurve, usePressure = false, startPx = 2 } = {}) {
+    //   flickTaper/zoom/brushWidth/enableFlickTaper … 終端ハライ/ハネ用 (smoother へ転送)
+    configure({ stabilizerValue = 0, pressureCurve, usePressure = false, startPx = 2,
+        flickTaper = null, zoom = 1.0, brushWidth = 1.0, enableFlickTaper = false } = {}) {
         this.usePressure = usePressure;
         if (pressureCurve) this.pressureCurve = pressureCurve;
-        this.smoother.configure({ stabilizerValue, startPx });
+        this.smoother.configure({ stabilizerValue, startPx, flickTaper, zoom, brushWidth, enableFlickTaper });
     }
 
     // 入力筆圧 → 出力筆圧。

@@ -15,17 +15,33 @@ export class StampPenBase extends DrawingPenBase {
         // ピクセル単位の調節パラメータ (ペンごとに override 可)
         this.startRawPx = 2;   // 開幕この距離まで筆圧フィルタを素通し
         this.subPxFloor = 0.5; // サブピクセル幅の形状下限
+        // 終端ハライ/ハネ (速度依存・筆圧テーパー)。筆圧ペンのみ有効。具体ペンで上書き可。
+        this.flickTaper = {
+            enabled: true,
+            thresholdBase: 0.5,   // ハライ判定速度 [canvas px/ms] (Z^-0.5 補正前)
+            taperFactor: 80,      // テーパ長[px] = v[px/ms] × factor[ms] (実質ルックアヘッドms)
+            minTaperRatio: 3.0,   // 下限 = ブラシ幅 × この倍率
+            maxTaperRatio: 12.0,  // 上限 = ブラシ幅 × この倍率 (暴走防止)
+            tipPressure: 0.0,     // テーパ終端の筆圧 (0 で消失)
+        };
     }
 
     // 描画開始
     start(x, y, e, option) {
         if (!this._startCommon(x, y, option)) return;
 
+        // ハライは筆圧ペン入力時のみ。マウス/タッチは筆圧一定のため誤発火させない。
+        const isPenInput = !!(e && e.pointerType === 'pen');
         this.pipeline = new StrokePipeline();
         this.pipeline.configure({
             ...readStrokeSettings(),
             usePressure: this.usePressure,
             startPx: this.startRawPx,
+            flickTaper: this.flickTaper,
+            zoom: this.axpObj.scale / 100,
+            brushWidth: this.size,
+            // 非筆圧ペンは半径が筆圧非依存のため、延長すると等幅で伸びてしまう → usePressure と pen で gate
+            enableFlickTaper: this.usePressure && this.flickTaper.enabled && isPenInput,
         });
         this.lastCommitted = null;
 

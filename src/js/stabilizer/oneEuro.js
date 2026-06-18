@@ -79,13 +79,25 @@ export class OneEuroStabilizer {
         this.d_cutoff = 1.0;
         // ペンごとに調節できるピクセル単位パラメータ (StrokePipeline 経由で設定)
         this.startPx = 2.0;  // 開幕この距離までは筆圧 LPF を素通し
+        // 終端ハライ/ハネ (速度依存・筆圧テーパー)。configure で設定。
+        this.enableFlickTaper = false;
+        this.flickTaper = null;
+        this.zoom = 1.0;
+        this.brushWidth = 1.0;
+        this.recent = []; // 直近のフィルタ後点 {x,y,t} (リリース速度/方向の算出用)
     }
 
     // ストローク開始時に一括設定する。
     // stabilizerValue: 0-10 スライダー値 / startPx: px 単位
-    configure({ stabilizerValue = 0, startPx = 2.0 } = {}) {
+    // flickTaper/zoom/brushWidth/enableFlickTaper: 終端ハライ用
+    configure({ stabilizerValue = 0, startPx = 2.0,
+        flickTaper = null, zoom = 1.0, brushWidth = 1.0, enableFlickTaper = false } = {}) {
         this.params = mapStabilizerToParams(stabilizerValue);
         this.startPx = startPx;
+        this.flickTaper = flickTaper;
+        this.zoom = (zoom > 0) ? zoom : 1.0;
+        this.brushWidth = (brushWidth > 0) ? brushWidth : 1.0;
+        this.enableFlickTaper = enableFlickTaper && !!flickTaper;
     }
 
     _filterPoint(raw) {
@@ -107,6 +119,7 @@ export class OneEuroStabilizer {
             this.prevY = y;
             this.prevFiltX = x;
             this.prevFiltY = y;
+            this._pushRecent(x, y, t);
             return { x, y, pressure: pMed, t };
         }
 
@@ -142,7 +155,14 @@ export class OneEuroStabilizer {
         this.prevFiltX = xHat;
         this.prevFiltY = yHat;
 
+        this._pushRecent(xHat, yHat, t);
         return { x: xHat, y: yHat, pressure: pHat, t };
+    }
+
+    // 直近のフィルタ後点を保持 (リリース速度/方向の算出用に最大6点)
+    _pushRecent(x, y, t) {
+        this.recent.push({ x, y, t });
+        if (this.recent.length > 6) this.recent.shift();
     }
 
     onStart(raw) {
@@ -159,6 +179,7 @@ export class OneEuroStabilizer {
         this.prevFiltY = null;
         this.cumDist = 0;
         this.lastCommitted = null;
+        this.recent = [];
 
         const fp = this._filterPoint(raw);
         this.lastCommitted = fp;
@@ -182,7 +203,52 @@ export class OneEuroStabilizer {
             this.lastCommitted = fp;
             return [fp];
         }
-        return this._emit(fp, gapPx);
+        const out = this._emit(fp, gapPx);
+        // 終端ハライ/ハネ: リリース速度がしきい値を超えたら進行方向へ筆圧テーパーを延ばす
+        if (this.enableFlickTaper) {
+            const tip = this._buildFlickTip(fp);
+            if (tip) {
+                // _emit が fp.pressure → tip.pressure を gap 間隔で線形補間 (筆圧ランプ)
+                for (const p of this._emit(tip, gapPx)) out.push(p);
+            }
+        }
+        return out;
+    }
+
+    // リリース時の掃き出し先端点を生成 (条件を満たさなければ null)
+    _buildFlickTip(fp) {
+        const ft = this.flickTaper;
+        if (!ft || this.recent.length < 2) return null;
+
+        // 直近 ~24ms (最低2点) の窓で 方向(フィルタ後で安定) と 速度[px/ms] を算出
+        const last = this.recent[this.recent.length - 1];
+        let i = this.recent.length - 2;
+        while (i > 0 && (last.t - this.recent[i].t) < 24) i--;
+        const ref = this.recent[i];
+        const dx = last.x - ref.x;
+        const dy = last.y - ref.y;
+        const dist = Math.hypot(dx, dy);
+        const dtMs = Math.max(1, last.t - ref.t);
+        if (dist < 1e-3) return null; // 方向不定 (静止) はハライ無し
+        const v = dist / dtMs; // canvas px/ms
+
+        // ハライ判定速度 (高ズームでは閾値を下げる: Z^-0.5)
+        const threshold = ft.thresholdBase * Math.pow(this.zoom, -0.5);
+        if (v <= threshold) return null;
+
+        // テーパ長: 速度依存、ブラシ幅倍率で下限/上限
+        const minT = this.brushWidth * ft.minTaperRatio;
+        const maxT = this.brushWidth * ft.maxTaperRatio;
+        const taperLen = Math.min(Math.max(v * ft.taperFactor, minT), maxT);
+
+        const ux = dx / dist;
+        const uy = dy / dist;
+        return {
+            x: fp.x + ux * taperLen,
+            y: fp.y + uy * taperLen,
+            pressure: ft.tipPressure,
+            t: fp.t,
+        };
     }
 
     // 確定点を出力 (必要なら線形補間で挿入)

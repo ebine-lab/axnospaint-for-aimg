@@ -1,5 +1,5 @@
 /*!
- * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-17T17:11:27.376Z)
+ * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-18T16:35:23.185Z)
  * (c) 2026- nijiurachan contributors
  * (c) 2022「悪の巣」部屋番号13番：「趣味の悪い大衆酒場[Mad end dance hall]」
  * Licensed under MPL 2.0
@@ -7903,7 +7903,7 @@ class ConfigSystem {
         let targetElement = document.getElementById('axp_config');
         targetElement.insertAdjacentHTML('afterbegin', this.axpObj.translateHTML(_html_config_txt__WEBPACK_IMPORTED_MODULE_2__));
         // バージョン情報の表示
-        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-17T17:11:27.376Z"})`
+        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-18T16:35:23.185Z"})`
     }
     // HTML展開
     deployHTML() {
@@ -11117,17 +11117,33 @@ class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPe
         // ピクセル単位の調節パラメータ (ペンごとに override 可)
         this.startRawPx = 2;   // 開幕この距離まで筆圧フィルタを素通し
         this.subPxFloor = 0.5; // サブピクセル幅の形状下限
+        // 終端ハライ/ハネ (速度依存・筆圧テーパー)。筆圧ペンのみ有効。具体ペンで上書き可。
+        this.flickTaper = {
+            enabled: true,
+            thresholdBase: 0.5,   // ハライ判定速度 [canvas px/ms] (Z^-0.5 補正前)
+            taperFactor: 80,      // テーパ長[px] = v[px/ms] × factor[ms] (実質ルックアヘッドms)
+            minTaperRatio: 3.0,   // 下限 = ブラシ幅 × この倍率
+            maxTaperRatio: 12.0,  // 上限 = ブラシ幅 × この倍率 (暴走防止)
+            tipPressure: 0.0,     // テーパ終端の筆圧 (0 で消失)
+        };
     }
 
     // 描画開始
     start(x, y, e, option) {
         if (!this._startCommon(x, y, option)) return;
 
+        // ハライは筆圧ペン入力時のみ。マウス/タッチは筆圧一定のため誤発火させない。
+        const isPenInput = !!(e && e.pointerType === 'pen');
         this.pipeline = new _stabilizer_strokePipeline_js__WEBPACK_IMPORTED_MODULE_2__.StrokePipeline();
         this.pipeline.configure({
             ...(0,_stabilizer_strokePipeline_js__WEBPACK_IMPORTED_MODULE_2__.readStrokeSettings)(),
             usePressure: this.usePressure,
             startPx: this.startRawPx,
+            flickTaper: this.flickTaper,
+            zoom: this.axpObj.scale / 100,
+            brushWidth: this.size,
+            // 非筆圧ペンは半径が筆圧非依存のため、延長すると等幅で伸びてしまう → usePressure と pen で gate
+            enableFlickTaper: this.usePressure && this.flickTaper.enabled && isPenInput,
         });
         this.lastCommitted = null;
 
@@ -14599,13 +14615,25 @@ class OneEuroStabilizer {
         this.d_cutoff = 1.0;
         // ペンごとに調節できるピクセル単位パラメータ (StrokePipeline 経由で設定)
         this.startPx = 2.0;  // 開幕この距離までは筆圧 LPF を素通し
+        // 終端ハライ/ハネ (速度依存・筆圧テーパー)。configure で設定。
+        this.enableFlickTaper = false;
+        this.flickTaper = null;
+        this.zoom = 1.0;
+        this.brushWidth = 1.0;
+        this.recent = []; // 直近のフィルタ後点 {x,y,t} (リリース速度/方向の算出用)
     }
 
     // ストローク開始時に一括設定する。
     // stabilizerValue: 0-10 スライダー値 / startPx: px 単位
-    configure({ stabilizerValue = 0, startPx = 2.0 } = {}) {
+    // flickTaper/zoom/brushWidth/enableFlickTaper: 終端ハライ用
+    configure({ stabilizerValue = 0, startPx = 2.0,
+        flickTaper = null, zoom = 1.0, brushWidth = 1.0, enableFlickTaper = false } = {}) {
         this.params = mapStabilizerToParams(stabilizerValue);
         this.startPx = startPx;
+        this.flickTaper = flickTaper;
+        this.zoom = (zoom > 0) ? zoom : 1.0;
+        this.brushWidth = (brushWidth > 0) ? brushWidth : 1.0;
+        this.enableFlickTaper = enableFlickTaper && !!flickTaper;
     }
 
     _filterPoint(raw) {
@@ -14627,6 +14655,7 @@ class OneEuroStabilizer {
             this.prevY = y;
             this.prevFiltX = x;
             this.prevFiltY = y;
+            this._pushRecent(x, y, t);
             return { x, y, pressure: pMed, t };
         }
 
@@ -14662,7 +14691,14 @@ class OneEuroStabilizer {
         this.prevFiltX = xHat;
         this.prevFiltY = yHat;
 
+        this._pushRecent(xHat, yHat, t);
         return { x: xHat, y: yHat, pressure: pHat, t };
+    }
+
+    // 直近のフィルタ後点を保持 (リリース速度/方向の算出用に最大6点)
+    _pushRecent(x, y, t) {
+        this.recent.push({ x, y, t });
+        if (this.recent.length > 6) this.recent.shift();
     }
 
     onStart(raw) {
@@ -14679,6 +14715,7 @@ class OneEuroStabilizer {
         this.prevFiltY = null;
         this.cumDist = 0;
         this.lastCommitted = null;
+        this.recent = [];
 
         const fp = this._filterPoint(raw);
         this.lastCommitted = fp;
@@ -14702,7 +14739,52 @@ class OneEuroStabilizer {
             this.lastCommitted = fp;
             return [fp];
         }
-        return this._emit(fp, gapPx);
+        const out = this._emit(fp, gapPx);
+        // 終端ハライ/ハネ: リリース速度がしきい値を超えたら進行方向へ筆圧テーパーを延ばす
+        if (this.enableFlickTaper) {
+            const tip = this._buildFlickTip(fp);
+            if (tip) {
+                // _emit が fp.pressure → tip.pressure を gap 間隔で線形補間 (筆圧ランプ)
+                for (const p of this._emit(tip, gapPx)) out.push(p);
+            }
+        }
+        return out;
+    }
+
+    // リリース時の掃き出し先端点を生成 (条件を満たさなければ null)
+    _buildFlickTip(fp) {
+        const ft = this.flickTaper;
+        if (!ft || this.recent.length < 2) return null;
+
+        // 直近 ~24ms (最低2点) の窓で 方向(フィルタ後で安定) と 速度[px/ms] を算出
+        const last = this.recent[this.recent.length - 1];
+        let i = this.recent.length - 2;
+        while (i > 0 && (last.t - this.recent[i].t) < 24) i--;
+        const ref = this.recent[i];
+        const dx = last.x - ref.x;
+        const dy = last.y - ref.y;
+        const dist = Math.hypot(dx, dy);
+        const dtMs = Math.max(1, last.t - ref.t);
+        if (dist < 1e-3) return null; // 方向不定 (静止) はハライ無し
+        const v = dist / dtMs; // canvas px/ms
+
+        // ハライ判定速度 (高ズームでは閾値を下げる: Z^-0.5)
+        const threshold = ft.thresholdBase * Math.pow(this.zoom, -0.5);
+        if (v <= threshold) return null;
+
+        // テーパ長: 速度依存、ブラシ幅倍率で下限/上限
+        const minT = this.brushWidth * ft.minTaperRatio;
+        const maxT = this.brushWidth * ft.maxTaperRatio;
+        const taperLen = Math.min(Math.max(v * ft.taperFactor, minT), maxT);
+
+        const ux = dx / dist;
+        const uy = dy / dist;
+        return {
+            x: fp.x + ux * taperLen,
+            y: fp.y + uy * taperLen,
+            pressure: ft.tipPressure,
+            t: fp.t,
+        };
     }
 
     // 確定点を出力 (必要なら線形補間で挿入)
@@ -14789,10 +14871,12 @@ class StrokePipeline {
     //   stabilizerValue / pressureCurve … readStrokeSettings() の戻り値
     //   usePressure … 筆圧を採用するか (ペン側のフラグ)
     //   startPx … 開幕の筆圧フィルタ素通し距離 (ペンごとに調節可能)
-    configure({ stabilizerValue = 0, pressureCurve, usePressure = false, startPx = 2 } = {}) {
+    //   flickTaper/zoom/brushWidth/enableFlickTaper … 終端ハライ/ハネ用 (smoother へ転送)
+    configure({ stabilizerValue = 0, pressureCurve, usePressure = false, startPx = 2,
+        flickTaper = null, zoom = 1.0, brushWidth = 1.0, enableFlickTaper = false } = {}) {
         this.usePressure = usePressure;
         if (pressureCurve) this.pressureCurve = pressureCurve;
-        this.smoother.configure({ stabilizerValue, startPx });
+        this.smoother.configure({ stabilizerValue, startPx, flickTaper, zoom, brushWidth, enableFlickTaper });
     }
 
     // 入力筆圧 → 出力筆圧。
@@ -20938,7 +21022,7 @@ __webpack_require__.r(__webpack_exports__);
     axpObj;
     constructor(option) {
         console.log('version:', "3.0.0-alpha");
-        console.log('build:', "2026-06-17T17:11:27.376Z");
+        console.log('build:', "2026-06-18T16:35:23.185Z");
         (async () => {
             // 追加辞書オプションチェック
             let additionalDictionaryJSON = null;
@@ -21319,7 +21403,7 @@ __webpack_require__.r(__webpack_exports__);
     }
     // バージョン
     version() {
-        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-17T17:11:27.376Z"})`;
+        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-18T16:35:23.185Z"})`;
     }
     // 画面の表示／非表示
     on() {
@@ -21331,7 +21415,7 @@ __webpack_require__.r(__webpack_exports__);
         this.axpObj.isClose = true;
     }
     static ver() {
-        return `version ${"3.0.0-alpha"} (${"2026-06-17T17:11:27.376Z"})`;
+        return `version ${"3.0.0-alpha"} (${"2026-06-18T16:35:23.185Z"})`;
     }
 });
 

@@ -18,11 +18,11 @@ export class StampPenBase extends DrawingPenBase {
         // 終端ハライ/ハネ (速度依存・筆圧テーパー)。筆圧ペンのみ有効。具体ペンで上書き可。
         this.flickTaper = {
             enabled: true,
-            thresholdBase: 0.5,   // ハライ判定速度 [canvas px/ms] (Z^-0.5 補正前)
-            taperFactor: 80,      // テーパ長[px] = v[px/ms] × factor[ms] (実質ルックアヘッドms)
-            minTaperRatio: 3.0,   // 下限 = ブラシ幅 × この倍率
-            maxTaperRatio: 12.0,  // 上限 = ブラシ幅 × この倍率 (暴走防止)
-            tipPressure: 0.0,     // テーパ終端の筆圧 (0 で消失)
+            thresholdBase: 0.1,   // ハライ判定速度 [canvas px/ms] (Z^-0.5 補正前)
+            taperFactor: 35,      // テーパ長[px] = v[px/ms] × factor[ms] (実質ルックアヘッドms)
+            minTaperRatio: 0.5,   // 下限 = ブラシ幅 × この倍率
+            maxTaperRatio: 4.0,   // 上限 = (ブラシ幅 + 4px) × この倍率 (細ペンでもハライ出るよう+4)
+            extrapRatio: 0.3,     // テーパ距離のうち外挿(進行方向への延長)が占める比率 (0〜0.8)
         };
     }
 
@@ -85,6 +85,18 @@ export class StampPenBase extends DrawingPenBase {
                 for (const cp of commits) {
                     this._drawSegment(this.lastCommitted, cp);
                     this.lastCommitted = cp;
+                }
+                // 終端ハライ/ハネ・テーパー: 既存終端の筆圧を遡って下げる必要があるため、
+                // ブラシキャンバスを clear し、テーパー後の全確定点を再描画する (write が
+                // レイヤー再ロード後にブラシ全体を1回合成するため二重濃化は起きない)。
+                const rebuild = this.pipeline.consumeRebuild();
+                if (rebuild && rebuild.length > 0) {
+                    this.CANVAS.brush_ctx.clearRect(0, 0, this.axpObj.x_size, this.axpObj.y_size);
+                    this.lastCommitted = null;
+                    for (const cp of rebuild) {
+                        this._drawSegment(this.lastCommitted, cp);
+                        this.lastCommitted = cp;
+                    }
                 }
                 this.write();
             } else {

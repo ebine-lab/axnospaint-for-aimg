@@ -71,4 +71,7 @@ export class StrokePipeline {
     onStart(input) { return this.smoother.onStart(this._raw(input)); }
     onMove(input, gapPx) { return this.smoother.onMove(this._raw(input), gapPx); }
     onEnd(input, gapPx) { return this.smoother.onEnd(this._raw(input), gapPx); }
+
+    // 終端テーパー後の全点再描画リストを取り出す (null=テーパー無し)。onEnd 後に呼ぶ。
+    consumeRebuild() { return this.smoother.consumeRebuild(); }
 }

@@ -168,6 +168,7 @@
                         <div class="axpc_range_label axpc_text_border">外挿率%</div>
                         <div class="axpc_range_value axpc_text_border"><output name="result">15</output></div>
                     </form>
+                    <button id="axp_config_button_resetFlick" class="axpc_button" style="margin-top:4px;">デフォルトに戻す</button>
                 </div>
                 <div class="axpc_config_group" data-title="スポイト">
                     <u>使用後ペンに切り替える</u>
@@ -479,15 +480,43 @@
                         <tbody>
                             <tr>
                                 <td>[ SPACE ]</td>
-                                <td>ハンドツール</td>
+                                <td><select id="axp_config_select_modkey_space" class="axpc_SAVE">
+                                    <option value="hand">ハンドツール</option>
+                                    <option value="eraser">消しゴム</option>
+                                    <option value="line">直線</option>
+                                    <option value="spuit">スポイト</option>
+                                    <option value="none">なし</option>
+                                </select></td>
                             </tr>
                             <tr>
                                 <td>[ SHIFT ]</td>
-                                <td>直線</td>
+                                <td><select id="axp_config_select_modkey_shift" class="axpc_SAVE">
+                                    <option value="hand">ハンドツール</option>
+                                    <option value="eraser">消しゴム</option>
+                                    <option value="line" selected>直線</option>
+                                    <option value="spuit">スポイト</option>
+                                    <option value="none">なし</option>
+                                </select></td>
                             </tr>
                             <tr>
                                 <td>[ CTRL ]</td>
-                                <td>スポイト</td>
+                                <td><select id="axp_config_select_modkey_ctrl" class="axpc_SAVE">
+                                    <option value="hand">ハンドツール</option>
+                                    <option value="eraser">消しゴム</option>
+                                    <option value="line">直線</option>
+                                    <option value="spuit" selected>スポイト</option>
+                                    <option value="none">なし</option>
+                                </select></td>
+                            </tr>
+                            <tr>
+                                <td>[ ALT ]</td>
+                                <td><select id="axp_config_select_modkey_alt" class="axpc_SAVE">
+                                    <option value="hand">ハンドツール</option>
+                                    <option value="eraser" selected>消しゴム</option>
+                                    <option value="line">直線</option>
+                                    <option value="spuit">スポイト</option>
+                                    <option value="none">なし</option>
+                                </select></td>
                             </tr>
                         </tbody>
                     </table>

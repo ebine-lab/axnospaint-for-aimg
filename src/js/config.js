@@ -672,6 +672,21 @@ export class ConfigSystem {
         };
         setTimeout(syncFlickSliders, 0);
 
+        document.getElementById('axp_config_button_resetFlick').addEventListener('click', () => {
+            confirmExPromise('ハライ/ハネの設定をデフォルトに戻します。\nよろしいですか？')
+                .then(() => {
+                    const pen = this.axpObj.penSystem.penObj[this.axpObj.penSystem.pen_mode];
+                    if (pen && pen.flickTaper) {
+                        pen.flickTaper.thresholdBase = 0.1;
+                        pen.flickTaper.taperFactor = 40;
+                        pen.flickTaper.minTaperRatio = 2.0;
+                        pen.flickTaper.maxTaperRatio = 7.0;
+                        pen.flickTaper.extrapRatio = 0.15;
+                    }
+                    syncFlickSliders();
+                }).catch(() => {});
+        });
+
         // ラジオボタン：長押しスポイト
         document.getElementById('axp_config_form_useLongtap').onchange = () => {
             this.set_longtap_use();

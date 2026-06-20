@@ -420,6 +420,37 @@ export class PenSystem extends ToolWindow {
             }
         );
 
+        // 太さクイックボタン
+        const quickSizeBtns = document.querySelectorAll('.axpc_pen_quicksize');
+        const renderQuickBtn = (btn) => {
+            const size = Number(btn.dataset.size);
+            btn.innerHTML = `<span class="axpc_qs_label">太さ</span><span class="axpc_qs_num">${size}</span>`;
+        };
+        quickSizeBtns.forEach((btn, i) => {
+            const saved = this.axpObj.configSystem.getConfig('QSIZE_' + i);
+            if (saved !== null && saved !== undefined) btn.dataset.size = saved;
+            renderQuickBtn(btn);
+
+            let lastTapTime = 0;
+            btn.addEventListener('pointerup', (e) => {
+                const now = Date.now();
+                if (now - lastTapTime < 300) {
+                    const input = prompt('太さを入力 (1〜200)', btn.dataset.size);
+                    if (input !== null) {
+                        const val = Math.min(200, Math.max(1, parseInt(input) || 1));
+                        btn.dataset.size = val;
+                        renderQuickBtn(btn);
+                        this.axpObj.configSystem.saveConfig('QSIZE_' + i, val);
+                    }
+                    lastTapTime = 0;
+                } else {
+                    lastTapTime = now;
+                    const size = Number(btn.dataset.size);
+                    this.setPenSize(size);
+                }
+            });
+        });
+
     }
 
     start(x, y, e, mode, option) {
@@ -750,6 +781,12 @@ export class PenSystem extends ToolWindow {
             'axp_pen_form_penSize',
             this.getSize(),
         )
+        // 太さクイックボタンの表示制御
+        if (this.getSize()) {
+            UTIL.show('axp_pen_div_quickSize');
+        } else {
+            UTIL.hide('axp_pen_div_quickSize');
+        }
         // 不透明度 (消しゴムは消し率で代替するため非表示)
         {
             const isEraser = this.penObj[this.pen_mode].type === 'eraser';

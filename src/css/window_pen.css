@@ -220,3 +220,32 @@
 .axpc_penmode_spuit {
     background-image: url('../../resource/spuit.png');
 }
+
+/* 太さクイックボタン */
+.axpc_pen_quicksize {
+    flex: 1;
+    height: 28px;
+    border: 1px solid #888;
+    border-radius: 3px;
+    background: #555;
+    color: #eee;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.axpc_pen_quicksize:active {
+    background: #333;
+}
+.axpc_pen_quicksize .axpc_qs_label {
+    font-size: 7px;
+    line-height: 1;
+}
+.axpc_pen_quicksize .axpc_qs_num {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+}

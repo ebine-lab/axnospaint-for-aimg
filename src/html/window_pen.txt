@@ -27,7 +27,7 @@
                     <div class="axpc_range_value"><output name="result">100</output></div>
                 </form>
                 <!-- 太さクイックボタン -->
-                <div id="axp_pen_div_quickSize" class="axpc_text_border" style="display:flex; gap:2px;">
+                <div id="axp_pen_div_quickSize" class="axpc_text_border">
                     <button class="axpc_pen_quicksize" data-qidx="0" data-size="2"></button>
                     <button class="axpc_pen_quicksize" data-qidx="1" data-size="4"></button>
                     <button class="axpc_pen_quicksize" data-qidx="2" data-size="10"></button>

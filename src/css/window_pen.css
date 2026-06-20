@@ -222,6 +222,10 @@
 }
 
 /* 太さクイックボタン */
+#axp_pen_div_quickSize {
+    display: flex;
+    gap: 2px;
+}
 .axpc_pen_quicksize {
     flex: 1;
     height: 28px;

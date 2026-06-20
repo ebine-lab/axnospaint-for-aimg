@@ -23,7 +23,7 @@
     height: 104px;
     background: rgba(255, 255, 255, 0.4);
     border: 2px #aaa solid;
-    cursor: pointer;
+    cursor: default;
     margin-top: 4px;
 }
 
@@ -42,6 +42,11 @@
     width: 100px;
     height: 100px;
     image-rendering: pixelated;
+}
+
+/* ペンウィンドウ内チェックボックスのラベル縮小 */
+#axp_pen_div_slider .axpc_checkbox label {
+    font-size: 11px;
 }
 
 /* スポイトのRGBA表示用 */

@@ -606,6 +606,16 @@ export class ConfigSystem {
                 ctx.moveTo(0, i * h / 10); ctx.lineTo(w, i * h / 10);
             }
             ctx.stroke();
+            // 軸ラベル
+            ctx.fillStyle = '#888';
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('入力', w / 2, h - 2);
+            ctx.save();
+            ctx.translate(10, h / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('出力', 0, 0);
+            ctx.restore();
             // 曲線
             ctx.strokeStyle = '#007BFF';
             ctx.lineWidth = 2;
@@ -628,6 +638,39 @@ export class ConfigSystem {
         });
         // 初回描画 (設定ロード後の値を反映するため少し遅延)
         setTimeout(drawPressureCurve, 0);
+
+        // ハライ/ハネ チューニング
+        const flickIds = [
+            ['axp_config_form_flickThreshold', 'thresholdBase', 100],
+            ['axp_config_form_flickFactor',    'taperFactor',     1],
+            ['axp_config_form_flickMinRatio',  'minTaperRatio',  10],
+            ['axp_config_form_flickMaxRatio',  'maxTaperRatio',  10],
+            ['axp_config_form_flickExtrap',    'extrapRatio',   100],
+        ];
+        for (const [formId, prop, divisor] of flickIds) {
+            const form = document.getElementById(formId);
+            if (form && form.volume) {
+                form.volume.addEventListener('input', () => {
+                    const pen = this.axpObj.penSystem.penObj[this.axpObj.penSystem.pen_mode];
+                    if (pen && pen.flickTaper) pen.flickTaper[prop] = Number(form.volume.value) / divisor;
+                });
+            }
+        }
+        const syncFlickSliders = () => {
+            const pen = this.axpObj.penSystem.penObj[this.axpObj.penSystem.pen_mode];
+            if (!pen || !pen.flickTaper) return;
+            const ft = pen.flickTaper;
+            const setFormValue = (id, raw, display) => {
+                const f = document.getElementById(id);
+                if (f) { f.volume.value = raw; f.result.value = display; }
+            };
+            setFormValue('axp_config_form_flickThreshold', ft.thresholdBase * 100, ft.thresholdBase);
+            setFormValue('axp_config_form_flickFactor', ft.taperFactor, ft.taperFactor);
+            setFormValue('axp_config_form_flickMinRatio', ft.minTaperRatio * 10, ft.minTaperRatio);
+            setFormValue('axp_config_form_flickMaxRatio', ft.maxTaperRatio * 10, ft.maxTaperRatio);
+            setFormValue('axp_config_form_flickExtrap', ft.extrapRatio * 100, ft.extrapRatio * 100);
+        };
+        setTimeout(syncFlickSliders, 0);
 
         // ラジオボタン：長押しスポイト
         document.getElementById('axp_config_form_useLongtap').onchange = () => {

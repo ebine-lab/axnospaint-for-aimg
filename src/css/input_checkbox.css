@@ -13,4 +13,6 @@
     height: 24px;
     width: 24px;
     margin-right: 4px;
+    accent-color: gray;
+    flex-shrink: 0;
 }

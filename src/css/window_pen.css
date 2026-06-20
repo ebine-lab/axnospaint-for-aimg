@@ -225,6 +225,8 @@
 #axp_pen_div_quickSize {
     display: flex;
     gap: 2px;
+    margin-top: 4px;
+    width: 104px;
 }
 #axp_pen_div_quickSize.axpc_NONE {
     display: none;

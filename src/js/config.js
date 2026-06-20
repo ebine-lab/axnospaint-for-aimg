@@ -1547,6 +1547,12 @@ export class ConfigSystem {
                             pObj[elememtId].usePressure = (value === true || value === 'true');
                         }
                         break;
+                    // 極細時に半透明化 (ペン別)
+                    case 'P-SPA':
+                        if (pObj[elememtId].usePressureControl) {
+                            pObj[elememtId].useSubPxAlpha = (value === true || value === 'true');
+                        }
+                        break;
                 }
             }
             return isFound;

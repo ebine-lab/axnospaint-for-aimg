@@ -386,6 +386,24 @@ export class PenSystem extends ToolWindow {
                 const pen = this.penObj[this.pen_mode];
                 if (pen) pen.usePressure = checked;
                 this.axpObj.configSystem.saveConfig('P-USP_' + this.pen_mode, checked);
+                // 極細半透明チェックの連動表示
+                if (pen && pen.usePressureControl) {
+                    if (checked) {
+                        UTIL.show('axp_pen_form_useSubPxAlpha');
+                    } else {
+                        UTIL.hide('axp_pen_form_useSubPxAlpha');
+                    }
+                }
+            }
+        );
+
+        // チェックボックス: 極細時に半透明化 (ペン別)
+        document.getElementById('axp_pen_checkbox_useSubPxAlpha').addEventListener('change',
+            (e) => {
+                const checked = e.target.checked;
+                const pen = this.penObj[this.pen_mode];
+                if (pen) pen.useSubPxAlpha = checked;
+                this.axpObj.configSystem.saveConfig('P-SPA_' + this.pen_mode, checked);
             }
         );
 
@@ -868,6 +886,16 @@ export class PenSystem extends ToolWindow {
                 document.getElementById('axp_pen_checkbox_usePressure').checked = !!pen.usePressure;
             } else {
                 UTIL.hide('axp_pen_form_usePressure');
+            }
+        }
+        // 極細時に半透明化 (ペン別、usePressureControl かつ usePressure のペンのみ表示)
+        {
+            const pen = this.penObj[this.pen_mode];
+            if (pen && pen.usePressureControl && pen.usePressure) {
+                UTIL.show('axp_pen_form_useSubPxAlpha');
+                document.getElementById('axp_pen_checkbox_useSubPxAlpha').checked = !!pen.useSubPxAlpha;
+            } else {
+                UTIL.hide('axp_pen_form_useSubPxAlpha');
             }
         }
 

@@ -80,6 +80,12 @@
                         <input type="checkbox" id="axp_pen_checkbox_usePressure" checked>${_("@PEN.USE_PRESSURE")}
                     </label>
                 </div>
+                <!-- 極細時に半透明化（オプション、ペン別） -->
+                <div id="axp_pen_form_useSubPxAlpha" class="axpc_checkbox axpc_text_border">
+                    <label>
+                        <input type="checkbox" id="axp_pen_checkbox_useSubPxAlpha" checked>${_("@PEN.USE_SUBPX_ALPHA")}
+                    </label>
+                </div>
                 <!-- [仮設] ハライ/ハネ チューニング -->
                 <form id="axp_pen_form_flickThreshold" oninput="result.value=(volume.value/100)" class="axpc_range axpc_text_border">
                     <input type="range" name="volume" min="0" max="50" value="10" step="1">

@@ -226,6 +226,9 @@
     display: flex;
     gap: 2px;
 }
+#axp_pen_div_quickSize.axpc_NONE {
+    display: none;
+}
 .axpc_pen_quicksize {
     flex: 1;
     height: 28px;

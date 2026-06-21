@@ -1,5 +1,5 @@
 /*!
- * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-19T13:20:11.089Z)
+ * AXNOS Paint w/ nijiurachan custom version 3.0.0-alpha (2026-06-20T12:57:27.338Z)
  * (c) 2026- nijiurachan contributors
  * (c) 2022「悪の巣」部屋番号13番：「趣味の悪い大衆酒場[Mad end dance hall]」
  * Licensed under MPL 2.0
@@ -1205,7 +1205,9 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* チェックボックス共通 */
     height: 24px;
     width: 24px;
     margin-right: 4px;
-}`, "",{"version":3,"sources":["webpack://./src/css/input_checkbox.css"],"names":[],"mappings":"AAAA,eAAe;AACf;IACI,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,mBAAmB;IACnB,eAAe;AACnB;;AAEA;IACI,YAAY;IACZ,WAAW;IACX,iBAAiB;AACrB","sourcesContent":["/* チェックボックス共通 */\n.axpc_checkbox {\n    height: 24px;\n}\n\n.axpc_checkbox label {\n    display: flex;\n    align-items: center;\n    cursor: pointer;\n}\n\n.axpc_checkbox input {\n    height: 24px;\n    width: 24px;\n    margin-right: 4px;\n}"],"sourceRoot":""}]);
+    accent-color: gray;
+    flex-shrink: 0;
+}`, "",{"version":3,"sources":["webpack://./src/css/input_checkbox.css"],"names":[],"mappings":"AAAA,eAAe;AACf;IACI,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,mBAAmB;IACnB,eAAe;AACnB;;AAEA;IACI,YAAY;IACZ,WAAW;IACX,iBAAiB;IACjB,kBAAkB;IAClB,cAAc;AAClB","sourcesContent":["/* チェックボックス共通 */\n.axpc_checkbox {\n    height: 24px;\n}\n\n.axpc_checkbox label {\n    display: flex;\n    align-items: center;\n    cursor: pointer;\n}\n\n.axpc_checkbox input {\n    height: 24px;\n    width: 24px;\n    margin-right: 4px;\n    accent-color: gray;\n    flex-shrink: 0;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3283,7 +3285,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* ペンツール */
     height: 104px;
     background: rgba(255, 255, 255, 0.4);
     border: 2px #aaa solid;
-    cursor: pointer;
+    cursor: default;
     margin-top: 4px;
 }
 
@@ -3302,6 +3304,11 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* ペンツール */
     width: 100px;
     height: 100px;
     image-rendering: pixelated;
+}
+
+/* ペンウィンドウ内チェックボックスのラベル縮小 */
+#axp_pen_div_slider .axpc_checkbox label {
+    font-size: 11px;
 }
 
 /* スポイトのRGBA表示用 */
@@ -3474,7 +3481,43 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* ペンツール */
 
 .axpc_penmode_spuit {
     background-image: url(${___CSS_LOADER_URL_REPLACEMENT_12___});
-}`, "",{"version":3,"sources":["webpack://./src/css/window_pen.css"],"names":[],"mappings":"AAAA,UAAU;;AAEV,YAAY;AACZ;IACI,aAAa;AACjB;;AAEA,2BAA2B;AAC3B;IACI,YAAY;IACZ,gBAAgB;AACpB;;AAEA,UAAU;AACV;IACI,gBAAgB;AACpB;;AAEA,YAAY;AACZ;IACI,kBAAkB;IAClB,YAAY;IACZ,aAAa;IACb,oCAAoC;IACpC,sBAAsB;IACtB,eAAe;IACf,eAAe;AACnB;;AAEA,qBAAqB;AACrB;IACI,kBAAkB;IAClB,UAAU;IACV,YAAY;IACZ,aAAa;AACjB;;AAEA,eAAe;AACf;IACI,kBAAkB;IAClB,UAAU;IACV,YAAY;IACZ,aAAa;IACb,0BAA0B;AAC9B;;AAEA,iBAAiB;AACjB;IACI,kBAAkB;AACtB;;AAEA,YAAY;AACZ;IACI,eAAe;IACf,aAAa;IACb,iBAAiB;AACrB;;AAEA,aAAa;AACb;IACI,eAAe;AACnB;;AAEA;;IAEI,YAAY;IACZ,YAAY;IACZ,kBAAkB;AACtB;;AAEA,qBAAqB;AACrB;IACI,iBAAiB;AACrB;;AAEA,WAAW;AACX;IACI,kBAAkB;AACtB;;AAEA,wBAAwB;AACxB;;IAEI,WAAW;IACX,YAAY;IACZ,kBAAkB;IAClB,sBAAsB;IACtB,6BAA6B;IAC7B,eAAe;IACf,4BAA4B;IAC5B,4BAA4B;IAC5B,sBAAsB;AAC1B;;AAEA,oBAAoB;AACpB;;IAEI,sBAAsB;IACtB,sBAAsB;AAC1B;;AAEA,qBAAqB;AACrB;IACI,mCAAmC;AACvC;;AAEA,uBAAuB;AACvB;IACI,WAAW;IACX,kBAAkB;IAClB,QAAQ;IACR,UAAU;IACV,YAAY;IACZ,2BAA2B;IAC3B,iCAAiC;IACjC,mBAAmB;IACnB;;KAEC;AACL;;AAEA;IACI,WAAW;IACX,kBAAkB;IAClB,SAAS;IACT,UAAU;IACV,WAAW;IACX,2BAA2B;IAC3B,8BAA8B;IAC9B,mBAAmB;IACnB;;KAEC;AACL;;AAEA;IACI,iCAAiC;IACjC;;KAEC;AACL;;AAEA,cAAc;AACd;IACI,kBAAkB;IAClB,kBAAkB;IAClB,aAAa;IACb,OAAO;IACP,MAAM;IACN,YAAY;IACZ,WAAW;IACX,cAAc;IACd,kCAAkC;AACtC;;AAEA,cAAc;AACd;IACI,yBAAyB;IACzB,iBAAiB;IACjB,eAAe;IACf,kBAAkB;IAClB,WAAW;IACX,6BAA6B;IAC7B,iBAAiB;AACrB;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAA+C;AACnD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAkD;AACtD;;AAEA;IACI,yDAAiD;AACrD;;AAEA;IACI,yDAAkD;AACtD;;AAEA;IACI,yDAAsD;AAC1D;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAyD;AAC7D;;AAEA;IACI,0DAAgD;AACpD;;AAEA;IACI,0DAAgD;AACpD;;AAEA;IACI,0DAAiD;AACrD","sourcesContent":["/* ペンツール */\n\n/* ペンツール外枠 */\n#axp_pen_div_content {\n    display: flex;\n}\n\n/* ペンツール左側（プレビュー、スライダー）外枠 */\n#axp_pen_div_leftSide {\n    width: 104px;\n    overflow: hidden;\n}\n\n/* ペンの名前 */\n#axp_pen_span_penName {\n    line-height: 1.0;\n}\n\n/* プレビュー領域 */\n#axp_pen_div_preview {\n    position: relative;\n    width: 104px;\n    height: 104px;\n    background: rgba(255, 255, 255, 0.4);\n    border: 2px #aaa solid;\n    cursor: pointer;\n    margin-top: 4px;\n}\n\n/* ペンの太さプレビュー用キャンバス */\n#axp_pen_canvas_previewPenSize {\n    position: absolute;\n    z-index: 2;\n    width: 100px;\n    height: 100px;\n}\n\n/* スポイト用キャンバス */\n#axp_pen_canvas_previewSpuit {\n    position: absolute;\n    z-index: 1;\n    width: 100px;\n    height: 100px;\n    image-rendering: pixelated;\n}\n\n/* スポイトのRGBA表示用 */\n#axp_pen_div_spuitColorRGBA {\n    line-height: 1.3em;\n}\n\n/* スライダー領域 */\n#axp_pen_div_slider {\n    margin-top: 8px;\n    display: flex;\n    flex-flow: column;\n}\n\n/* セレクトボックス */\n#axp_pen_div_selectbox {\n    margin-top: 8px;\n}\n\n#axp_pen_select_drawMode,\n#axp_pen_select_fillMode {\n    width: 100px;\n    height: 24px;\n    border-radius: 5px;\n}\n\n/* ペンツール右側（機能ボタン）外枠 */\n#axp_pen_div_rightSide {\n    margin-left: 12px;\n}\n\n/* 各ボタンの枠 */\n#axp_pen_div_rightSide>div {\n    position: relative;\n}\n\n/* ペンツール内のアイコン（メイン＆サブ） */\n#axp_pen_div_rightSide>div>button,\n#axp_penmode button {\n    width: 44px;\n    height: 44px;\n    border-radius: 5px;\n    border: 3px solid #000;\n    box-shadow: 0px 0px 10px #000;\n    cursor: pointer;\n    background-repeat: no-repeat;\n    background-position: 2px 2px;\n    background-color: #aaa;\n}\n\n/* ホバーしたアイコンに枠をつける */\n#axp_pen_div_rightSide>div>button:hover,\n#axp_penmode button:hover {\n    background-color: #aaa;\n    border: 3px solid #fff;\n}\n\n/* 選択しているアイコンに色をつける */\n#axp_pen_div_rightSide>div>button[data-selected=\"true\"] {\n    background-color: rgb(238, 172, 96);\n}\n\n/* サブメニューがあることを示す表示効果 */\n#axp_pen_div_rightSide>div:not(:last-child)>button[data-selected=true]::before {\n    content: \"\";\n    position: absolute;\n    top: 6px;\n    left: -9px;\n    height: 16px;\n    border-width: 8px 7px 8px 0;\n    border-color: transparent #eeac60;\n    border-style: solid;\n    /*\n    transition: all .5s ease-out;\n    */\n}\n\n#axp_pen_div_rightSide>div:not(:last-child)>button[data-selected=true]::after {\n    content: \"\";\n    position: absolute;\n    top: 18px;\n    left: -8px;\n    height: 0px;\n    border-width: 4px 4px 4px 0;\n    border-color: transparent #000;\n    border-style: solid;\n    /*\n    transition: all .5s ease-out;\n    */\n}\n\n#axp_penmode:not(.axpc_NONE)~#axp_main #axp_pen_div_rightSide>div:not(:last-child)>button[data-selected=true]::before {\n    border-color: transparent #533C21;\n    /*\n    transition: all .5s ease-out;\n    */\n}\n\n/* サブメニュー用外枠 */\n#axp_penmode {\n    touch-action: none;\n    position: absolute;\n    z-index: 2000;\n    left: 0;\n    top: 0;\n    height: 100%;\n    width: 100%;\n    overflow: auto;\n    background-color: rgba(0, 0, 0, 0);\n}\n\n/* サブメニュー用内枠 */\n#axp_penmode>div {\n    -webkit-user-select: none;\n    user-select: none;\n    font-size: 15px;\n    border-radius: 8px;\n    color: #fff;\n    background: rgba(0, 0, 0, .8);\n    padding-left: 8px;\n}\n\n.axpc_penmode_round {\n    background-image: url('../../resource/pen1.png');\n}\n\n.axpc_penmode_square {\n    background-image: url('../../resource/pen2.png');\n}\n\n.axpc_penmode_dot {\n    background-image: url('../../resource/dot.png');\n}\n\n.axpc_penmode_fude {\n    background-image: url('../../resource/fude.png');\n}\n\n.axpc_penmode_crayon {\n    background-image: url('../../resource/crayon.png');\n}\n\n.axpc_penmode_brush {\n    background-image: url('../../resource/brush.png');\n}\n\n.axpc_penmode_eraser_round {\n    background-image: url('../../resource/eraser.png');\n}\n\n.axpc_penmode_eraser_dot {\n    background-image: url('../../resource/eraser_dot.png');\n}\n\n.axpc_penmode_fill {\n    background-image: url('../../resource/fill.png');\n}\n\n.axpc_penmode_fillgradation {\n    background-image: url('../../resource/fillgradation.png');\n}\n\n.axpc_penmode_hand {\n    background-image: url('../../resource/hand.png');\n}\n\n.axpc_penmode_move {\n    background-image: url('../../resource/move.png');\n}\n\n.axpc_penmode_spuit {\n    background-image: url('../../resource/spuit.png');\n}"],"sourceRoot":""}]);
+}
+
+/* 太さクイックボタン */
+#axp_pen_div_quickSize {
+    display: flex;
+    gap: 2px;
+}
+#axp_pen_div_quickSize.axpc_NONE {
+    display: none;
+}
+.axpc_pen_quicksize {
+    flex: 1;
+    height: 28px;
+    border: 1px solid #888;
+    border-radius: 3px;
+    background: #555;
+    color: #eee;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.axpc_pen_quicksize:active {
+    background: #333;
+}
+.axpc_pen_quicksize .axpc_qs_label {
+    font-size: 7px;
+    line-height: 1;
+}
+.axpc_pen_quicksize .axpc_qs_num {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+}`, "",{"version":3,"sources":["webpack://./src/css/window_pen.css"],"names":[],"mappings":"AAAA,UAAU;;AAEV,YAAY;AACZ;IACI,aAAa;AACjB;;AAEA,2BAA2B;AAC3B;IACI,YAAY;IACZ,gBAAgB;AACpB;;AAEA,UAAU;AACV;IACI,gBAAgB;AACpB;;AAEA,YAAY;AACZ;IACI,kBAAkB;IAClB,YAAY;IACZ,aAAa;IACb,oCAAoC;IACpC,sBAAsB;IACtB,eAAe;IACf,eAAe;AACnB;;AAEA,qBAAqB;AACrB;IACI,kBAAkB;IAClB,UAAU;IACV,YAAY;IACZ,aAAa;AACjB;;AAEA,eAAe;AACf;IACI,kBAAkB;IAClB,UAAU;IACV,YAAY;IACZ,aAAa;IACb,0BAA0B;AAC9B;;AAEA,2BAA2B;AAC3B;IACI,eAAe;AACnB;;AAEA,iBAAiB;AACjB;IACI,kBAAkB;AACtB;;AAEA,YAAY;AACZ;IACI,eAAe;IACf,aAAa;IACb,iBAAiB;AACrB;;AAEA,aAAa;AACb;IACI,eAAe;AACnB;;AAEA;;IAEI,YAAY;IACZ,YAAY;IACZ,kBAAkB;AACtB;;AAEA,qBAAqB;AACrB;IACI,iBAAiB;AACrB;;AAEA,WAAW;AACX;IACI,kBAAkB;AACtB;;AAEA,wBAAwB;AACxB;;IAEI,WAAW;IACX,YAAY;IACZ,kBAAkB;IAClB,sBAAsB;IACtB,6BAA6B;IAC7B,eAAe;IACf,4BAA4B;IAC5B,4BAA4B;IAC5B,sBAAsB;AAC1B;;AAEA,oBAAoB;AACpB;;IAEI,sBAAsB;IACtB,sBAAsB;AAC1B;;AAEA,qBAAqB;AACrB;IACI,mCAAmC;AACvC;;AAEA,uBAAuB;AACvB;IACI,WAAW;IACX,kBAAkB;IAClB,QAAQ;IACR,UAAU;IACV,YAAY;IACZ,2BAA2B;IAC3B,iCAAiC;IACjC,mBAAmB;IACnB;;KAEC;AACL;;AAEA;IACI,WAAW;IACX,kBAAkB;IAClB,SAAS;IACT,UAAU;IACV,WAAW;IACX,2BAA2B;IAC3B,8BAA8B;IAC9B,mBAAmB;IACnB;;KAEC;AACL;;AAEA;IACI,iCAAiC;IACjC;;KAEC;AACL;;AAEA,cAAc;AACd;IACI,kBAAkB;IAClB,kBAAkB;IAClB,aAAa;IACb,OAAO;IACP,MAAM;IACN,YAAY;IACZ,WAAW;IACX,cAAc;IACd,kCAAkC;AACtC;;AAEA,cAAc;AACd;IACI,yBAAyB;IACzB,iBAAiB;IACjB,eAAe;IACf,kBAAkB;IAClB,WAAW;IACX,6BAA6B;IAC7B,iBAAiB;AACrB;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAA+C;AACnD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAkD;AACtD;;AAEA;IACI,yDAAiD;AACrD;;AAEA;IACI,yDAAkD;AACtD;;AAEA;IACI,yDAAsD;AAC1D;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAyD;AAC7D;;AAEA;IACI,0DAAgD;AACpD;;AAEA;IACI,0DAAgD;AACpD;;AAEA;IACI,0DAAiD;AACrD;;AAEA,cAAc;AACd;IACI,aAAa;IACb,QAAQ;AACZ;AACA;IACI,aAAa;AACjB;AACA;IACI,OAAO;IACP,YAAY;IACZ,sBAAsB;IACtB,kBAAkB;IAClB,gBAAgB;IAChB,WAAW;IACX,eAAe;IACf,UAAU;IACV,cAAc;IACd,aAAa;IACb,sBAAsB;IACtB,mBAAmB;IACnB,uBAAuB;AAC3B;AACA;IACI,gBAAgB;AACpB;AACA;IACI,cAAc;IACd,cAAc;AAClB;AACA;IACI,eAAe;IACf,iBAAiB;IACjB,cAAc;AAClB","sourcesContent":["/* ペンツール */\n\n/* ペンツール外枠 */\n#axp_pen_div_content {\n    display: flex;\n}\n\n/* ペンツール左側（プレビュー、スライダー）外枠 */\n#axp_pen_div_leftSide {\n    width: 104px;\n    overflow: hidden;\n}\n\n/* ペンの名前 */\n#axp_pen_span_penName {\n    line-height: 1.0;\n}\n\n/* プレビュー領域 */\n#axp_pen_div_preview {\n    position: relative;\n    width: 104px;\n    height: 104px;\n    background: rgba(255, 255, 255, 0.4);\n    border: 2px #aaa solid;\n    cursor: default;\n    margin-top: 4px;\n}\n\n/* ペンの太さプレビュー用キャンバス */\n#axp_pen_canvas_previewPenSize {\n    position: absolute;\n    z-index: 2;\n    width: 100px;\n    height: 100px;\n}\n\n/* スポイト用キャンバス */\n#axp_pen_canvas_previewSpuit {\n    position: absolute;\n    z-index: 1;\n    width: 100px;\n    height: 100px;\n    image-rendering: pixelated;\n}\n\n/* ペンウィンドウ内チェックボックスのラベル縮小 */\n#axp_pen_div_slider .axpc_checkbox label {\n    font-size: 11px;\n}\n\n/* スポイトのRGBA表示用 */\n#axp_pen_div_spuitColorRGBA {\n    line-height: 1.3em;\n}\n\n/* スライダー領域 */\n#axp_pen_div_slider {\n    margin-top: 8px;\n    display: flex;\n    flex-flow: column;\n}\n\n/* セレクトボックス */\n#axp_pen_div_selectbox {\n    margin-top: 8px;\n}\n\n#axp_pen_select_drawMode,\n#axp_pen_select_fillMode {\n    width: 100px;\n    height: 24px;\n    border-radius: 5px;\n}\n\n/* ペンツール右側（機能ボタン）外枠 */\n#axp_pen_div_rightSide {\n    margin-left: 12px;\n}\n\n/* 各ボタンの枠 */\n#axp_pen_div_rightSide>div {\n    position: relative;\n}\n\n/* ペンツール内のアイコン（メイン＆サブ） */\n#axp_pen_div_rightSide>div>button,\n#axp_penmode button {\n    width: 44px;\n    height: 44px;\n    border-radius: 5px;\n    border: 3px solid #000;\n    box-shadow: 0px 0px 10px #000;\n    cursor: pointer;\n    background-repeat: no-repeat;\n    background-position: 2px 2px;\n    background-color: #aaa;\n}\n\n/* ホバーしたアイコンに枠をつける */\n#axp_pen_div_rightSide>div>button:hover,\n#axp_penmode button:hover {\n    background-color: #aaa;\n    border: 3px solid #fff;\n}\n\n/* 選択しているアイコンに色をつける */\n#axp_pen_div_rightSide>div>button[data-selected=\"true\"] {\n    background-color: rgb(238, 172, 96);\n}\n\n/* サブメニューがあることを示す表示効果 */\n#axp_pen_div_rightSide>div:not(:last-child)>button[data-selected=true]::before {\n    content: \"\";\n    position: absolute;\n    top: 6px;\n    left: -9px;\n    height: 16px;\n    border-width: 8px 7px 8px 0;\n    border-color: transparent #eeac60;\n    border-style: solid;\n    /*\n    transition: all .5s ease-out;\n    */\n}\n\n#axp_pen_div_rightSide>div:not(:last-child)>button[data-selected=true]::after {\n    content: \"\";\n    position: absolute;\n    top: 18px;\n    left: -8px;\n    height: 0px;\n    border-width: 4px 4px 4px 0;\n    border-color: transparent #000;\n    border-style: solid;\n    /*\n    transition: all .5s ease-out;\n    */\n}\n\n#axp_penmode:not(.axpc_NONE)~#axp_main #axp_pen_div_rightSide>div:not(:last-child)>button[data-selected=true]::before {\n    border-color: transparent #533C21;\n    /*\n    transition: all .5s ease-out;\n    */\n}\n\n/* サブメニュー用外枠 */\n#axp_penmode {\n    touch-action: none;\n    position: absolute;\n    z-index: 2000;\n    left: 0;\n    top: 0;\n    height: 100%;\n    width: 100%;\n    overflow: auto;\n    background-color: rgba(0, 0, 0, 0);\n}\n\n/* サブメニュー用内枠 */\n#axp_penmode>div {\n    -webkit-user-select: none;\n    user-select: none;\n    font-size: 15px;\n    border-radius: 8px;\n    color: #fff;\n    background: rgba(0, 0, 0, .8);\n    padding-left: 8px;\n}\n\n.axpc_penmode_round {\n    background-image: url('../../resource/pen1.png');\n}\n\n.axpc_penmode_square {\n    background-image: url('../../resource/pen2.png');\n}\n\n.axpc_penmode_dot {\n    background-image: url('../../resource/dot.png');\n}\n\n.axpc_penmode_fude {\n    background-image: url('../../resource/fude.png');\n}\n\n.axpc_penmode_crayon {\n    background-image: url('../../resource/crayon.png');\n}\n\n.axpc_penmode_brush {\n    background-image: url('../../resource/brush.png');\n}\n\n.axpc_penmode_eraser_round {\n    background-image: url('../../resource/eraser.png');\n}\n\n.axpc_penmode_eraser_dot {\n    background-image: url('../../resource/eraser_dot.png');\n}\n\n.axpc_penmode_fill {\n    background-image: url('../../resource/fill.png');\n}\n\n.axpc_penmode_fillgradation {\n    background-image: url('../../resource/fillgradation.png');\n}\n\n.axpc_penmode_hand {\n    background-image: url('../../resource/hand.png');\n}\n\n.axpc_penmode_move {\n    background-image: url('../../resource/move.png');\n}\n\n.axpc_penmode_spuit {\n    background-image: url('../../resource/spuit.png');\n}\n\n/* 太さクイックボタン */\n#axp_pen_div_quickSize {\n    display: flex;\n    gap: 2px;\n}\n#axp_pen_div_quickSize.axpc_NONE {\n    display: none;\n}\n.axpc_pen_quicksize {\n    flex: 1;\n    height: 28px;\n    border: 1px solid #888;\n    border-radius: 3px;\n    background: #555;\n    color: #eee;\n    cursor: pointer;\n    padding: 0;\n    line-height: 1;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n}\n.axpc_pen_quicksize:active {\n    background: #333;\n}\n.axpc_pen_quicksize .axpc_qs_label {\n    font-size: 7px;\n    line-height: 1;\n}\n.axpc_pen_quicksize .axpc_qs_num {\n    font-size: 14px;\n    font-weight: bold;\n    line-height: 1;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3838,7 +3881,7 @@ module.exports = function (item) {
   \**************************/
 /***/ ((module) => {
 
-module.exports = {"@VERSION":"2.4.0","@LANGUAGE":"ja","@COMMON.OPACITY":"不透明度","@COMMON.RED":"赤","@COMMON.GREEN":"緑","@COMMON.BLUE":"青","@COMMON.ALPHA":"透","@COMMON.BUTTON_CLOSE":"閉じる","@COMMON.WIDTH":"横","@COMMON.HEIGHT":"縦","@COMMON.BG_WHITE":"白地","@COMMON.BG_TRANSPARENT":"透過","@COMMON.DRAW_NEW":"いちから描いた","@COMMON.DRAW_BASED":"もとの絵あるよ","@COMMON.REQUIRED":"必須","@TAB.CANVAS":"キャンバス","@TAB.SETTINGS":"設定","@TAB.POST":"投稿","@WINDOW.LAUNCHER":"表示","@WINDOW.PEN_TOOL":"ペンツール","@WINDOW.COLOR":"色作成","@WINDOW.SWATCHES":"パレット","@WINDOW.LAYER":"レイヤー","@WINDOW.MISC":"補助ツール","@WINDOW.CUSTOM_BUTTONS":"ｶｽﾀﾑ","@PEN.SIZE":"太さ","@PEN.GROW_FILL_AREA":"塗り残し補正","@PEN.ANGLE":"角度","@PEN.ROUNDNESS":"丸み","@PEN.BLUR":"ぼかし度","@PEN.TONE_DENSITY":"トーン濃度","@PEN.STABILIZER":"手ぶれ補正","@PEN.USE_PRESSURE":"筆圧を反映","@PEN.OPTION_FREE_HAND":"手描き","@PEN.OPTION_STRAIGHT":"直線","@PEN.OPTION_RECT":"長方形","@PEN.OPTION_CIRCLE":"円","@PEN.OPTION_FILL_SAMPLE_ALL":"全ﾚｲﾔｰ判定","@PEN.OPTION_FILL_SAMPLE_CURRENT":"現ﾚｲﾔｰ判定","@PEN.TYPE":"種別","@PENGROUP.PEN":"ペン","@PENGROUP.TOOL":"ツール","@PENGROUP.ERASER":"消しゴム","@PENGROUP.FILL":"バケツ","@PENGROUP.EYEDROPPER":"スポイト","@PENNAME.ROUND":"丸ペン","@PENNAME.SQUARE":"角ペン","@PENNAME.DOT":"ドットペン","@PENNAME.CALLIGRAPHY":"筆ペン","@PENNAME.CRAYON":"クレヨン","@PENNAME.AIRBRUSH":"エアブラシ","@PENNAME.ERASER":"消しゴム","@PENNAME.SQUARE_ERASER":"角消しゴム","@PENNAME.FILL":"バケツ","@PENNAME.GRADATION_FILL":"階調バケツ","@PENNAME.EYEDROPPER":"スポイト","@PENNAME.HAND":"ハンド","@PENNAME.MOVE_TOOL":"移動ツール","@SWATCHES.COLUMNS":"横幅","@SWATCHES.EDIT":"編集","@SWATCHES.SET":"登録","@SWATCHES.DEL":"削除","@LAYER.NEWLAYER_TEMPLATE":"レイヤー","@LAYER.OPTION_NORMAL":"通常","@LAYER.OPTION_CLIPING":"クリッピング","@LAYER.OPTION_MULTIPLY":"乗算","@LAYER.OPTION_SCREEN":"スクリーン","@LAYER.OPTION_OVERLAY":"オーバーレイ","@LAYER.OPTION_DARKEN":"比較（暗）","@LAYER.OPTION_LIGHTEN":"比較（明）","@LAYER.OPTION_DODGE":"覆い焼き","@LAYER.OPTION_BURN":"焼き込み","@LAYER.OPTION_HARD_LIGHT":"ハードライト","@LAYER.OPTION_SOFT_LIGHT":"ソフトライト","@LAYER.OPTION_DIFFERENCE":"差の絶対値","@LAYER.OPTION_EXCLUSION":"除外","@LAYER.BUTTON_CLEAR":"ｸﾘｱ","@LAYER.BUTTON_NEW":"新規","@LAYER.BUTTON_MERGE":"統","@LAYER.BUTTON_COPY":"複","@LAYER.BUTTON_DEL":"削","@LAYER.BUTTON_RENAME_OK":"決定","@LAYER.BUTTON_CLEAR_COLOR":"色解除","@LAYER.LAYERS_INFO":"レイヤー情報","@LAYER.PRESET_NAME":"登録名","@MISC.BUTTON_UNDO":"アンドゥ","@MISC.BUTTON_REDO":"リドゥ","@MISC.BUTTON_RESTORE_AUTOSAVE":"自動保存から復元","@MISC.BUTTON_SAVE":"セーブ","@MISC.BUTTON_LOAD":"ロード","@MISC.BUTTON_FLIP_H":"左右反転","@MISC.BUTTON_FLIP_V":"上下反転","@MISC.BUTTON_BG_ALPHA":"背景透過","@MISC.BUTTON_GRID":"補助線","@GRID.MAIN":"主線","@GRID.SUB":"副線","@GRID.DIAG":"斜め","@GRID.DIVISIONS_H":"分割数：横","@GRID.DIVISIONS_V":"分割数：縦","@GRID.CONSTRAIN":"縦横を連動","@GRID.LINE_COLOR":"補助線の色","@SETTINGS.MENU_CANVAS":"キャンバス","@SETTINGS.MENU_TOOL_WINDOWS":"ツールウィンドウ","@SETTINGS.MENU_PEN_TOOL":"ペンツール","@SETTINGS.MENU_COLOR":"色作成","@SETTINGS.MENU_SWATCHES":"パレット","@SETTINGS.MENU_LAYER":"レイヤー","@SETTINGS.MENU_MISC":"補助ツール","@SETTINGS.MENU_CUSTOM_BUTTONS":"カスタムボタン","@SETTINGS.MENU_MOUSE":"マウス","@SETTINGS.MENU_TOUCH_PANEL":"タッチパネル","@SETTINGS.MENU_KEYBOARD":"キーボード","@SETTINGS.MENU_STARTUP":"起動時","@SETTINGS.MENU_VER_INFO":"バージョン情報","@POST.POSTPICTURE":"投稿するお絵カキコ","@POST.THUMBNAIL":"サムネイル","@POST.THUMBNAIL_CLICK":"※クリックで拡大表示","@POST.INPUT":"投稿情報の入力","@POST.NAME":"投稿者名","@POST.TITLE":"タイトル","@POST.MESSAGE":"本文","@POST.WATCHLIST":"ウォッチリストに登録","@POST.STATUS.SIZE":"画像サイズ","@POST.STATUS.BG_TRANSPARENT":"背景の透過","@POST.STATUS.BASED":"もとの絵","@POST.BUTTON_SUBMIT":"お絵カキコする！","@POST.INFO_REQUIRED":"※必須項目が入力されていません。","@POST.NOTICE":"投稿前の注意事項","@POST.NOTICE1":"投稿時にすべてのレイヤーが統合されます。","@POST.NOTICE2":"","@POST.NOTICE3":"","@POST.NOTICE4":""}
+module.exports = {"@VERSION":"2.4.0","@LANGUAGE":"ja","@COMMON.OPACITY":"不透明度","@COMMON.RED":"赤","@COMMON.GREEN":"緑","@COMMON.BLUE":"青","@COMMON.ALPHA":"透","@COMMON.BUTTON_CLOSE":"閉じる","@COMMON.WIDTH":"横","@COMMON.HEIGHT":"縦","@COMMON.BG_WHITE":"白地","@COMMON.BG_TRANSPARENT":"透過","@COMMON.DRAW_NEW":"いちから描いた","@COMMON.DRAW_BASED":"もとの絵あるよ","@COMMON.REQUIRED":"必須","@TAB.CANVAS":"キャンバス","@TAB.SETTINGS":"設定","@TAB.POST":"投稿","@WINDOW.LAUNCHER":"表示","@WINDOW.PEN_TOOL":"ペンツール","@WINDOW.COLOR":"色作成","@WINDOW.SWATCHES":"パレット","@WINDOW.LAYER":"レイヤー","@WINDOW.MISC":"補助ツール","@WINDOW.CUSTOM_BUTTONS":"ｶｽﾀﾑ","@PEN.SIZE":"太さ","@PEN.GROW_FILL_AREA":"塗り残し補正","@PEN.ANGLE":"角度","@PEN.ROUNDNESS":"丸み","@PEN.BLUR":"ぼかし度","@PEN.TONE_DENSITY":"トーン濃度","@PEN.STABILIZER":"手ぶれ補正","@PEN.USE_PRESSURE":"筆圧を反映","@PEN.USE_SUBPX_ALPHA":"幅<1で透過","@PEN.ERASE_RATE":"消し率","@PEN.OPTION_FREE_HAND":"手描き","@PEN.OPTION_STRAIGHT":"直線","@PEN.OPTION_RECT":"長方形","@PEN.OPTION_CIRCLE":"円","@PEN.OPTION_FILL_SAMPLE_ALL":"全ﾚｲﾔｰ判定","@PEN.OPTION_FILL_SAMPLE_CURRENT":"現ﾚｲﾔｰ判定","@PEN.TYPE":"種別","@PENGROUP.PEN":"ペン","@PENGROUP.TOOL":"ツール","@PENGROUP.ERASER":"消しゴム","@PENGROUP.FILL":"バケツ","@PENGROUP.EYEDROPPER":"スポイト","@PENNAME.ROUND":"丸ペン","@PENNAME.SQUARE":"角ペン","@PENNAME.DOT":"ドットペン","@PENNAME.CALLIGRAPHY":"筆ペン","@PENNAME.CRAYON":"クレヨン","@PENNAME.AIRBRUSH":"エアブラシ","@PENNAME.ERASER":"消しゴム","@PENNAME.SQUARE_ERASER":"角消しゴム","@PENNAME.FILL":"バケツ","@PENNAME.GRADATION_FILL":"階調バケツ","@PENNAME.EYEDROPPER":"スポイト","@PENNAME.HAND":"ハンド","@PENNAME.MOVE_TOOL":"移動ツール","@SWATCHES.COLUMNS":"横幅","@SWATCHES.EDIT":"編集","@SWATCHES.SET":"登録","@SWATCHES.DEL":"削除","@LAYER.NEWLAYER_TEMPLATE":"レイヤー","@LAYER.OPTION_NORMAL":"通常","@LAYER.OPTION_CLIPING":"クリッピング","@LAYER.OPTION_MULTIPLY":"乗算","@LAYER.OPTION_SCREEN":"スクリーン","@LAYER.OPTION_OVERLAY":"オーバーレイ","@LAYER.OPTION_DARKEN":"比較（暗）","@LAYER.OPTION_LIGHTEN":"比較（明）","@LAYER.OPTION_DODGE":"覆い焼き","@LAYER.OPTION_BURN":"焼き込み","@LAYER.OPTION_HARD_LIGHT":"ハードライト","@LAYER.OPTION_SOFT_LIGHT":"ソフトライト","@LAYER.OPTION_DIFFERENCE":"差の絶対値","@LAYER.OPTION_EXCLUSION":"除外","@LAYER.BUTTON_CLEAR":"ｸﾘｱ","@LAYER.BUTTON_NEW":"新規","@LAYER.BUTTON_MERGE":"統","@LAYER.BUTTON_COPY":"複","@LAYER.BUTTON_DEL":"削","@LAYER.BUTTON_RENAME_OK":"決定","@LAYER.BUTTON_CLEAR_COLOR":"色解除","@LAYER.LAYERS_INFO":"レイヤー情報","@LAYER.PRESET_NAME":"登録名","@MISC.BUTTON_UNDO":"アンドゥ","@MISC.BUTTON_REDO":"リドゥ","@MISC.BUTTON_RESTORE_AUTOSAVE":"自動保存から復元","@MISC.BUTTON_SAVE":"セーブ","@MISC.BUTTON_LOAD":"ロード","@MISC.BUTTON_FLIP_H":"左右反転","@MISC.BUTTON_FLIP_V":"上下反転","@MISC.BUTTON_BG_ALPHA":"背景透過","@MISC.BUTTON_GRID":"補助線","@GRID.MAIN":"主線","@GRID.SUB":"副線","@GRID.DIAG":"斜め","@GRID.DIVISIONS_H":"分割数：横","@GRID.DIVISIONS_V":"分割数：縦","@GRID.CONSTRAIN":"縦横を連動","@GRID.LINE_COLOR":"補助線の色","@SETTINGS.MENU_CANVAS":"キャンバス","@SETTINGS.MENU_TOOL_WINDOWS":"ツールウィンドウ","@SETTINGS.MENU_PEN_TOOL":"ペンツール","@SETTINGS.MENU_COLOR":"色作成","@SETTINGS.MENU_SWATCHES":"パレット","@SETTINGS.MENU_LAYER":"レイヤー","@SETTINGS.MENU_MISC":"補助ツール","@SETTINGS.MENU_CUSTOM_BUTTONS":"カスタムボタン","@SETTINGS.MENU_MOUSE":"マウス","@SETTINGS.MENU_TOUCH_PANEL":"タッチパネル","@SETTINGS.MENU_KEYBOARD":"キーボード","@SETTINGS.MENU_STARTUP":"起動時","@SETTINGS.MENU_VER_INFO":"バージョン情報","@POST.POSTPICTURE":"投稿するお絵カキコ","@POST.THUMBNAIL":"サムネイル","@POST.THUMBNAIL_CLICK":"※クリックで拡大表示","@POST.INPUT":"投稿情報の入力","@POST.NAME":"投稿者名","@POST.TITLE":"タイトル","@POST.MESSAGE":"本文","@POST.WATCHLIST":"ウォッチリストに登録","@POST.STATUS.SIZE":"画像サイズ","@POST.STATUS.BG_TRANSPARENT":"背景の透過","@POST.STATUS.BASED":"もとの絵","@POST.BUTTON_SUBMIT":"お絵カキコする！","@POST.INFO_REQUIRED":"※必須項目が入力されていません。","@POST.NOTICE":"投稿前の注意事項","@POST.NOTICE1":"投稿時にすべてのレイヤーが統合されます。","@POST.NOTICE2":"","@POST.NOTICE3":"","@POST.NOTICE4":""}
 
 /***/ }),
 
@@ -5481,7 +5524,8 @@ class AXPObj {
     isBackgroundimage; // 背景タイルプレビューが有効である
     isSPACE = false; // スペースが押されている
     isCTRL = false; // CTRLが押されている
-    isSHIFT = false; // シフトキーが押されている
+    isLineMod = false; // 直線モード修飾キーが押されている
+    isALT = false; // ALTが押されている
     isDrawing = false; // 描画中である
     isDrawn = false; // 描画処理が行われた
     isDrawCancel = false; // 描画処理がキャンセルされた
@@ -7903,7 +7947,7 @@ class ConfigSystem {
         let targetElement = document.getElementById('axp_config');
         targetElement.insertAdjacentHTML('afterbegin', this.axpObj.translateHTML(_html_config_txt__WEBPACK_IMPORTED_MODULE_2__));
         // バージョン情報の表示
-        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-19T13:20:11.089Z"})`
+        document.getElementById('axp_config_div_versionInfo').textContent = `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-20T12:57:27.338Z"})`
     }
     // HTML展開
     deployHTML() {
@@ -8325,6 +8369,16 @@ class ConfigSystem {
                 ctx.moveTo(0, i * h / 10); ctx.lineTo(w, i * h / 10);
             }
             ctx.stroke();
+            // 軸ラベル
+            ctx.fillStyle = '#888';
+            ctx.font = '10px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('入力', w / 2, h - 2);
+            ctx.save();
+            ctx.translate(10, h / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('出力', 0, 0);
+            ctx.restore();
             // 曲線
             ctx.strokeStyle = '#007BFF';
             ctx.lineWidth = 2;
@@ -8347,6 +8401,54 @@ class ConfigSystem {
         });
         // 初回描画 (設定ロード後の値を反映するため少し遅延)
         setTimeout(drawPressureCurve, 0);
+
+        // ハライ/ハネ チューニング
+        const flickIds = [
+            ['axp_config_form_flickThreshold', 'thresholdBase', 100],
+            ['axp_config_form_flickFactor',    'taperFactor',     1],
+            ['axp_config_form_flickMinRatio',  'minTaperRatio',  10],
+            ['axp_config_form_flickMaxRatio',  'maxTaperRatio',  10],
+            ['axp_config_form_flickExtrap',    'extrapRatio',   100],
+        ];
+        for (const [formId, prop, divisor] of flickIds) {
+            const form = document.getElementById(formId);
+            if (form && form.volume) {
+                form.volume.addEventListener('input', () => {
+                    const pen = this.axpObj.penSystem.penObj[this.axpObj.penSystem.pen_mode];
+                    if (pen && pen.flickTaper) pen.flickTaper[prop] = Number(form.volume.value) / divisor;
+                });
+            }
+        }
+        const syncFlickSliders = () => {
+            const pen = this.axpObj.penSystem.penObj[this.axpObj.penSystem.pen_mode];
+            if (!pen || !pen.flickTaper) return;
+            const ft = pen.flickTaper;
+            const setFormValue = (id, raw, display) => {
+                const f = document.getElementById(id);
+                if (f) { f.volume.value = raw; f.result.value = display; }
+            };
+            setFormValue('axp_config_form_flickThreshold', ft.thresholdBase * 100, ft.thresholdBase);
+            setFormValue('axp_config_form_flickFactor', ft.taperFactor, ft.taperFactor);
+            setFormValue('axp_config_form_flickMinRatio', ft.minTaperRatio * 10, ft.minTaperRatio);
+            setFormValue('axp_config_form_flickMaxRatio', ft.maxTaperRatio * 10, ft.maxTaperRatio);
+            setFormValue('axp_config_form_flickExtrap', ft.extrapRatio * 100, ft.extrapRatio * 100);
+        };
+        setTimeout(syncFlickSliders, 0);
+
+        document.getElementById('axp_config_button_resetFlick').addEventListener('click', () => {
+            (0,_alert_js__WEBPACK_IMPORTED_MODULE_0__.confirmExPromise)('ハライ/ハネの設定をデフォルトに戻します。\nよろしいですか？')
+                .then(() => {
+                    const pen = this.axpObj.penSystem.penObj[this.axpObj.penSystem.pen_mode];
+                    if (pen && pen.flickTaper) {
+                        pen.flickTaper.thresholdBase = 0.1;
+                        pen.flickTaper.taperFactor = 40;
+                        pen.flickTaper.minTaperRatio = 2.0;
+                        pen.flickTaper.maxTaperRatio = 7.0;
+                        pen.flickTaper.extrapRatio = 0.15;
+                    }
+                    syncFlickSliders();
+                }).catch(() => {});
+        });
 
         // ラジオボタン：長押しスポイト
         document.getElementById('axp_config_form_useLongtap').onchange = () => {
@@ -9264,6 +9366,12 @@ class ConfigSystem {
                     case 'P-USP':
                         if (pObj[elememtId].usePressureControl) {
                             pObj[elememtId].usePressure = (value === true || value === 'true');
+                        }
+                        break;
+                    // 極細時に半透明化 (ペン別)
+                    case 'P-SPA':
+                        if (pObj[elememtId].usePressureControl) {
+                            pObj[elememtId].useSubPxAlpha = (value === true || value === 'true');
                         }
                         break;
                 }
@@ -10285,142 +10393,120 @@ class KeyboardSystem {
     init() {
     }
     startEvent() {
-        // ウィンドウ非アクティブの時、強制的に押しているキーを解除
+        const readModKeyConfig = () => {
+            const get = (id, def) => {
+                const el = document.getElementById(id);
+                return el ? el.value : def;
+            };
+            return {
+                ' ':       get('axp_config_select_modkey_space', 'hand'),
+                'SHIFT':   get('axp_config_select_modkey_shift', 'line'),
+                'CONTROL': get('axp_config_select_modkey_ctrl',  'spuit'),
+                'ALT':     get('axp_config_select_modkey_alt',   'eraser'),
+            };
+        };
+        this.modKeyActions = readModKeyConfig();
+
+        for (const id of ['axp_config_select_modkey_space', 'axp_config_select_modkey_shift',
+                           'axp_config_select_modkey_ctrl', 'axp_config_select_modkey_alt']) {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', () => { this.modKeyActions = readModKeyConfig(); });
+        }
+
+        this.activeModifiers = {};
+
+        const applyAction = (action, down) => {
+            switch (action) {
+                case 'hand':
+                    if (down) this.axpObj.penSystem.changePenModeTemporary('axp_penmode_hand');
+                    else this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_hand');
+                    break;
+                case 'eraser':
+                    if (down) this.axpObj.penSystem.changePenModeTemporary('axp_penmode_eraser');
+                    else this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_eraser');
+                    break;
+                case 'spuit':
+                    if (down) this.axpObj.penSystem.changePenModeTemporary('axp_penmode_spuit');
+                    else this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_spuit');
+                    break;
+                case 'line':
+                    this.axpObj.isLineMod = down;
+                    if (down && this.axpObj.isDrawing) this.axpObj.isLine = true;
+                    break;
+            }
+        };
+
         window.addEventListener('blur', () => {
-            if (this.axpObj.isSPACE) {
-                this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_hand');
-                this.axpObj.isSPACE = false;
+            for (const [key, action] of Object.entries(this.activeModifiers)) {
+                applyAction(action, false);
             }
-            if (this.axpObj.isCTRL) {
-                this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_spuit');
-                this.axpObj.isCTRL = false;
-            }
-            if (this.axpObj.isSHIFT) {
-                this.axpObj.isSHIFT = false;
-            }
+            this.activeModifiers = {};
+            this.axpObj.isSPACE = false;
+            this.axpObj.isCTRL = false;
+            this.axpObj.isLineMod = false;
+            this.axpObj.isALT = false;
             if (this.axpObj.codeCHANGE_SIZE_KEY) {
                 this.axpObj.codeCHANGE_SIZE_KEY = null;
             }
         });
 
-        // キーが離された時
         window.addEventListener('keyup', (e) => {
-            // e.keyが有効の場合のみ処理する（オートコンプリートによるイベントを無視）
             if (!e.key) return;
-
-            let inkey = e.key.toUpperCase();
-            switch (inkey) {
-                case ' ':
-                    this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_hand');
-                    this.axpObj.isSPACE = false;
-                    break;
-                case 'CONTROL':
-                    this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_spuit');
-                    this.axpObj.isCTRL = false;
-                    break;
-                case 'SHIFT':
-                    this.axpObj.isSHIFT = false;
-                    break;
+            const inkey = e.key.toUpperCase();
+            if (this.activeModifiers[inkey]) {
+                applyAction(this.activeModifiers[inkey], false);
+                delete this.activeModifiers[inkey];
             }
-            // ショートカット「ペンの太さ調整」で押された物理キー
+            switch (inkey) {
+                case ' ': this.axpObj.isSPACE = false; break;
+                case 'CONTROL': this.axpObj.isCTRL = false; break;
+                case 'SHIFT': this.axpObj.isLineMod = false; break;
+                case 'ALT': this.axpObj.isALT = false; break;
+            }
             if (e.code === this.axpObj.codeCHANGE_SIZE_KEY) {
                 this.axpObj.penSystem.modeChangeSizeOff();
             }
         });
-        // キーが押された時（キーボードショートカット）
+
         window.addEventListener('keydown', (e) => {
-
-            // 非表示時は無効
-            if (this.axpObj.isClose) { return };
-
-            // キャンバスタブ以外の画面（設定、投稿）は無効
-            if (!this.axpObj.isCanvasOpen) { return; }
-
-            // モーダルウィンドウ表示中（セーブロード、レイヤー名変更入力時）は無効
-            if (this.axpObj.isModalOpen) { return; }
-
-            // キー入力可能な要素にフォーカス中の場合は無効
-            if (document.activeElement.type === 'number' || document.activeElement.type === 'text') {
-                return;
-            }
-
-            // OS本来の操作を抑止
+            if (this.axpObj.isClose || !this.axpObj.isCanvasOpen || this.axpObj.isModalOpen) return;
+            if (document.activeElement.type === 'number' || document.activeElement.type === 'text') return;
             e.preventDefault();
 
-            let inkey = e.key.toUpperCase(); // 入力されたキーを大文字に変換
-            // 描画中は無効
+            const inkey = e.key.toUpperCase();
+
             if (this.axpObj.isDrawing) {
-                if (inkey === 'SHIFT') {
-                    // SHIFTキーで描画途中からでも直線描画モードに移行
-                    this.axpObj.isLine = true;
-                }
+                const action = this.modKeyActions[inkey];
+                if (action === 'line') this.axpObj.isLine = true;
                 return;
             }
 
-            if (e.repeat) {
-                if (
-                    inkey === ' ' ||
-                    inkey === 'CONTROL' ||
-                    inkey === 'ALT' ||
-                    inkey === 'SHIFT'
-                ) {
-                    // 上記のキーは、押しっぱなし入力を無効とする
-                    return;
-                } else {
-                    // その他のキーは、呼び出す機能に応じて、後続の処理で判定を行う
-                }
-            }
+            if (e.repeat && (inkey === ' ' || inkey === 'CONTROL' || inkey === 'ALT' || inkey === 'SHIFT')) return;
 
-            let keyId = inkey;
-            // 記号を文字に変換
-            switch (keyId) {
-                case '*':
-                    keyId = 'ASTERISK';
-                    break;
-                case '+':
-                    keyId = 'PLUS';
-                    break;
-                case ',':
-                    keyId = 'COMMA';
-                    break;
-                case '-':
-                    keyId = 'MINUS';
-                    break;
-                case '.':
-                    keyId = 'DOT';
-                    break;
-                case '/':
-                    keyId = 'SLASH';
-                    break;
-                case ':':
-                    keyId = 'COLON';
-                    break;
-                case ';':
-                    keyId = 'SEMICOLON';
-                    break;
-            }
-            console.log('keyboard:', e.code, e.key, '->', inkey, keyId);
-            // e.code : 物理キーコード
-            // e.key : 入力されたキーコード
-            // keyId : 要素ID用
-            // inkey : 画面表示用キー
-            switch (inkey) {
-                case ' ':
-                    this.axpObj.isSPACE = true;
-                    this.axpObj.penSystem.changePenModeTemporary('axp_penmode_hand');
-                    break;
-                case 'CONTROL':
-                    this.axpObj.isCTRL = true;
-                    this.axpObj.penSystem.changePenModeTemporary('axp_penmode_spuit');
-                    break;
-                case 'ALT':
-                    break;
-                case 'SHIFT':
-                    this.axpObj.isSHIFT = true;
-                    break;
-                default:
-                    this.axpObj.callTask(`axp_config_custom_key${keyId}`, inkey, e.repeat, e.code);
-                    break;
+            const action = this.modKeyActions[inkey];
+            if (action && action !== 'none') {
+                switch (inkey) {
+                    case ' ': this.axpObj.isSPACE = true; break;
+                    case 'CONTROL': this.axpObj.isCTRL = true; break;
+                    case 'SHIFT': this.axpObj.isLineMod = true; break;
+                    case 'ALT': this.axpObj.isALT = true; break;
+                }
+                this.activeModifiers[inkey] = action;
+                applyAction(action, true);
+            } else if (!action) {
+                let keyId = inkey;
+                switch (keyId) {
+                    case '*': keyId = 'ASTERISK'; break;
+                    case '+': keyId = 'PLUS'; break;
+                    case ',': keyId = 'COMMA'; break;
+                    case '-': keyId = 'MINUS'; break;
+                    case '.': keyId = 'DOT'; break;
+                    case '/': keyId = 'SLASH'; break;
+                    case ':': keyId = 'COLON'; break;
+                    case ';': keyId = 'SEMICOLON'; break;
+                }
+                console.log('keyboard:', e.code, e.key, '->', inkey, keyId);
+                this.axpObj.callTask(`axp_config_custom_key${keyId}`, inkey, e.repeat, e.code);
             }
         });
     }
@@ -10617,6 +10703,7 @@ class DrawingPenBase extends _penobj_js__WEBPACK_IMPORTED_MODULE_0__.PenObj {
         this.canUndo = true;
         this.usePressure = false;        // 既定: 筆圧なし (Round のみ true)
         this.usePressureControl = false; // 既定: 筆圧チェック非表示 (Round のみ true)
+        this.useSubPxAlphaControl = false;
         // 描画
         this.borderRadius = 50;
         this.borderStyle = 'normal';
@@ -10847,7 +10934,7 @@ class PenObj {
     // 各種モードの設定
     set_modeflag() {
         this.drawmode = this.axpObj.CONST.DRAW_FREEHAND;
-        if (this.axpObj.isSHIFT) { this.axpObj.isLine = true; } // シフトを押していたら直線モード
+        if (this.axpObj.isLineMod) { this.axpObj.isLine = true; }
         // 描画モード指定
         switch (document.getElementById('axp_pen_select_drawMode').value) {
             case 'option_line':
@@ -11117,6 +11204,7 @@ class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPe
         // ピクセル単位の調節パラメータ (ペンごとに override 可)
         this.startRawPx = 2;   // 開幕この距離まで筆圧フィルタを素通し
         this.subPxFloor = 0.5; // サブピクセル幅の形状下限
+        this.useSubPxAlpha = true; // 極細時に半透明化 (false = 常に不透明)
         // 終端ハライ/ハネ (速度依存・筆圧テーパー)。筆圧ペンのみ有効。具体ペンで上書き可。
         this.flickTaper = {
             enabled: true,
@@ -11201,6 +11289,13 @@ class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPe
                         this.lastCommitted = cp;
                     }
                 }
+                // サブピクセル半透明モードの終端キャップ (ストローク中にスタンプを省略しているため)
+                if (this.useSubPxAlpha && this.lastCommitted) {
+                    const rLast = this._radiusAt(this.lastCommitted);
+                    if (rLast > 0 && rLast < this.subPxFloor) {
+                        this._drawStamp(this.lastCommitted);
+                    }
+                }
                 this.write();
             } else {
                 this._drawShapeFull();
@@ -11219,9 +11314,17 @@ class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPe
         return { x, y, rawPressure, pointerType, t };
     }
 
-    // 確定点間隔: 太いほど粗く打てる (細部の取りこぼし防止に下限 2px)
+    // 確定点間隔: 太いほど粗く打てる (細部の取りこぼし防止に下限 2px)。
+    // サブピクセル半透明モードでは gap を縮小してポリゴンタイリングを密にする。
     _gap() {
-        return Math.max(2, this._halfWidth());
+        const hw = this._halfWidth();
+        if (this.usePressure && this.useSubPxAlpha && this.lastCommitted) {
+            const r = hw * this.lastCommitted.pressure;
+            if (r < this.subPxFloor) {
+                return 2 * this.subPxFloor;
+            }
+        }
+        return Math.max(2, hw);
     }
 
     // 描画半径: usePressure のとき筆圧に比例、それ以外は固定半幅。
@@ -11234,6 +11337,7 @@ class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPe
     // サブピクセル幅 (直径 < 1px) のエミュレーション:
     // 形状は subPxFloor にクランプし、不透明度を真半径/subPxFloor で減衰させる
     _subPxAlpha(rTrue) {
+        if (!this.useSubPxAlpha) return 1.0;
         const f = this.subPxFloor;
         return (rTrue < f) ? Math.max(0, rTrue) / f : 1.0;
     }
@@ -11304,8 +11408,12 @@ class StampPenBase extends _drawingpen_js__WEBPACK_IMPORTED_MODULE_0__.DrawingPe
         ctx.closePath();
         ctx.fill();
         ctx.globalAlpha = saved;
-        // 終端のキャップ円 (こちらは p2 自身の真半径でアルファ補正)
-        this._drawStamp(p2);
+        // 終端のキャップ円: サブピクセル半透明モードでは省略 (ポリゴンタイリングで均一化)
+        const bothSubPx = this.useSubPxAlpha
+            && r1True < this.subPxFloor && r2True < this.subPxFloor;
+        if (!bothSubPx) {
+            this._drawStamp(p2);
+        }
     }
 
     // RECT / CIRCLE / 直線モード: 毎フレーム全体を再描画
@@ -11903,7 +12011,7 @@ __webpack_require__.r(__webpack_exports__);
 // @description ペン定義：スタンプ系共通＞消しゴム
 //
 // 丸ニブの消しゴム。形状は StampPenBase 既定の円スタンプをそのまま使い、
-// 合成のみ destination-out にする。筆圧は使わない。
+// 合成のみ destination-out にする。筆圧対応（丸ペン同様の可変幅消去）。
 
 
 
@@ -11918,8 +12026,10 @@ class Eraser extends _stamppen_js__WEBPACK_IMPORTED_MODULE_0__.StampPenBase {
         this.toneLevel = null;
         this.blurLevel = null;
         // 制御
-        this.usePressure = false;        // 消しゴムは筆圧で太さを変えない
-        this.usePressureControl = false; // 消しゴムにはペン別の筆圧チェックを表示しない
+        this.usePressure = true;
+        this.usePressureControl = true;
+        this.useSubPxAlpha = false;
+        this.flickTaper = null;
         // 描画
         this.borderStyle = 'dashed';
 
@@ -12882,8 +12992,9 @@ class Round extends _stamppen_js__WEBPACK_IMPORTED_MODULE_0__.StampPenBase {
         this.size = 1;
         this.index = (0,_rangeindex_js__WEBPACK_IMPORTED_MODULE_1__.range_index)(this.size);
         // 制御
-        this.usePressure = true;         // 唯一の筆圧反応ペン
-        this.usePressureControl = true;  // 筆圧 ON/OFF をユーザーが切替可能
+        this.usePressure = true;
+        this.usePressureControl = true;
+        this.useSubPxAlphaControl = true;
 
         this.init_save();
     }
@@ -19064,6 +19175,19 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
             }
         );
 
+        // レンジスライダー：消し率（消しゴム専用）
+        document.getElementById('axp_pen_range_eraseRate').addEventListener('input',
+            (e) => {
+                const ERASE_RATES = [2, 5, 10, 20, 50, 100];
+                const idx = Number(e.target.value);
+                const rate = ERASE_RATES[idx];
+                this.setAlpha(rate);
+                this.axpObj.msg('@AXP5001', this.getName(), rate);
+                this.previewPenSize();
+                this.axpObj.configSystem.saveConfig('P-ALP_' + this.pen_mode, rate);
+            }
+        );
+
         // レンジスライダー：塗り残し補正
         document.getElementById('axp_pen_range_fillThreshold').addEventListener('input',
             (e) => {
@@ -19141,112 +19265,58 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
                 const pen = this.penObj[this.pen_mode];
                 if (pen) pen.usePressure = checked;
                 this.axpObj.configSystem.saveConfig('P-USP_' + this.pen_mode, checked);
+                // 極細半透明チェックの連動表示
+                if (pen && pen.useSubPxAlphaControl) {
+                    if (checked) {
+                        _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.show('axp_pen_form_useSubPxAlpha');
+                    } else {
+                        _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.hide('axp_pen_form_useSubPxAlpha');
+                    }
+                }
             }
         );
 
-        // [仮設] ハライ/ハネ チューニング
-        const flickIds = [
-            ['axp_pen_form_flickThreshold', 'thresholdBase', 100],
-            ['axp_pen_form_flickFactor',    'taperFactor',     1],
-            ['axp_pen_form_flickMinRatio',  'minTaperRatio',  10],
-            ['axp_pen_form_flickMaxRatio',  'maxTaperRatio',  10],
-            ['axp_pen_form_flickExtrap',    'extrapRatio',   100],
-        ];
-        for (const [formId, prop, divisor] of flickIds) {
-            const el = document.getElementById(formId);
-            if (el && el.volume) {
-                el.volume.addEventListener('input', (e) => {
-                    const pen = this.penObj[this.pen_mode];
-                    if (pen && pen.flickTaper) pen.flickTaper[prop] = Number(e.target.value) / divisor;
-                });
+        // チェックボックス: 極細時に半透明化 (ペン別)
+        document.getElementById('axp_pen_checkbox_useSubPxAlpha').addEventListener('change',
+            (e) => {
+                const checked = e.target.checked;
+                const pen = this.penObj[this.pen_mode];
+                if (pen) pen.useSubPxAlpha = checked;
+                this.axpObj.configSystem.saveConfig('P-SPA_' + this.pen_mode, checked);
             }
-        }
+        );
 
-        // キャンバス：ペンの太さプレビュー
-        // 原点からの座標に対する角度（0～359）を算出
-        const calcDeg = (dy, dx) => {
-            let r = Math.atan2(dy, dx);
-            if (r < 0) {
-                r = r + 2 * Math.PI;
-            }
-            return Math.round(r * 180 / Math.PI);
+        // 太さクイックボタン
+        const quickSizeBtns = document.querySelectorAll('.axpc_pen_quicksize');
+        const renderQuickBtn = (btn) => {
+            const size = Number(btn.dataset.size);
+            btn.innerHTML = `<span class="axpc_qs_label">太さ</span><span class="axpc_qs_num">${size}</span>`;
         };
-        const setPenSizeByPreview = (e) => {
-            if (e.type === 'pointerdown') {
-                e.target.classList.add('axpc_onGRAB');
-                // 初期位置保存
-                this.preview_dragstart_x = e.offsetX;
-                this.preview_dragstart_y = e.offsetY;
-                //console.log(this.preview_dragstart_x, this.preview_dragstart_y);
-            }
-            if (e.target.classList.contains('axpc_onGRAB')) {
+        quickSizeBtns.forEach((btn, i) => {
+            const saved = this.axpObj.configSystem.getConfig('QSIZE_' + i);
+            if (saved !== null && saved !== undefined) btn.dataset.size = saved;
+            renderQuickBtn(btn);
 
-                let target = e.currentTarget;
-                let name = this.getName();
-                if (this.pen_mode === 'axp_penmode_fillgradation') {
-                    // ドラッグ差分
-                    let dx = e.offsetX - this.preview_dragstart_x;
-                    let dy = e.offsetY - this.preview_dragstart_y;
-                    let deg = calcDeg(dy, dx) - 270;
-                    if (deg < 0) { deg = deg + 360 }
-                    // %1の角度：%2
-                    this.axpObj.msg('@AXP5003', name, deg);
-                    this.setGradation(deg);
-                    // スライダー更新
-                    document.getElementById('axp_pen_range_fillGradationDeg').value = deg;
-                    document.getElementById('axp_pen_form_fillGradationDeg').result.value = deg;
-                    // ペンの太さプレビュー
-                    this.previewPenSize();
-                    // コンフィグオブジェクトをDBに保存
-                    this.axpObj.configSystem.saveConfig('P-DEG_' + this.pen_mode, deg);
-                    return;
+            let lastTapTime = 0;
+            btn.addEventListener('pointerup', (e) => {
+                const now = Date.now();
+                if (now - lastTapTime < 300) {
+                    const input = prompt('太さを入力 (1〜200)', btn.dataset.size);
+                    if (input !== null) {
+                        const val = Math.min(200, Math.max(1, parseInt(input) || 1));
+                        btn.dataset.size = val;
+                        renderQuickBtn(btn);
+                        this.axpObj.configSystem.saveConfig('QSIZE_' + i, val);
+                    }
+                    lastTapTime = 0;
+                } else {
+                    lastTapTime = now;
+                    const size = Number(btn.dataset.size);
+                    this.setPenSize(size);
                 }
-
-
-                var x0 = target.width / 2;
-                var y0 = target.height / 2;
-                var x1 = e.offsetX;
-                var y1 = e.offsetY;
-                var distance = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-                var basesize = distance * 2;
-                // ペンの太さ（最小１、最大200）
-                var size = Math.min(200, Math.max(1, parseInt(basesize * 100 / this.axpObj.scale)));
-
-
-                // size更新とindex取得
-                var index = this.setSize(size);
-                if (!index) {
-                    // %1の太さは変更できません。
-                    this.axpObj.msg('@CAU0203', name);
-                    return;
-                }
-                // ペンツール表示更新
-                this.changePenMode();
-                // %1の太さ：%2
-                this.axpObj.msg('@AXP5000', name, size);
-
-            }
-        }
-
-        this.CANVAS.pensize.addEventListener('pointerdown', setPenSizeByPreview);
-        this.CANVAS.pensize.addEventListener('pointermove', setPenSizeByPreview);
-        this.CANVAS.pensize.addEventListener('pointerleave', () => {
-            this.axpObj.msg('');
+            });
         });
 
-        const setPenSizeByPreview_end = (e) => {
-            // ドラッグを終了したとき
-            if (e.target.classList.contains('axpc_onGRAB')) {
-                e.target.classList.remove('axpc_onGRAB');
-                // 太さ変更可能なペン種のみ、変更された太さを保存する
-                if (this.getSize()) {
-                    // コンフィグオブジェクトをDBに保存
-                    this.axpObj.configSystem.saveConfig('P-SIZ_' + this.pen_mode, this.getSize());
-                }
-            }
-        }
-        this.CANVAS.pensize.addEventListener('pointerup', setPenSizeByPreview_end);
-        this.CANVAS.pensize.addEventListener('pointerleave', setPenSizeByPreview_end);
     }
 
     start(x, y, e, mode, option) {
@@ -19479,6 +19549,7 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
                 item.dataset.selected = 'false';
             }
         }
+        let actualMode = mode;
         // アイコン変更
         switch (mode) {
             case 'axp_penmode_spuit':
@@ -19507,8 +19578,13 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
                 elementHand.dataset.msg = document.getElementById(mode).dataset.msg;
                 break;
             }
+            case 'axp_penmode_eraser': {
+                actualMode = document.getElementById('axp_pen_button_eraserBase').dataset.set;
+                document.getElementById('axp_pen_button_eraserBase').dataset.selected = 'true';
+                break;
+            }
         }
-        this.changePenMode(mode);
+        this.changePenMode(actualMode);
     }
     restorePenModeTemporary(mode) {
         console.log('restorePenModeTemporary:', mode);
@@ -19538,6 +19614,9 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
                 elementHand.classList.add(this.getClassIcon(this.saveIcon));
                 break;
             }
+            case 'axp_penmode_eraser':
+                document.getElementById('axp_pen_button_eraserBase').dataset.selected = 'false';
+                break;
         }
         // 復元
         this.saveElement.dataset.selected = 'true';
@@ -19577,11 +19656,33 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
             'axp_pen_form_penSize',
             this.getSize(),
         )
-        // 不透明度
-        displaySlider(
-            'axp_pen_form_alpha',
-            this.getAlpha(),
-        )
+        // 太さクイックボタンの表示制御
+        if (this.getSize()) {
+            _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.show('axp_pen_div_quickSize');
+        } else {
+            _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.hide('axp_pen_div_quickSize');
+        }
+        // 不透明度 (消しゴムは消し率で代替するため非表示)
+        {
+            const isEraser = this.penObj[this.pen_mode].type === 'eraser';
+            displaySlider(
+                'axp_pen_form_alpha',
+                isEraser ? null : this.getAlpha(),
+            )
+        }
+        // 消し率 (消しゴム専用)
+        {
+            const pen = this.penObj[this.pen_mode];
+            if (pen && pen.type === 'eraser') {
+                const ERASE_RATES = [2, 5, 10, 20, 50, 100];
+                const idx = ERASE_RATES.indexOf(pen.alpha);
+                _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.show('axp_pen_form_eraseRate');
+                document.getElementById('axp_pen_form_eraseRate').volume.value = (idx >= 0) ? idx : 5;
+                document.getElementById('axp_pen_form_eraseRate').result.value = pen.alpha;
+            } else {
+                _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.hide('axp_pen_form_eraseRate');
+            }
+        }
         // バケツ閾値
         displaySlider(
             'axp_pen_form_fillThreshold',
@@ -19625,29 +19726,14 @@ class PenSystem extends _window_js__WEBPACK_IMPORTED_MODULE_0__.ToolWindow {
                 _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.hide('axp_pen_form_usePressure');
             }
         }
-
-        // [仮設] ハライ/ハネ チューニング スライダー
+        // 極細時に半透明化 (ペン別、usePressureControl かつ usePressure のペンのみ表示)
         {
             const pen = this.penObj[this.pen_mode];
-            const flickFormIds = [
-                'axp_pen_form_flickThreshold', 'axp_pen_form_flickFactor',
-                'axp_pen_form_flickMinRatio', 'axp_pen_form_flickMaxRatio', 'axp_pen_form_flickExtrap',
-            ];
-            if (pen && pen.usePressureControl && pen.flickTaper) {
-                for (const fid of flickFormIds) _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.show(fid);
-                const ft = pen.flickTaper;
-                document.getElementById('axp_pen_form_flickThreshold').volume.value = ft.thresholdBase * 100;
-                document.getElementById('axp_pen_form_flickThreshold').result.value = ft.thresholdBase;
-                document.getElementById('axp_pen_form_flickFactor').volume.value = ft.taperFactor;
-                document.getElementById('axp_pen_form_flickFactor').result.value = ft.taperFactor;
-                document.getElementById('axp_pen_form_flickMinRatio').volume.value = ft.minTaperRatio * 10;
-                document.getElementById('axp_pen_form_flickMinRatio').result.value = ft.minTaperRatio;
-                document.getElementById('axp_pen_form_flickMaxRatio').volume.value = ft.maxTaperRatio * 10;
-                document.getElementById('axp_pen_form_flickMaxRatio').result.value = ft.maxTaperRatio;
-                document.getElementById('axp_pen_form_flickExtrap').volume.value = ft.extrapRatio * 100;
-                document.getElementById('axp_pen_form_flickExtrap').result.value = ft.extrapRatio * 100;
+            if (pen && pen.useSubPxAlphaControl && pen.usePressure) {
+                _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.show('axp_pen_form_useSubPxAlpha');
+                document.getElementById('axp_pen_checkbox_useSubPxAlpha').checked = !!pen.useSubPxAlpha;
             } else {
-                for (const fid of flickFormIds) _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.hide(fid);
+                _etc_js__WEBPACK_IMPORTED_MODULE_4__.UTIL.hide('axp_pen_form_useSubPxAlpha');
             }
         }
 
@@ -20873,7 +20959,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAABy
   \*****************************/
 /***/ ((module) => {
 
-module.exports = "<!-- 設定タブ -->\n<div id=\"axp_config_div_menu\">\n    <div id=\"axp_config_div_content\">\n        <div id=\"axp_config_div_nav\">\n            <div id=\"axp_config_div_navButton\">\n                <button class=\"axpc_MSG axpc_ACTIVE\" data-msg=\"@CFG2001\">${_(\"@SETTINGS.MENU_CANVAS\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2002\">${_(\"@SETTINGS.MENU_TOOL_WINDOWS\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2003\">${_(\"@SETTINGS.MENU_PEN_TOOL\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2004\">${_(\"@SETTINGS.MENU_COLOR\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2005\">${_(\"@SETTINGS.MENU_SWATCHES\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2006\">${_(\"@SETTINGS.MENU_LAYER\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2007\">${_(\"@SETTINGS.MENU_MISC\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2008\">${_(\"@SETTINGS.MENU_CUSTOM_BUTTONS\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2009\">${_(\"@SETTINGS.MENU_MOUSE\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2010\">${_(\"@SETTINGS.MENU_TOUCH_PANEL\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2011\">${_(\"@SETTINGS.MENU_KEYBOARD\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2013\">${_(\"@SETTINGS.MENU_STARTUP\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2020\"\n                    id=\"axp_config_button_version\">${_(\"@SETTINGS.MENU_VER_INFO\")}</button>\n            </div>\n        </div>\n        <div class=\"axpc_config_chapter\" id=\"axp_config_div_pageMain\">\n            <div class=\"axpc_config_section\" data-title=\"キャンバス\">\n                <div class=\"axpc_config_group\" data-title=\"キャンバスの初期化\">\n                    <u>画像サイズ</u><br>\n                    <div style=\"display: flex;\">\n                        <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0300\">\n                            <label>横\n                                <input id=\"axp_config_number_oekakiWidth\" type=\"number\">\n                            </label>×\n                        </div>\n                        <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0301\">\n                            <label>縦\n                                <input id=\"axp_config_number_oekakiHeight\" type=\"number\">[px]\n                            </label>\n                        </div>\n                    </div>\n                    <span id=\"axp_config_span_canvasSizeLimit\"></span><br>\n                    [履歴]<br>\n                    <ul id=\"axp_config_ul_canvasSizeHistory\" class=\"axpc_MSG\" data-msg=\"@CFG0016\">\n                    </ul>\n                    <button id=\"axp_config_button_newCanvas\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0017\">新規キャンバス</button>\n                    <br>\n                    <button id=\"axp_config_button_changeCanvasSize\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0018\">画像を保持したままサイズ変更</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"画像の書き出し\">\n                    <button class=\"axpc_MSG axpc_button axpc_button_width260\" data-msg=\"@CFG0019\"\n                        id=\"axp_config_button_pngDownload\">画像をPNG形式でファイルに保存</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"キャンバス全体のぼかし（アンチエイリアシング）\">\n                    <form id=\"axp_config_form_antialiasing\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0020\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0021\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"ポインタ座標の表示\">\n                    <form id=\"axp_config_form_displayPosition\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0022\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0023\" data-value=\"upperleft\">左上</span>\n                        <span data-msg=\"@CFG0024\" data-value=\"upperright\">右上</span>\n                        <span data-msg=\"@CFG0010\" data-value=\"lowerleft\">左下</span>\n                        <span data-msg=\"@CFG0025\" data-value=\"lowerright\">右下</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"ツールウィンドウ\">\n                <div class=\"axpc_config_group\" data-title=\"ツールウィンドウ位置の自動調整\">\n                    <form id=\"axp_config_form_windowAutoAdjust\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0028\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0029\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"位置初期化\">\n                    <button id=\"axp_config_button_resetWindow\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0030\">全ウィンドウ位置の初期化</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"表示ウィンドウ\">\n                    <u>アイコンサイズ</u>\n                    <form id=\"axp_config_form_minimizeButtonType\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0036\" data-value=\"small\">小</span>\n                        <span data-msg=\"@CFG0036\" data-value=\"medium\" data-default=\"y\">中</span>\n                        <span data-msg=\"@CFG0036\" data-value=\"big\">大</span>\n                    </form>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0037\">\n                        <label>\n                            <input id=\"axp_config_checkbox_singleWindowMode\" class=\"axpc_SAVE\"\n                                type=\"checkbox\">単一ウィンドウモードを使用する\n                        </label>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"ペンツール\" data-icon=\"axpc_icon_window_pen\">\n                <div class=\"axpc_config_group\" data-title=\"手ぶれ補正\">\n                    <u>補正の強さ</u>\n                    <form id=\"axp_config_form_stabilizerValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"2\" step=\"1\" min=\"0\" max=\"10\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0040\">\n                        <div class=\"axpc_range_label axpc_text_border\">手ぶれ補正</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">2</output></div>\n                    </form>\n                    <div style=\"margin-top: 4px;\"></div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0041\">\n                        <label>\n                            <input id=\"axp_config_checkbox_stabilize\" class=\"axpc_SAVE\"\n                                type=\"checkbox\" checked>ペンツールウィンドウ内にレンジスライダーを表示する\n                        </label>\n                    </div>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"筆圧\">\n                    <u>筆圧カーブ</u>\n                    <div style=\"display: flex; align-items: flex-start; gap: 12px;\">\n                        <canvas id=\"axp_config_canvas_pressureCurve\" width=\"160\" height=\"160\"\n                            style=\"border: 1px solid #ccc; background-color: #fff; flex-shrink: 0;\"></canvas>\n                        <div style=\"flex: 1; min-width: 0;\">\n                            <form id=\"axp_config_form_pressureB\" oninput=\"result.value=parseFloat(volume.value).toFixed(2)\"\n                                class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                                <input type=\"range\" name=\"volume\" value=\"1.0\" step=\"0.1\" min=\"1.0\" max=\"10.0\">\n                                <div class=\"axpc_range_label axpc_text_border\">感度</div>\n                                <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">1.00</output></div>\n                            </form>\n                            <form id=\"axp_config_form_pressureA\" oninput=\"result.value=Math.pow(2, parseFloat(volume.value)).toFixed(2)\"\n                                class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                                <input type=\"range\" name=\"volume\" value=\"1\" step=\"0.05\" min=\"-2\" max=\"2\">\n                                <div class=\"axpc_range_label axpc_text_border\">乗数</div>\n                                <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">2.00</output></div>\n                            </form>\n                            <form id=\"axp_config_form_pressureC\" oninput=\"result.value=parseFloat(volume.value).toFixed(2)\"\n                                class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                                <input type=\"range\" name=\"volume\" value=\"0.0\" step=\"0.01\" min=\"0.0\" max=\"0.99\">\n                                <div class=\"axpc_range_label axpc_text_border\">不感地帯</div>\n                                <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">0.00</output></div>\n                            </form>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"スポイト\">\n                    <u>使用後ペンに切り替える</u>\n                    <form id=\"axp_config_form_autoChangeSpuitToPen\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0043\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0044\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>長押しスポイト</u>\n                    <form id=\"axp_config_form_useLongtap\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0045\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0046\" data-value=\"on\">あり</span>\n                    </form>\n                    <div style=\"margin-top: 16px;\"></div>\n                    <form id=\"axp_config_form_longtapDurationValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"700\" step=\"100\" min=\"500\" max=\"1500\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0047\">\n                        <div class=\"axpc_range_label axpc_text_border\">長押し反応時間</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">700</output></div>[ミリ秒]\n                    </form>\n                    <form id=\"axp_config_form_longtapStabilizerValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"5\" step=\"1\" min=\"0\" max=\"10\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0048\">\n                        <div class=\"axpc_range_label axpc_text_border\">長押し受付範囲</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">5</output></div>[px]\n                    </form>\n                    （※長押し操作が反応しない場合、受付範囲を大きくしてください）\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"レンジスライダー\">\n                    <u>ぼかし度</u>\n                    <form id=\"axp_config_form_blurLevel\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0200\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0201\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>トーン濃度</u>\n                    <form id=\"axp_config_form_ToneLevel\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0049\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0050\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>太さと不透明度の表示順序</u>\n                    <form id=\"axp_config_form_pentoolRangeOrder\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0051\" data-value=\"size\" data-default=\"y\">太さ->不透明度</span>\n                        <span data-msg=\"@CFG0052\" data-value=\"alpha\">不透明度->太さ</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"色作成\" data-icon=\"axpc_icon_window_colormaker\">\n                <div class=\"axpc_config_group\" data-title=\"使用する色作成ツール\">\n                    <u>混色パレット</u>\n                    <form id=\"axp_config_form_makeColorTypeMixed\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0053\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0054\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>RGBスライダー</u>\n                    <form id=\"axp_config_form_makeColorTypeRGB\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0055\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0056\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>カラーピッカー</u>\n                    <form id=\"axp_config_form_makeColorTypePicker\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0057\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0058\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"パレット\" data-icon=\"axpc_icon_window_palette\">\n                <div class=\"axpc_config_group\" data-title=\"パレットのレイアウト\">\n                    <u>横幅（列の数）</u><br>\n                    <form id=\"axp_config_form_paletteColumnValue\" class=\"axpc_range axpc_range_width228\">\n                        <!-- axpc_SAVE 対象外 -->\n                        <input type=\"range\" class=\"axpc_MSG\" name=\"volume\" value=\"3\" step=\"1\" min=\"1\" max=\"24\"\n                            data-msg=\"@CFG0063\">\n                        <div class=\"axpc_range_label axpc_text_border\">横幅</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\"></output></div>[列]\n                    </form>\n                    <div style=\"margin-top: 4px;\"></div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0062\">\n                        <label>\n                            <input id=\"axp_config_checkbox_paletteColumnEdit\" class=\"axpc_SAVE\" type=\"checkbox\"\n                                checked>パレット編集モード時にレンジスライダーを表示する\n                        </label>\n                    </div>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <!-- カラーパレットを表示するためのエリア -->\n                    <div id=\"axp_config_div_paletteText\"></div>\n                    <div id=\"axp_config_div_paletteScroll\">\n                        <div id=\"axp_config_div_paletteBox\"></div>\n                    </div>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"パレットのインポート・エクスポート／初期化\">\n                    <button id=\"axp_config_button_saveColor\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0064\">パレットファイルに保存</button>\n                    <br>\n                    <button id=\"axp_config_button_loadColor\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0065\">パレットファイルの読込</button>\n                    <br>\n                    <button id=\"axp_config_button_resetColor\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0066\">パレットの初期化</button>\n                    <input type=\"file\" id=\"axp_config_file_loadColor\" accept=\".txt\" style=\"display: none;\">\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"レイヤー\" data-icon=\"axpc_icon_window_layer\">\n                <div class=\"axpc_config_group\" data-title=\"合成モードの表示\">\n                    <form id=\"axp_config_form_blendModeDisplayType\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0120\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0121\" data-value=\"all\">全表示</span>\n                        <span data-msg=\"@CFG0122\" data-value=\"unusual\" data-default=\"y\">通常以外表示</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"レイヤー名の登録\">\n                    レイヤー名の変更時、文字入力の代わりに登録した名前を使用できます。\n                    <div id=\"axp_config_div_colorTag\" class=\"axpc_MSG\" data-msg=\"@CFG0123\"></div>\n                    <button id=\"axp_config_button_resetColorTag\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0124\">レイヤー名の初期化</button>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"補助ツール\" data-icon=\"axpc_icon_window_subtool\">\n                <div class=\"axpc_config_group\" data-title=\"アンドゥ／リドゥ可能回数\">\n                    <form id=\"axp_config_form_undoMaxValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"25\" step=\"1\" min=\"10\" max=\"50\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0067\">\n                        <div class=\"axpc_range_label axpc_text_border\">回数</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">25</output></div>[回]\n                    </form>\n                    （※変更した値を有効にするにはAXNOS Paintを再起動する必要があります）\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"拡大率\">\n                    <div id=\"axp_config_div_scale\">\n                        <div id=\"axp_config_div_scaleButton\">\n                            <input id=\"axp_config_number_scale\" type=\"number\" maxlength=\"3\" min=\"25\" max=\"1600\"\n                                value=\"125\" size=\"5\" class=\"axpc_MSG\" data-msg=\"@CFG0211\">\n                            <span>[%]</span>\n                            <button id=\"axp_config_button_addScale\" class=\"axpc_MSG axpc_button\"\n                                data-msg=\"@CFG0070\">追加</button>\n                        </div>\n                        （※最小25～最大1600）\n                        <button id=\"axp_config_button_deleteScale\" class=\"axpc_MSG axpc_button\"\n                            data-msg=\"@CFG0071\">選択した拡大率を削除</button>\n                        <ul id=\"axp_config_ul_scale\" class=\"axpc_MSG\" data-msg=\"@CFG0212\">\n                        </ul>\n                        <button id=\"axp_config_button_resetScale\" class=\"axpc_MSG axpc_button\"\n                            data-msg=\"@CFG0072\">拡大率の初期化</button>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"カスタムボタン\">\n                <div class=\"axpc_config_group\" data-title=\"カスタムボタンと機能割り当て\">\n                    <u>ボタンの表示</u>\n                    <form id=\"axp_config_form_useCustomButton\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0080\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0081\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <div id=\"axp_config_div_customButtonFunction\">\n                        <table id=\"axp_config_table_customButton\" class=\"axpc_MSG axpc_config_table\"\n                            data-msg=\"@CFG0112\">\n                            <thead>\n                                <tr>\n                                    <th>ボタン</th>\n                                    <th>機能</th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                            </tbody>\n                        </table>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"マウス\">\n                <div class=\"axpc_config_group\" data-title=\"マウス右ボタン\">\n                    <form id=\"axp_config_form_mouseRightButton\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0082\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0083\" data-value=\"undo\" data-default=\"y\">アンドゥ</span>\n                        <span data-msg=\"@CFG0084\" data-value=\"spuit\">スポイト</span>\n                        <span data-msg=\"@CFG0085\" data-value=\"hand\">ハンド</span>\n                        <span data-msg=\"@CFG0086\" data-value=\"loupe\">拡大率100%</span>\n                        <span data-msg=\"@CFG0087\" data-value=\"swapcolor\">ﾒｲﾝ色切替</span>\n                        <span data-msg=\"@CFG0088\" data-value=\"swaptrans\">透明色切替</span>\n                        <span data-msg=\"@CFG0400\" data-value=\"transdraw\">透明色描画</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"マウスホイールボタン\">\n                    <form id=\"axp_config_form_mouseWheelButton\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0082\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0083\" data-value=\"undo\">アンドゥ</span>\n                        <span data-msg=\"@CFG0084\" data-value=\"spuit\" data-default=\"y\">スポイト</span>\n                        <span data-msg=\"@CFG0085\" data-value=\"hand\">ハンド</span>\n                        <span data-msg=\"@CFG0086\" data-value=\"loupe\">拡大率100%</span>\n                        <span data-msg=\"@CFG0087\" data-value=\"swapcolor\">ﾒｲﾝ色切替</span>\n                        <span data-msg=\"@CFG0088\" data-value=\"swaptrans\">透明色切替</span>\n                        <span data-msg=\"@CFG0400\" data-value=\"transdraw\">透明色描画</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"マウスホイール回転\">\n                    <form id=\"axp_config_form_mouseWheelRotate\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0089\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0090\" data-value=\"loupe\" data-default=\"y\">拡大/縮小</span>\n                        <span data-msg=\"@CFG0091\" data-value=\"scroll\">スクロール</span>\n                    </form>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0220\">\n                        <label>\n                            <input id=\"axp_config_checkbox_mouseWheelDirection\" class=\"axpc_SAVE\" type=\"checkbox\">回転方向反転\n                        </label>\n                    </div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0223\">\n                        <label>\n                            <input id=\"axp_config_checkbox_mouseWheelPointerTracking\" class=\"axpc_SAVE\" type=\"checkbox\"\n                                checked>ポインタ位置を中心に拡大／縮小\n                        </label>\n                    </div>\n                    <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0221\">\n                        <label>スクロール移動量\n                            <input id=\"axp_config_number_mouseWheelMoveSize\" class=\"axpc_SAVE\" type=\"number\" min=\"1\"\n                                max=\"100\" value=\"30\">[px]（※最小1～最大100）\n                        </label>\n                    </div>\n                    <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0222\">\n                        <label>連続入力抑止時間\n                            <input id=\"axp_config_number_mouseWheelSleepTime\" class=\"axpc_SAVE\" type=\"number\" min=\"0\"\n                                max=\"500\" value=\"0\">[ミリ秒]\n                        </label>\n                    </div>\n                    （※最小0～最大500。0を指定すると入力抑止を行いません。<br>\n                    　タッチパッドのホイール操作感度が高すぎる場合に設定してください）\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"タッチパッド\">\n                    <u>キャンバスの拡大／縮小</u>（ピンチアウト／ピンチイン）\n                    <form id=\"axp_config_form_mouseWheelZoom\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0097\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0098\" data-value=\"on\">あり</span>\n                    </form>\n                    （※「あり」設定時、環境によってマウスホイールと競合する場合があります）\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"タッチパネル\">\n                <div class=\"axpc_config_group\" data-title=\"タッチ操作\">\n                    <u>機能割り当て</u>（１本指タッチ）\n                    <form id=\"axp_config_form_touchDrawType\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0092\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0093\" data-value=\"draw\" data-default=\"y\">描画</span>\n                        <span data-msg=\"@CFG0094\" data-value=\"hand\">ハンド</span>\n                    </form>\n                    <br>\n                    <u>キャンバスの移動</u>（２本指スワイプ）\n                    <form id=\"axp_config_form_touchHand\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0095\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0096\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>キャンバスの拡大／縮小</u>（ピンチ操作）\n                    <form id=\"axp_config_form_touchZoom\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0097\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0098\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"タップ操作\">\n                    <u>アンドゥ</u>（２本指タップ）\n                    <form id=\"axp_config_form_touchUndo\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0099\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0100\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>リドゥ</u>（３本指タップ）\n                    <form id=\"axp_config_form_touchRedo\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0101\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0102\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <div style=\"margin-top: 16px;\"></div>\n                    <form id=\"axp_config_form_touchDurationValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"300\" step=\"100\" min=\"100\" max=\"1000\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0103\">\n                        <div class=\"axpc_range_label axpc_text_border\">タップ制限時間</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">300</output></div>[ミリ秒]\n                    </form>\n                    <form id=\"axp_config_form_touchThresholdValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"5\" step=\"1\" min=\"0\" max=\"10\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0401\">\n                        <div class=\"axpc_range_label axpc_text_border\">タップ受付範囲</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">5</output></div>[px]\n                    </form>\n                    （※タップ操作が反応しない場合、受付範囲を大きくしてください）\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"キーボード\">\n                <div class=\"axpc_config_group\" data-title=\"ショートカットと機能割り当て\">\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0111\">\n                        <label>\n                            <input id=\"axp_config_checkbox_shortcutKeyHiddenNofunc\" class=\"axpc_SAVE\"\n                                type=\"checkbox\">割り当て無しのキーを非表示にする\n                        </label>\n                    </div>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <table id=\"axp_config_table_shortcutKey\" class=\"axpc_MSG axpc_config_table\" data-msg=\"@CFG0112\">\n                        <thead>\n                            <tr>\n                                <th>キー</th>\n                                <th>機能</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>[ SPACE ]</td>\n                                <td>ハンドツール</td>\n                            </tr>\n                            <tr>\n                                <td>[ SHIFT ]</td>\n                                <td>直線</td>\n                            </tr>\n                            <tr>\n                                <td>[ CTRL ]</td>\n                                <td>スポイト</td>\n                            </tr>\n                        </tbody>\n                    </table>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"ショートカットのインポート・エクスポート／初期化\">\n                    <button id=\"axp_config_button_saveShortcut\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0113\">ショートカットファイルに保存</button>\n                    <br>\n                    <button id=\"axp_config_button_loadShortcut\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0114\">ショートカットファイルの読込</button>\n                    <br>\n                    <button id=\"axp_config_button_resetShortcut\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0115\">ショートカットの初期化</button>\n                    <input type=\"file\" id=\"axp_config_file_loadShortcut\" accept=\".txt\" style=\"display: none;\">\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"画面スクロール\">\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0230\">\n                        <label>\n                            <input id=\"axp_config_checkbox_moveDirection\" class=\"axpc_SAVE\" type=\"checkbox\">スクロール方向反転\n                        </label>\n                    </div>\n                    <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0108\">\n                        <label>スクロール移動量\n                            <input id=\"axp_config_number_moveSize\" class=\"axpc_SAVE\" type=\"number\" min=\"1\" max=\"100\"\n                                value=\"30\">[px]（※最小1～最大100）\n                        </label>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"起動時\">\n                <div class=\"axpc_config_group\" data-title=\"前回の状態の復元\">\n                    <u>ツールウィンドウ位置</u>\n                    <form id=\"axp_config_form_saveLastWindowPosition\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0026\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0027\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>ペンツールの設定値</u>\n                    <form id=\"axp_config_form_saveLastPenValue\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0034\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0035\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>カラーパレットの色</u>\n                    <form id=\"axp_config_form_saveLastPalleteColor\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0059\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0060\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"バージョン情報\" id=\"axp_config_div_version\">\n                <div class=\"axpc_config_group\" data-title=\"バージョン情報\">\n                    <div id=\"axp_config_div_versionInfo\"></div>\n                    © 2026- nijiurachan contributors<br>\n                    © 2022 「悪の巣」部屋番号13番：「趣味の悪い大衆酒場[Mad end dance hall]」<br>\n                    <br>\n                    ◆ GitHub<br>\n                    <a href=\"https://github.com/nijiurachan/axnospaint-for-aimg\" target=\"_blank\" rel=\"noopener\"\n                        style=\"text-decoration: none;color:#00f\">\n                        https://github.com/nijiurachan/axnospaint-for-aimg</a>\n                    <br><br>\n                    ◆ AXNOS Paint:ヘルプ - ニコニコ大百科<br>\n                    <a href=\"https://dic.nicovideo.jp/id/5703111\" target=\"_blank\" rel=\"noopener\"\n                        style=\"text-decoration: none;color:#00f\">\n                        https://dic.nicovideo.jp/id/5703111</a>\n                    <br>\n                    ※ 本バージョンはあいもげ用にカスタマイズしたものです。質問・バグ報告・要望は、ニコニコ大百科でなくGitHubまでお願いします。\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"デバッグ情報表示\">\n                    <details>\n                        <summary><span style=\"color:#f00\"><b>※不具合発生時の動作検証用です。通常時は使用しないでください。</b></span></summary>\n                        <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"チェックするとデバッグモードが有効になります。\">\n                            <label>\n                                <input id=\"axp_config_checkbox_useDebugMode\" class=\"axpc_SAVE\"\n                                    type=\"checkbox\">デバッグ情報を表示する\n                            </label>\n                        </div>\n                    </details>\n                </div>\n            </div>\n            <div style=\"height: calc(100vh);\"></div>\n            <div class=\"axpc_config_section\" data-title=\"ページの終端です。\">\n            </div>\n        </div>\n    </div>\n</div>";
+module.exports = "<!-- 設定タブ -->\n<div id=\"axp_config_div_menu\">\n    <div id=\"axp_config_div_content\">\n        <div id=\"axp_config_div_nav\">\n            <div id=\"axp_config_div_navButton\">\n                <button class=\"axpc_MSG axpc_ACTIVE\" data-msg=\"@CFG2001\">${_(\"@SETTINGS.MENU_CANVAS\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2002\">${_(\"@SETTINGS.MENU_TOOL_WINDOWS\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2003\">${_(\"@SETTINGS.MENU_PEN_TOOL\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2004\">${_(\"@SETTINGS.MENU_COLOR\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2005\">${_(\"@SETTINGS.MENU_SWATCHES\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2006\">${_(\"@SETTINGS.MENU_LAYER\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2007\">${_(\"@SETTINGS.MENU_MISC\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2008\">${_(\"@SETTINGS.MENU_CUSTOM_BUTTONS\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2009\">${_(\"@SETTINGS.MENU_MOUSE\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2010\">${_(\"@SETTINGS.MENU_TOUCH_PANEL\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2011\">${_(\"@SETTINGS.MENU_KEYBOARD\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2013\">${_(\"@SETTINGS.MENU_STARTUP\")}</button>\n                <button class=\"axpc_MSG\" data-msg=\"@CFG2020\"\n                    id=\"axp_config_button_version\">${_(\"@SETTINGS.MENU_VER_INFO\")}</button>\n            </div>\n        </div>\n        <div class=\"axpc_config_chapter\" id=\"axp_config_div_pageMain\">\n            <div class=\"axpc_config_section\" data-title=\"キャンバス\">\n                <div class=\"axpc_config_group\" data-title=\"キャンバスの初期化\">\n                    <u>画像サイズ</u><br>\n                    <div style=\"display: flex;\">\n                        <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0300\">\n                            <label>横\n                                <input id=\"axp_config_number_oekakiWidth\" type=\"number\">\n                            </label>×\n                        </div>\n                        <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0301\">\n                            <label>縦\n                                <input id=\"axp_config_number_oekakiHeight\" type=\"number\">[px]\n                            </label>\n                        </div>\n                    </div>\n                    <span id=\"axp_config_span_canvasSizeLimit\"></span><br>\n                    [履歴]<br>\n                    <ul id=\"axp_config_ul_canvasSizeHistory\" class=\"axpc_MSG\" data-msg=\"@CFG0016\">\n                    </ul>\n                    <button id=\"axp_config_button_newCanvas\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0017\">新規キャンバス</button>\n                    <br>\n                    <button id=\"axp_config_button_changeCanvasSize\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0018\">画像を保持したままサイズ変更</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"画像の書き出し\">\n                    <button class=\"axpc_MSG axpc_button axpc_button_width260\" data-msg=\"@CFG0019\"\n                        id=\"axp_config_button_pngDownload\">画像をPNG形式でファイルに保存</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"キャンバス全体のぼかし（アンチエイリアシング）\">\n                    <form id=\"axp_config_form_antialiasing\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0020\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0021\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"ポインタ座標の表示\">\n                    <form id=\"axp_config_form_displayPosition\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0022\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0023\" data-value=\"upperleft\">左上</span>\n                        <span data-msg=\"@CFG0024\" data-value=\"upperright\">右上</span>\n                        <span data-msg=\"@CFG0010\" data-value=\"lowerleft\">左下</span>\n                        <span data-msg=\"@CFG0025\" data-value=\"lowerright\">右下</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"ツールウィンドウ\">\n                <div class=\"axpc_config_group\" data-title=\"ツールウィンドウ位置の自動調整\">\n                    <form id=\"axp_config_form_windowAutoAdjust\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0028\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0029\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"位置初期化\">\n                    <button id=\"axp_config_button_resetWindow\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0030\">全ウィンドウ位置の初期化</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"表示ウィンドウ\">\n                    <u>アイコンサイズ</u>\n                    <form id=\"axp_config_form_minimizeButtonType\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0036\" data-value=\"small\">小</span>\n                        <span data-msg=\"@CFG0036\" data-value=\"medium\" data-default=\"y\">中</span>\n                        <span data-msg=\"@CFG0036\" data-value=\"big\">大</span>\n                    </form>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0037\">\n                        <label>\n                            <input id=\"axp_config_checkbox_singleWindowMode\" class=\"axpc_SAVE\"\n                                type=\"checkbox\">単一ウィンドウモードを使用する\n                        </label>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"ペンツール\" data-icon=\"axpc_icon_window_pen\">\n                <div class=\"axpc_config_group\" data-title=\"手ぶれ補正\">\n                    <u>補正の強さ</u>\n                    <form id=\"axp_config_form_stabilizerValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"2\" step=\"1\" min=\"0\" max=\"10\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0040\">\n                        <div class=\"axpc_range_label axpc_text_border\">手ぶれ補正</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">2</output></div>\n                    </form>\n                    <div style=\"margin-top: 4px;\"></div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0041\">\n                        <label>\n                            <input id=\"axp_config_checkbox_stabilize\" class=\"axpc_SAVE\"\n                                type=\"checkbox\" checked>ペンツールウィンドウ内にレンジスライダーを表示する\n                        </label>\n                    </div>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"筆圧\">\n                    <u>筆圧カーブ</u>\n                    <div style=\"display: flex; align-items: flex-start; gap: 12px;\">\n                        <canvas id=\"axp_config_canvas_pressureCurve\" width=\"160\" height=\"160\"\n                            style=\"border: 1px solid #ccc; background-color: #fff; flex-shrink: 0;\"></canvas>\n                        <div style=\"flex: 1; min-width: 0;\">\n                            <form id=\"axp_config_form_pressureB\" oninput=\"result.value=parseFloat(volume.value).toFixed(2)\"\n                                class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                                <input type=\"range\" name=\"volume\" value=\"1.0\" step=\"0.1\" min=\"1.0\" max=\"10.0\">\n                                <div class=\"axpc_range_label axpc_text_border\">感度</div>\n                                <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">1.00</output></div>\n                            </form>\n                            <form id=\"axp_config_form_pressureA\" oninput=\"result.value=Math.pow(2, parseFloat(volume.value)).toFixed(2)\"\n                                class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                                <input type=\"range\" name=\"volume\" value=\"1\" step=\"0.05\" min=\"-2\" max=\"2\">\n                                <div class=\"axpc_range_label axpc_text_border\">乗数</div>\n                                <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">2.00</output></div>\n                            </form>\n                            <form id=\"axp_config_form_pressureC\" oninput=\"result.value=parseFloat(volume.value).toFixed(2)\"\n                                class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                                <input type=\"range\" name=\"volume\" value=\"0.0\" step=\"0.01\" min=\"0.0\" max=\"0.99\">\n                                <div class=\"axpc_range_label axpc_text_border\">不感地帯</div>\n                                <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">0.00</output></div>\n                            </form>\n                        </div>\n                    </div>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <u>ハライ/ハネ</u>\n                    <form id=\"axp_config_form_flickThreshold\" oninput=\"result.value=(volume.value/100)\"\n                        class=\"axpc_range axpc_range_width228\">\n                        <input type=\"range\" name=\"volume\" min=\"0\" max=\"50\" value=\"10\" step=\"1\">\n                        <div class=\"axpc_range_label axpc_text_border\">ハライ閾値</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">0.1</output></div>\n                    </form>\n                    <form id=\"axp_config_form_flickFactor\" oninput=\"result.value=volume.value\"\n                        class=\"axpc_range axpc_range_width228\">\n                        <input type=\"range\" name=\"volume\" min=\"0\" max=\"80\" value=\"40\" step=\"1\">\n                        <div class=\"axpc_range_label axpc_text_border\">テーパ係数</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">40</output></div>\n                    </form>\n                    <form id=\"axp_config_form_flickMinRatio\" oninput=\"result.value=(volume.value/10)\"\n                        class=\"axpc_range axpc_range_width228\">\n                        <input type=\"range\" name=\"volume\" min=\"0\" max=\"100\" value=\"20\" step=\"5\">\n                        <div class=\"axpc_range_label axpc_text_border\">最小倍率</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">2</output></div>\n                    </form>\n                    <form id=\"axp_config_form_flickMaxRatio\" oninput=\"result.value=(volume.value/10)\"\n                        class=\"axpc_range axpc_range_width228\">\n                        <input type=\"range\" name=\"volume\" min=\"0\" max=\"100\" value=\"70\" step=\"1\">\n                        <div class=\"axpc_range_label axpc_text_border\">最大倍率</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">7</output></div>\n                    </form>\n                    <form id=\"axp_config_form_flickExtrap\" oninput=\"result.value=volume.value\"\n                        class=\"axpc_range axpc_range_width228\">\n                        <input type=\"range\" name=\"volume\" min=\"0\" max=\"80\" value=\"15\" step=\"5\">\n                        <div class=\"axpc_range_label axpc_text_border\">外挿率%</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">15</output></div>\n                    </form>\n                    <button id=\"axp_config_button_resetFlick\" class=\"axpc_button\" style=\"margin-top:4px;\">デフォルトに戻す</button>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"スポイト\">\n                    <u>使用後ペンに切り替える</u>\n                    <form id=\"axp_config_form_autoChangeSpuitToPen\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0043\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0044\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>長押しスポイト</u>\n                    <form id=\"axp_config_form_useLongtap\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0045\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0046\" data-value=\"on\">あり</span>\n                    </form>\n                    <div style=\"margin-top: 16px;\"></div>\n                    <form id=\"axp_config_form_longtapDurationValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"700\" step=\"100\" min=\"500\" max=\"1500\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0047\">\n                        <div class=\"axpc_range_label axpc_text_border\">長押し反応時間</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">700</output></div>[ミリ秒]\n                    </form>\n                    <form id=\"axp_config_form_longtapStabilizerValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"5\" step=\"1\" min=\"0\" max=\"10\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0048\">\n                        <div class=\"axpc_range_label axpc_text_border\">長押し受付範囲</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">5</output></div>[px]\n                    </form>\n                    （※長押し操作が反応しない場合、受付範囲を大きくしてください）\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"レンジスライダー\">\n                    <u>ぼかし度</u>\n                    <form id=\"axp_config_form_blurLevel\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0200\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0201\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>トーン濃度</u>\n                    <form id=\"axp_config_form_ToneLevel\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0049\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0050\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>太さと不透明度の表示順序</u>\n                    <form id=\"axp_config_form_pentoolRangeOrder\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0051\" data-value=\"size\" data-default=\"y\">太さ->不透明度</span>\n                        <span data-msg=\"@CFG0052\" data-value=\"alpha\">不透明度->太さ</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"色作成\" data-icon=\"axpc_icon_window_colormaker\">\n                <div class=\"axpc_config_group\" data-title=\"使用する色作成ツール\">\n                    <u>混色パレット</u>\n                    <form id=\"axp_config_form_makeColorTypeMixed\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0053\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0054\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>RGBスライダー</u>\n                    <form id=\"axp_config_form_makeColorTypeRGB\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0055\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0056\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <u>カラーピッカー</u>\n                    <form id=\"axp_config_form_makeColorTypePicker\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0057\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0058\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"パレット\" data-icon=\"axpc_icon_window_palette\">\n                <div class=\"axpc_config_group\" data-title=\"パレットのレイアウト\">\n                    <u>横幅（列の数）</u><br>\n                    <form id=\"axp_config_form_paletteColumnValue\" class=\"axpc_range axpc_range_width228\">\n                        <!-- axpc_SAVE 対象外 -->\n                        <input type=\"range\" class=\"axpc_MSG\" name=\"volume\" value=\"3\" step=\"1\" min=\"1\" max=\"24\"\n                            data-msg=\"@CFG0063\">\n                        <div class=\"axpc_range_label axpc_text_border\">横幅</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\"></output></div>[列]\n                    </form>\n                    <div style=\"margin-top: 4px;\"></div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0062\">\n                        <label>\n                            <input id=\"axp_config_checkbox_paletteColumnEdit\" class=\"axpc_SAVE\" type=\"checkbox\"\n                                checked>パレット編集モード時にレンジスライダーを表示する\n                        </label>\n                    </div>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <!-- カラーパレットを表示するためのエリア -->\n                    <div id=\"axp_config_div_paletteText\"></div>\n                    <div id=\"axp_config_div_paletteScroll\">\n                        <div id=\"axp_config_div_paletteBox\"></div>\n                    </div>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"パレットのインポート・エクスポート／初期化\">\n                    <button id=\"axp_config_button_saveColor\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0064\">パレットファイルに保存</button>\n                    <br>\n                    <button id=\"axp_config_button_loadColor\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0065\">パレットファイルの読込</button>\n                    <br>\n                    <button id=\"axp_config_button_resetColor\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0066\">パレットの初期化</button>\n                    <input type=\"file\" id=\"axp_config_file_loadColor\" accept=\".txt\" style=\"display: none;\">\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"レイヤー\" data-icon=\"axpc_icon_window_layer\">\n                <div class=\"axpc_config_group\" data-title=\"合成モードの表示\">\n                    <form id=\"axp_config_form_blendModeDisplayType\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0120\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0121\" data-value=\"all\">全表示</span>\n                        <span data-msg=\"@CFG0122\" data-value=\"unusual\" data-default=\"y\">通常以外表示</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"レイヤー名の登録\">\n                    レイヤー名の変更時、文字入力の代わりに登録した名前を使用できます。\n                    <div id=\"axp_config_div_colorTag\" class=\"axpc_MSG\" data-msg=\"@CFG0123\"></div>\n                    <button id=\"axp_config_button_resetColorTag\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0124\">レイヤー名の初期化</button>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"補助ツール\" data-icon=\"axpc_icon_window_subtool\">\n                <div class=\"axpc_config_group\" data-title=\"アンドゥ／リドゥ可能回数\">\n                    <form id=\"axp_config_form_undoMaxValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"25\" step=\"1\" min=\"10\" max=\"50\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0067\">\n                        <div class=\"axpc_range_label axpc_text_border\">回数</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">25</output></div>[回]\n                    </form>\n                    （※変更した値を有効にするにはAXNOS Paintを再起動する必要があります）\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"拡大率\">\n                    <div id=\"axp_config_div_scale\">\n                        <div id=\"axp_config_div_scaleButton\">\n                            <input id=\"axp_config_number_scale\" type=\"number\" maxlength=\"3\" min=\"25\" max=\"1600\"\n                                value=\"125\" size=\"5\" class=\"axpc_MSG\" data-msg=\"@CFG0211\">\n                            <span>[%]</span>\n                            <button id=\"axp_config_button_addScale\" class=\"axpc_MSG axpc_button\"\n                                data-msg=\"@CFG0070\">追加</button>\n                        </div>\n                        （※最小25～最大1600）\n                        <button id=\"axp_config_button_deleteScale\" class=\"axpc_MSG axpc_button\"\n                            data-msg=\"@CFG0071\">選択した拡大率を削除</button>\n                        <ul id=\"axp_config_ul_scale\" class=\"axpc_MSG\" data-msg=\"@CFG0212\">\n                        </ul>\n                        <button id=\"axp_config_button_resetScale\" class=\"axpc_MSG axpc_button\"\n                            data-msg=\"@CFG0072\">拡大率の初期化</button>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"カスタムボタン\">\n                <div class=\"axpc_config_group\" data-title=\"カスタムボタンと機能割り当て\">\n                    <u>ボタンの表示</u>\n                    <form id=\"axp_config_form_useCustomButton\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0080\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0081\" data-value=\"on\">あり</span>\n                    </form>\n                    <br>\n                    <div id=\"axp_config_div_customButtonFunction\">\n                        <table id=\"axp_config_table_customButton\" class=\"axpc_MSG axpc_config_table\"\n                            data-msg=\"@CFG0112\">\n                            <thead>\n                                <tr>\n                                    <th>ボタン</th>\n                                    <th>機能</th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                            </tbody>\n                        </table>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"マウス\">\n                <div class=\"axpc_config_group\" data-title=\"マウス右ボタン\">\n                    <form id=\"axp_config_form_mouseRightButton\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0082\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0083\" data-value=\"undo\" data-default=\"y\">アンドゥ</span>\n                        <span data-msg=\"@CFG0084\" data-value=\"spuit\">スポイト</span>\n                        <span data-msg=\"@CFG0085\" data-value=\"hand\">ハンド</span>\n                        <span data-msg=\"@CFG0086\" data-value=\"loupe\">拡大率100%</span>\n                        <span data-msg=\"@CFG0087\" data-value=\"swapcolor\">ﾒｲﾝ色切替</span>\n                        <span data-msg=\"@CFG0088\" data-value=\"swaptrans\">透明色切替</span>\n                        <span data-msg=\"@CFG0400\" data-value=\"transdraw\">透明色描画</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"マウスホイールボタン\">\n                    <form id=\"axp_config_form_mouseWheelButton\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0082\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0083\" data-value=\"undo\">アンドゥ</span>\n                        <span data-msg=\"@CFG0084\" data-value=\"spuit\" data-default=\"y\">スポイト</span>\n                        <span data-msg=\"@CFG0085\" data-value=\"hand\">ハンド</span>\n                        <span data-msg=\"@CFG0086\" data-value=\"loupe\">拡大率100%</span>\n                        <span data-msg=\"@CFG0087\" data-value=\"swapcolor\">ﾒｲﾝ色切替</span>\n                        <span data-msg=\"@CFG0088\" data-value=\"swaptrans\">透明色切替</span>\n                        <span data-msg=\"@CFG0400\" data-value=\"transdraw\">透明色描画</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"マウスホイール回転\">\n                    <form id=\"axp_config_form_mouseWheelRotate\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0089\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0090\" data-value=\"loupe\" data-default=\"y\">拡大/縮小</span>\n                        <span data-msg=\"@CFG0091\" data-value=\"scroll\">スクロール</span>\n                    </form>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0220\">\n                        <label>\n                            <input id=\"axp_config_checkbox_mouseWheelDirection\" class=\"axpc_SAVE\" type=\"checkbox\">回転方向反転\n                        </label>\n                    </div>\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0223\">\n                        <label>\n                            <input id=\"axp_config_checkbox_mouseWheelPointerTracking\" class=\"axpc_SAVE\" type=\"checkbox\"\n                                checked>ポインタ位置を中心に拡大／縮小\n                        </label>\n                    </div>\n                    <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0221\">\n                        <label>スクロール移動量\n                            <input id=\"axp_config_number_mouseWheelMoveSize\" class=\"axpc_SAVE\" type=\"number\" min=\"1\"\n                                max=\"100\" value=\"30\">[px]（※最小1～最大100）\n                        </label>\n                    </div>\n                    <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0222\">\n                        <label>連続入力抑止時間\n                            <input id=\"axp_config_number_mouseWheelSleepTime\" class=\"axpc_SAVE\" type=\"number\" min=\"0\"\n                                max=\"500\" value=\"0\">[ミリ秒]\n                        </label>\n                    </div>\n                    （※最小0～最大500。0を指定すると入力抑止を行いません。<br>\n                    　タッチパッドのホイール操作感度が高すぎる場合に設定してください）\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"タッチパッド\">\n                    <u>キャンバスの拡大／縮小</u>（ピンチアウト／ピンチイン）\n                    <form id=\"axp_config_form_mouseWheelZoom\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0097\" data-value=\"off\" data-default=\"y\">なし</span>\n                        <span data-msg=\"@CFG0098\" data-value=\"on\">あり</span>\n                    </form>\n                    （※「あり」設定時、環境によってマウスホイールと競合する場合があります）\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"タッチパネル\">\n                <div class=\"axpc_config_group\" data-title=\"タッチ操作\">\n                    <u>機能割り当て</u>（１本指タッチ）\n                    <form id=\"axp_config_form_touchDrawType\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0092\" data-value=\"none\">なし</span>\n                        <span data-msg=\"@CFG0093\" data-value=\"draw\" data-default=\"y\">描画</span>\n                        <span data-msg=\"@CFG0094\" data-value=\"hand\">ハンド</span>\n                    </form>\n                    <br>\n                    <u>キャンバスの移動</u>（２本指スワイプ）\n                    <form id=\"axp_config_form_touchHand\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0095\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0096\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>キャンバスの拡大／縮小</u>（ピンチ操作）\n                    <form id=\"axp_config_form_touchZoom\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0097\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0098\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"タップ操作\">\n                    <u>アンドゥ</u>（２本指タップ）\n                    <form id=\"axp_config_form_touchUndo\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0099\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0100\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>リドゥ</u>（３本指タップ）\n                    <form id=\"axp_config_form_touchRedo\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0101\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0102\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <div style=\"margin-top: 16px;\"></div>\n                    <form id=\"axp_config_form_touchDurationValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"300\" step=\"100\" min=\"100\" max=\"1000\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0103\">\n                        <div class=\"axpc_range_label axpc_text_border\">タップ制限時間</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">300</output></div>[ミリ秒]\n                    </form>\n                    <form id=\"axp_config_form_touchThresholdValue\" oninput=\"result.value=parseInt(volume.value)\"\n                        class=\"axpc_range axpc_range_width228 axpc_SAVE\">\n                        <input type=\"range\" name=\"volume\" value=\"5\" step=\"1\" min=\"0\" max=\"10\" class=\"axpc_MSG\"\n                            data-msg=\"@CFG0401\">\n                        <div class=\"axpc_range_label axpc_text_border\">タップ受付範囲</div>\n                        <div class=\"axpc_range_value axpc_text_border\"><output name=\"result\">5</output></div>[px]\n                    </form>\n                    （※タップ操作が反応しない場合、受付範囲を大きくしてください）\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"キーボード\">\n                <div class=\"axpc_config_group\" data-title=\"ショートカットと機能割り当て\">\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0111\">\n                        <label>\n                            <input id=\"axp_config_checkbox_shortcutKeyHiddenNofunc\" class=\"axpc_SAVE\"\n                                type=\"checkbox\">割り当て無しのキーを非表示にする\n                        </label>\n                    </div>\n                    <div style=\"margin-top: 8px;\"></div>\n                    <table id=\"axp_config_table_shortcutKey\" class=\"axpc_MSG axpc_config_table\" data-msg=\"@CFG0112\">\n                        <thead>\n                            <tr>\n                                <th>キー</th>\n                                <th>機能</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>[ SPACE ]</td>\n                                <td><select id=\"axp_config_select_modkey_space\" class=\"axpc_SAVE\">\n                                    <option value=\"hand\">ハンドツール</option>\n                                    <option value=\"eraser\">消しゴム</option>\n                                    <option value=\"line\">直線</option>\n                                    <option value=\"spuit\">スポイト</option>\n                                    <option value=\"none\">なし</option>\n                                </select></td>\n                            </tr>\n                            <tr>\n                                <td>[ SHIFT ]</td>\n                                <td><select id=\"axp_config_select_modkey_shift\" class=\"axpc_SAVE\">\n                                    <option value=\"hand\">ハンドツール</option>\n                                    <option value=\"eraser\">消しゴム</option>\n                                    <option value=\"line\" selected>直線</option>\n                                    <option value=\"spuit\">スポイト</option>\n                                    <option value=\"none\">なし</option>\n                                </select></td>\n                            </tr>\n                            <tr>\n                                <td>[ CTRL ]</td>\n                                <td><select id=\"axp_config_select_modkey_ctrl\" class=\"axpc_SAVE\">\n                                    <option value=\"hand\">ハンドツール</option>\n                                    <option value=\"eraser\">消しゴム</option>\n                                    <option value=\"line\">直線</option>\n                                    <option value=\"spuit\" selected>スポイト</option>\n                                    <option value=\"none\">なし</option>\n                                </select></td>\n                            </tr>\n                            <tr>\n                                <td>[ ALT ]</td>\n                                <td><select id=\"axp_config_select_modkey_alt\" class=\"axpc_SAVE\">\n                                    <option value=\"hand\">ハンドツール</option>\n                                    <option value=\"eraser\" selected>消しゴム</option>\n                                    <option value=\"line\">直線</option>\n                                    <option value=\"spuit\">スポイト</option>\n                                    <option value=\"none\">なし</option>\n                                </select></td>\n                            </tr>\n                        </tbody>\n                    </table>\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"ショートカットのインポート・エクスポート／初期化\">\n                    <button id=\"axp_config_button_saveShortcut\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0113\">ショートカットファイルに保存</button>\n                    <br>\n                    <button id=\"axp_config_button_loadShortcut\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0114\">ショートカットファイルの読込</button>\n                    <br>\n                    <button id=\"axp_config_button_resetShortcut\" class=\"axpc_MSG axpc_button axpc_button_width260\"\n                        data-msg=\"@CFG0115\">ショートカットの初期化</button>\n                    <input type=\"file\" id=\"axp_config_file_loadShortcut\" accept=\".txt\" style=\"display: none;\">\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"画面スクロール\">\n                    <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"@CFG0230\">\n                        <label>\n                            <input id=\"axp_config_checkbox_moveDirection\" class=\"axpc_SAVE\" type=\"checkbox\">スクロール方向反転\n                        </label>\n                    </div>\n                    <div class=\"axpc_number axpc_MSG\" data-msg=\"@CFG0108\">\n                        <label>スクロール移動量\n                            <input id=\"axp_config_number_moveSize\" class=\"axpc_SAVE\" type=\"number\" min=\"1\" max=\"100\"\n                                value=\"30\">[px]（※最小1～最大100）\n                        </label>\n                    </div>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"起動時\">\n                <div class=\"axpc_config_group\" data-title=\"前回の状態の復元\">\n                    <u>ツールウィンドウ位置</u>\n                    <form id=\"axp_config_form_saveLastWindowPosition\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0026\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0027\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>ペンツールの設定値</u>\n                    <form id=\"axp_config_form_saveLastPenValue\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0034\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0035\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                    <br>\n                    <u>カラーパレットの色</u>\n                    <form id=\"axp_config_form_saveLastPalleteColor\" class=\"axpc_radio\">\n                        <span data-msg=\"@CFG0059\" data-value=\"off\">なし</span>\n                        <span data-msg=\"@CFG0060\" data-value=\"on\" data-default=\"y\">あり</span>\n                    </form>\n                </div>\n            </div>\n            <div class=\"axpc_config_section\" data-title=\"バージョン情報\" id=\"axp_config_div_version\">\n                <div class=\"axpc_config_group\" data-title=\"バージョン情報\">\n                    <div id=\"axp_config_div_versionInfo\"></div>\n                    © 2026- nijiurachan contributors<br>\n                    © 2022 「悪の巣」部屋番号13番：「趣味の悪い大衆酒場[Mad end dance hall]」<br>\n                    <br>\n                    ◆ GitHub<br>\n                    <a href=\"https://github.com/nijiurachan/axnospaint-for-aimg\" target=\"_blank\" rel=\"noopener\"\n                        style=\"text-decoration: none;color:#00f\">\n                        https://github.com/nijiurachan/axnospaint-for-aimg</a>\n                    <br><br>\n                    ◆ AXNOS Paint:ヘルプ - ニコニコ大百科<br>\n                    <a href=\"https://dic.nicovideo.jp/id/5703111\" target=\"_blank\" rel=\"noopener\"\n                        style=\"text-decoration: none;color:#00f\">\n                        https://dic.nicovideo.jp/id/5703111</a>\n                    <br>\n                    ※ 本バージョンはあいもげ用にカスタマイズしたものです。質問・バグ報告・要望は、ニコニコ大百科でなくGitHubまでお願いします。\n                </div>\n                <div class=\"axpc_config_group\" data-title=\"デバッグ情報表示\">\n                    <details>\n                        <summary><span style=\"color:#f00\"><b>※不具合発生時の動作検証用です。通常時は使用しないでください。</b></span></summary>\n                        <div class=\"axpc_checkbox axpc_MSG\" data-msg=\"チェックするとデバッグモードが有効になります。\">\n                            <label>\n                                <input id=\"axp_config_checkbox_useDebugMode\" class=\"axpc_SAVE\"\n                                    type=\"checkbox\">デバッグ情報を表示する\n                            </label>\n                        </div>\n                    </details>\n                </div>\n            </div>\n            <div style=\"height: calc(100vh);\"></div>\n            <div class=\"axpc_config_section\" data-title=\"ページの終端です。\">\n            </div>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
 
@@ -20963,7 +21049,7 @@ module.exports = "<!-- パレット -->\n<div class=\"axpc_window_content\">\n  
   \*********************************/
 /***/ ((module) => {
 
-module.exports = "<!-- ペンツール -->\n<div class=\"axpc_window_content\">\n    <div id=\"axp_pen_div_content\">\n        <!-- ペンツール左側 -->\n        <div id=\"axp_pen_div_leftSide\">\n            <span id=\"axp_pen_span_penName\" class=\"axpc_MSG\" data-msg=\"@PEN0001\"></span>\n            <!-- プレビュー領域 -->\n            <div id=\"axp_pen_div_preview\" class=\"axpc_MSG\" data-msg=\"@PEN0200\">\n                <canvas id=\"axp_pen_canvas_previewPenSize\"></canvas>\n                <canvas id=\"axp_pen_canvas_previewSpuit\"></canvas>\n            </div>\n            <!-- スライダー領域 -->\n            <div id=\"axp_pen_div_slider\">\n                <!-- ペンの不透明度 -->\n                <form id=\"axp_pen_form_alpha\" class=\"axpc_range axpc_text_border\"\n                    oninput=\"result.value=parseInt(volume.value)\">\n                    <input type=\"range\" id=\"axp_pen_range_alpha\" name=\"volume\" min=\"5\" max=\"100\" value=\"100\" step=\"5\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0002\">\n                    <div class=\"axpc_range_label\">${_(\"@COMMON.OPACITY\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- ペンの太さ -->\n                <form id=\"axp_pen_form_penSize\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_penSize\" name=\"volume\" min=\"1\" max=\"100\" value=\"1\" step=\"1\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0003\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.SIZE\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- バケツの境界補正 -->\n                <form id=\"axp_pen_form_fillThreshold\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_fillThreshold\" name=\"volume\" value=\"0\" step=\"1\" min=\"0\"\n                        max=\"5\" class=\"axpc_MSG\" data-msg=\"@PEN0004\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.GROW_FILL_AREA\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- バケツのグラデーション角度 -->\n                <form id=\"axp_pen_form_fillGradationDeg\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_fillGradationDeg\" name=\"volume\" value=\"0\" step=\"15\" min=\"0\"\n                        max=\"360\" class=\"axpc_MSG\" data-msg=\"@PEN0005\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.ANGLE\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- クレヨンの丸み -->\n                <form id=\"axp_pen_form_radius\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_radius\" name=\"volume\" value=\"50\" step=\"1\" min=\"0\" max=\"50\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0010\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.ROUNDNESS\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- ぼかし度（オプション） -->\n                <form id=\"axp_pen_form_blur\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_blur\" name=\"volume\" value=\"0\" step=\"1\" min=\"0\" max=\"5\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0009\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.BLUR\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- トーン濃度（オプション） -->\n                <form id=\"axp_pen_form_toneLevel\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_toneLevel\" name=\"volume\" value=\"16\" step=\"1\" min=\"1\" max=\"16\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0006\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.TONE_DENSITY\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- 手ぶれ補正（オプション） -->\n                <form id=\"axp_pen_form_stabilizer\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_stabilizer\" name=\"volume\" value=\"2\" step=\"1\" min=\"0\" max=\"10\"\n                        class=\"axpc_MSG\" data-msg=\"@CFG0040\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.STABILIZER\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- 筆圧 ON/OFF（オプション、ペン別） -->\n                <div id=\"axp_pen_form_usePressure\" class=\"axpc_checkbox axpc_text_border\">\n                    <label>\n                        <input type=\"checkbox\" id=\"axp_pen_checkbox_usePressure\" checked>${_(\"@PEN.USE_PRESSURE\")}\n                    </label>\n                </div>\n                <!-- [仮設] ハライ/ハネ チューニング -->\n                <form id=\"axp_pen_form_flickThreshold\" oninput=\"result.value=(volume.value/100)\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" name=\"volume\" min=\"0\" max=\"50\" value=\"10\" step=\"1\">\n                    <div class=\"axpc_range_label\">ハライ閾値</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\">0.1</output></div>\n                </form>\n                <form id=\"axp_pen_form_flickFactor\" oninput=\"result.value=volume.value\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" name=\"volume\" min=\"0\" max=\"80\" value=\"40\" step=\"1\">\n                    <div class=\"axpc_range_label\">テーパ係数</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\">40</output></div>\n                </form>\n                <form id=\"axp_pen_form_flickMinRatio\" oninput=\"result.value=(volume.value/10)\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" name=\"volume\" min=\"0\" max=\"100\" value=\"20\" step=\"5\">\n                    <div class=\"axpc_range_label\">最小倍率</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\">2</output></div>\n                </form>\n                <form id=\"axp_pen_form_flickMaxRatio\" oninput=\"result.value=(volume.value/10)\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" name=\"volume\" min=\"0\" max=\"100\" value=\"70\" step=\"1\">\n                    <div class=\"axpc_range_label\">最大倍率</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\">7</output></div>\n                </form>\n                <form id=\"axp_pen_form_flickExtrap\" oninput=\"result.value=volume.value\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" name=\"volume\" min=\"0\" max=\"80\" value=\"15\" step=\"5\">\n                    <div class=\"axpc_range_label\">外挿率%</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\">15</output></div>\n                </form>\n            </div>\n\n            <div id=\"axp_pen_div_spuitColorRGBA\">\n                <div>${_(\"@COMMON.RED\")}:<span id=\"axp_pen_span_spuitColorRed\">-</span></div>\n                <div>${_(\"@COMMON.GREEN\")}:<span id=\"axp_pen_span_spuitColorGreen\">-</span></div>\n                <div>${_(\"@COMMON.BLUE\")}:<span id=\"axp_pen_span_spuitColorBlue\">-</span></div>\n                <div>${_(\"@COMMON.ALPHA\")}:<span id=\"axp_pen_span_spuitColorAlpha\">-</span></div>\n            </div>\n\n            <div id=\"axp_pen_div_selectbox\">\n                <select id=\"axp_pen_select_drawMode\" class=\"axpc_MSG\" data-msg=\"@PEN0007\">\n                    <option value=\"option_normal\">${_(\"@PEN.OPTION_FREE_HAND\")}</option>\n                    <option value=\"option_line\">${_(\"@PEN.OPTION_STRAIGHT\")}</option>\n                    <option value=\"option_rectangle\">${_(\"@PEN.OPTION_RECT\")}</option>\n                    <option value=\"option_circle\">${_(\"@PEN.OPTION_CIRCLE\")}</option>\n                </select>\n                <select id=\"axp_pen_select_fillMode\" class=\"axpc_MSG axpc_NONE\" data-msg=\"@PEN0008\">\n                    <option value=\"option_all\">${_(\"@PEN.OPTION_FILL_SAMPLE_ALL\")}</option>\n                    <option value=\"option_layer\">${_(\"@PEN.OPTION_FILL_SAMPLE_CURRENT\")}</option>\n                </select>\n            </div>\n\n        </div>\n        <!-- ペンツール右側 -->\n        <div id=\"axp_pen_div_rightSide\">\n            <div>\n                <button data-idx=\"0\" id=\"axp_pen_button_penBase\" class=\"axpc_FUNC\" data-function=\"func_switch_pen\"\n                    data-selected=\"true\" data-msg=\"@PEN0050\"></button>\n            </div>\n            <div>\n                <button data-idx=\"1\" id=\"axp_pen_button_eraserBase\" class=\"axpc_FUNC\" data-function=\"func_switch_eraser\"\n                    data-msg=\"@PEN0051\"></button>\n            </div>\n            <div>\n                <button data-idx=\"2\" id=\"axp_pen_button_fillBase\" class=\"axpc_FUNC\" data-function=\"func_switch_fill\"\n                    data-msg=\"@PEN0052\"></button>\n            </div>\n            <div>\n                <button data-idx=\"3\" id=\"axp_pen_button_handBase\" class=\"axpc_FUNC\" data-function=\"func_switch_hand\"\n                    data-msg=\"@PEN0053\"></button>\n            </div>\n            <div>\n                <button data-idx=\"4\" id=\"axp_pen_button_spuitBase\" class=\"axpc_FUNC\" data-function=\"func_switch_spuit\"\n                    data-msg=\"@PEN0054\"></button>\n            </div>\n        </div>\n    </div>\n</div>";
+module.exports = "<!-- ペンツール -->\n<div class=\"axpc_window_content\">\n    <div id=\"axp_pen_div_content\">\n        <!-- ペンツール左側 -->\n        <div id=\"axp_pen_div_leftSide\">\n            <span id=\"axp_pen_span_penName\" class=\"axpc_MSG\" data-msg=\"@PEN0001\"></span>\n            <!-- プレビュー領域 -->\n            <div id=\"axp_pen_div_preview\" class=\"axpc_MSG\" data-msg=\"@PEN0200\">\n                <canvas id=\"axp_pen_canvas_previewPenSize\"></canvas>\n                <canvas id=\"axp_pen_canvas_previewSpuit\"></canvas>\n            </div>\n            <!-- スライダー領域 -->\n            <div id=\"axp_pen_div_slider\">\n                <!-- ペンの不透明度 -->\n                <form id=\"axp_pen_form_alpha\" class=\"axpc_range axpc_text_border\"\n                    oninput=\"result.value=parseInt(volume.value)\">\n                    <input type=\"range\" id=\"axp_pen_range_alpha\" name=\"volume\" min=\"5\" max=\"100\" value=\"100\" step=\"5\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0002\">\n                    <div class=\"axpc_range_label\">${_(\"@COMMON.OPACITY\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- 消し率（消しゴム専用） -->\n                <form id=\"axp_pen_form_eraseRate\" oninput=\"result.value=[2,5,10,20,50,100][parseInt(volume.value)]\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_eraseRate\" name=\"volume\" min=\"0\" max=\"5\" value=\"5\" step=\"1\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.ERASE_RATE\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\">100</output></div>\n                </form>\n                <!-- 太さクイックボタン -->\n                <div id=\"axp_pen_div_quickSize\" class=\"axpc_text_border\">\n                    <button class=\"axpc_pen_quicksize\" data-qidx=\"0\" data-size=\"2\"></button>\n                    <button class=\"axpc_pen_quicksize\" data-qidx=\"1\" data-size=\"4\"></button>\n                    <button class=\"axpc_pen_quicksize\" data-qidx=\"2\" data-size=\"10\"></button>\n                </div>\n                <!-- ペンの太さ -->\n                <form id=\"axp_pen_form_penSize\" class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_penSize\" name=\"volume\" min=\"1\" max=\"100\" value=\"1\" step=\"1\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0003\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.SIZE\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- バケツの境界補正 -->\n                <form id=\"axp_pen_form_fillThreshold\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_fillThreshold\" name=\"volume\" value=\"0\" step=\"1\" min=\"0\"\n                        max=\"5\" class=\"axpc_MSG\" data-msg=\"@PEN0004\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.GROW_FILL_AREA\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- バケツのグラデーション角度 -->\n                <form id=\"axp_pen_form_fillGradationDeg\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_fillGradationDeg\" name=\"volume\" value=\"0\" step=\"15\" min=\"0\"\n                        max=\"360\" class=\"axpc_MSG\" data-msg=\"@PEN0005\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.ANGLE\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- クレヨンの丸み -->\n                <form id=\"axp_pen_form_radius\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_radius\" name=\"volume\" value=\"50\" step=\"1\" min=\"0\" max=\"50\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0010\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.ROUNDNESS\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- ぼかし度（オプション） -->\n                <form id=\"axp_pen_form_blur\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_blur\" name=\"volume\" value=\"0\" step=\"1\" min=\"0\" max=\"5\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0009\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.BLUR\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- トーン濃度（オプション） -->\n                <form id=\"axp_pen_form_toneLevel\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_toneLevel\" name=\"volume\" value=\"16\" step=\"1\" min=\"1\" max=\"16\"\n                        class=\"axpc_MSG\" data-msg=\"@PEN0006\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.TONE_DENSITY\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- 手ぶれ補正（オプション） -->\n                <form id=\"axp_pen_form_stabilizer\" oninput=\"result.value=parseInt(volume.value)\"\n                    class=\"axpc_range axpc_text_border\">\n                    <input type=\"range\" id=\"axp_pen_range_stabilizer\" name=\"volume\" value=\"2\" step=\"1\" min=\"0\" max=\"10\"\n                        class=\"axpc_MSG\" data-msg=\"@CFG0040\">\n                    <div class=\"axpc_range_label\">${_(\"@PEN.STABILIZER\")}</div>\n                    <div class=\"axpc_range_value\"><output name=\"result\"></output></div>\n                </form>\n                <!-- 筆圧 ON/OFF（オプション、ペン別） -->\n                <div id=\"axp_pen_form_usePressure\" class=\"axpc_checkbox axpc_text_border\">\n                    <label>\n                        <input type=\"checkbox\" id=\"axp_pen_checkbox_usePressure\" checked>${_(\"@PEN.USE_PRESSURE\")}\n                    </label>\n                </div>\n                <!-- 極細時に半透明化（オプション、ペン別） -->\n                <div id=\"axp_pen_form_useSubPxAlpha\" class=\"axpc_checkbox axpc_text_border\">\n                    <label>\n                        <input type=\"checkbox\" id=\"axp_pen_checkbox_useSubPxAlpha\" checked>${_(\"@PEN.USE_SUBPX_ALPHA\")}\n                    </label>\n                </div>\n            </div>\n\n            <div id=\"axp_pen_div_spuitColorRGBA\">\n                <div>${_(\"@COMMON.RED\")}:<span id=\"axp_pen_span_spuitColorRed\">-</span></div>\n                <div>${_(\"@COMMON.GREEN\")}:<span id=\"axp_pen_span_spuitColorGreen\">-</span></div>\n                <div>${_(\"@COMMON.BLUE\")}:<span id=\"axp_pen_span_spuitColorBlue\">-</span></div>\n                <div>${_(\"@COMMON.ALPHA\")}:<span id=\"axp_pen_span_spuitColorAlpha\">-</span></div>\n            </div>\n\n            <div id=\"axp_pen_div_selectbox\">\n                <select id=\"axp_pen_select_drawMode\" class=\"axpc_MSG\" data-msg=\"@PEN0007\">\n                    <option value=\"option_normal\">${_(\"@PEN.OPTION_FREE_HAND\")}</option>\n                    <option value=\"option_line\">${_(\"@PEN.OPTION_STRAIGHT\")}</option>\n                    <option value=\"option_rectangle\">${_(\"@PEN.OPTION_RECT\")}</option>\n                    <option value=\"option_circle\">${_(\"@PEN.OPTION_CIRCLE\")}</option>\n                </select>\n                <select id=\"axp_pen_select_fillMode\" class=\"axpc_MSG axpc_NONE\" data-msg=\"@PEN0008\">\n                    <option value=\"option_all\">${_(\"@PEN.OPTION_FILL_SAMPLE_ALL\")}</option>\n                    <option value=\"option_layer\">${_(\"@PEN.OPTION_FILL_SAMPLE_CURRENT\")}</option>\n                </select>\n            </div>\n\n        </div>\n        <!-- ペンツール右側 -->\n        <div id=\"axp_pen_div_rightSide\">\n            <div>\n                <button data-idx=\"0\" id=\"axp_pen_button_penBase\" class=\"axpc_FUNC\" data-function=\"func_switch_pen\"\n                    data-selected=\"true\" data-msg=\"@PEN0050\"></button>\n            </div>\n            <div>\n                <button data-idx=\"1\" id=\"axp_pen_button_eraserBase\" class=\"axpc_FUNC\" data-function=\"func_switch_eraser\"\n                    data-msg=\"@PEN0051\"></button>\n            </div>\n            <div>\n                <button data-idx=\"2\" id=\"axp_pen_button_fillBase\" class=\"axpc_FUNC\" data-function=\"func_switch_fill\"\n                    data-msg=\"@PEN0052\"></button>\n            </div>\n            <div>\n                <button data-idx=\"3\" id=\"axp_pen_button_handBase\" class=\"axpc_FUNC\" data-function=\"func_switch_hand\"\n                    data-msg=\"@PEN0053\"></button>\n            </div>\n            <div>\n                <button data-idx=\"4\" id=\"axp_pen_button_spuitBase\" class=\"axpc_FUNC\" data-function=\"func_switch_spuit\"\n                    data-msg=\"@PEN0054\"></button>\n            </div>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
 
@@ -21146,7 +21232,7 @@ __webpack_require__.r(__webpack_exports__);
     axpObj;
     constructor(option) {
         console.log('version:', "3.0.0-alpha");
-        console.log('build:', "2026-06-19T13:20:11.089Z");
+        console.log('build:', "2026-06-20T12:57:27.338Z");
         (async () => {
             // 追加辞書オプションチェック
             let additionalDictionaryJSON = null;
@@ -21527,7 +21613,7 @@ __webpack_require__.r(__webpack_exports__);
     }
     // バージョン
     version() {
-        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-19T13:20:11.089Z"})`;
+        return `${this.axpObj.CONST.APP_TITLE} version ${"3.0.0-alpha"} (${"2026-06-20T12:57:27.338Z"})`;
     }
     // 画面の表示／非表示
     on() {
@@ -21539,7 +21625,7 @@ __webpack_require__.r(__webpack_exports__);
         this.axpObj.isClose = true;
     }
     static ver() {
-        return `version ${"3.0.0-alpha"} (${"2026-06-19T13:20:11.089Z"})`;
+        return `version ${"3.0.0-alpha"} (${"2026-06-20T12:57:27.338Z"})`;
     }
 });
 

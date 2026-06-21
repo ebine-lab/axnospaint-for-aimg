@@ -15,6 +15,7 @@ export class StampPenBase extends DrawingPenBase {
         // ピクセル単位の調節パラメータ (ペンごとに override 可)
         this.startRawPx = 2;   // 開幕この距離まで筆圧フィルタを素通し
         this.subPxFloor = 0.5; // サブピクセル幅の形状下限
+        this.useSubPxAlpha = true; // 極細時に半透明化 (false = 常に不透明)
         // 終端ハライ/ハネ (速度依存・筆圧テーパー)。筆圧ペンのみ有効。具体ペンで上書き可。
         this.flickTaper = {
             enabled: true,
@@ -99,6 +100,13 @@ export class StampPenBase extends DrawingPenBase {
                         this.lastCommitted = cp;
                     }
                 }
+                // サブピクセル半透明モードの終端キャップ (ストローク中にスタンプを省略しているため)
+                if (this.useSubPxAlpha && this.lastCommitted) {
+                    const rLast = this._radiusAt(this.lastCommitted);
+                    if (rLast > 0 && rLast < this.subPxFloor) {
+                        this._drawStamp(this.lastCommitted);
+                    }
+                }
                 this.write();
             } else {
                 this._drawShapeFull();
@@ -117,9 +125,17 @@ export class StampPenBase extends DrawingPenBase {
         return { x, y, rawPressure, pointerType, t };
     }
 
-    // 確定点間隔: 太いほど粗く打てる (細部の取りこぼし防止に下限 2px)
+    // 確定点間隔: 太いほど粗く打てる (細部の取りこぼし防止に下限 2px)。
+    // サブピクセル半透明モードでは gap を縮小してポリゴンタイリングを密にする。
     _gap() {
-        return Math.max(2, this._halfWidth());
+        const hw = this._halfWidth();
+        if (this.usePressure && this.useSubPxAlpha && this.lastCommitted) {
+            const r = hw * this.lastCommitted.pressure;
+            if (r < this.subPxFloor) {
+                return 2 * this.subPxFloor;
+            }
+        }
+        return Math.max(2, hw);
     }
 
     // 描画半径: usePressure のとき筆圧に比例、それ以外は固定半幅。
@@ -132,6 +148,7 @@ export class StampPenBase extends DrawingPenBase {
     // サブピクセル幅 (直径 < 1px) のエミュレーション:
     // 形状は subPxFloor にクランプし、不透明度を真半径/subPxFloor で減衰させる
     _subPxAlpha(rTrue) {
+        if (!this.useSubPxAlpha) return 1.0;
         const f = this.subPxFloor;
         return (rTrue < f) ? Math.max(0, rTrue) / f : 1.0;
     }
@@ -202,8 +219,12 @@ export class StampPenBase extends DrawingPenBase {
         ctx.closePath();
         ctx.fill();
         ctx.globalAlpha = saved;
-        // 終端のキャップ円 (こちらは p2 自身の真半径でアルファ補正)
-        this._drawStamp(p2);
+        // 終端のキャップ円: サブピクセル半透明モードでは省略 (ポリゴンタイリングで均一化)
+        const bothSubPx = this.useSubPxAlpha
+            && r1True < this.subPxFloor && r2True < this.subPxFloor;
+        if (!bothSubPx) {
+            this._drawStamp(p2);
+        }
     }
 
     // RECT / CIRCLE / 直線モード: 毎フレーム全体を再描画

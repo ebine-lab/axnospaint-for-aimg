@@ -92,7 +92,8 @@ export class AXPObj {
     isBackgroundimage; // 背景タイルプレビューが有効である
     isSPACE = false; // スペースが押されている
     isCTRL = false; // CTRLが押されている
-    isSHIFT = false; // シフトキーが押されている
+    isLineMod = false; // 直線モード修飾キーが押されている
+    isALT = false; // ALTが押されている
     isDrawing = false; // 描画中である
     isDrawn = false; // 描画処理が行われた
     isDrawCancel = false; // 描画処理がキャンセルされた

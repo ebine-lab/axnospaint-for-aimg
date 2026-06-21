@@ -9,142 +9,123 @@ export class KeyboardSystem {
     init() {
     }
     startEvent() {
-        // ウィンドウ非アクティブの時、強制的に押しているキーを解除
+        const readModKeyConfig = () => {
+            const get = (id, def) => {
+                const el = document.getElementById(id);
+                return el ? el.value : def;
+            };
+            return {
+                ' ':       get('axp_config_select_modkey_space', 'hand'),
+                'SHIFT':   get('axp_config_select_modkey_shift', 'line'),
+                'CONTROL': get('axp_config_select_modkey_ctrl',  'spuit'),
+                'ALT':     get('axp_config_select_modkey_alt',   'eraser'),
+            };
+        };
+        this.modKeyActions = readModKeyConfig();
+
+        for (const id of ['axp_config_select_modkey_space', 'axp_config_select_modkey_shift',
+                           'axp_config_select_modkey_ctrl', 'axp_config_select_modkey_alt']) {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', () => { this.modKeyActions = readModKeyConfig(); });
+        }
+
+        this.activeModifiers = {};
+
+        const applyAction = (action, down) => {
+            switch (action) {
+                case 'hand':
+                    if (down) this.axpObj.penSystem.changePenModeTemporary('axp_penmode_hand');
+                    else this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_hand');
+                    break;
+                case 'eraser':
+                    if (down) this.axpObj.penSystem.changePenModeTemporary('axp_penmode_eraser');
+                    else this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_eraser');
+                    break;
+                case 'spuit':
+                    if (down) this.axpObj.penSystem.changePenModeTemporary('axp_penmode_spuit');
+                    else this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_spuit');
+                    break;
+                case 'line':
+                    this.axpObj.isLineMod = down;
+                    if (down && this.axpObj.isDrawing) this.axpObj.isLine = true;
+                    break;
+            }
+        };
+
         window.addEventListener('blur', () => {
-            if (this.axpObj.isSPACE) {
-                this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_hand');
-                this.axpObj.isSPACE = false;
+            for (const [, action] of Object.entries(this.activeModifiers)) {
+                applyAction(action, false);
             }
-            if (this.axpObj.isCTRL) {
-                this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_spuit');
-                this.axpObj.isCTRL = false;
-            }
-            if (this.axpObj.isSHIFT) {
-                this.axpObj.isSHIFT = false;
-            }
+            this.activeModifiers = {};
+            this.axpObj.isSPACE = false;
+            this.axpObj.isCTRL = false;
+            this.axpObj.isLineMod = false;
+            this.axpObj.isALT = false;
             if (this.axpObj.codeCHANGE_SIZE_KEY) {
                 this.axpObj.codeCHANGE_SIZE_KEY = null;
             }
         });
 
-        // キーが離された時
         window.addEventListener('keyup', (e) => {
-            // e.keyが有効の場合のみ処理する（オートコンプリートによるイベントを無視）
             if (!e.key) return;
-
-            let inkey = e.key.toUpperCase();
-            switch (inkey) {
-                case ' ':
-                    this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_hand');
-                    this.axpObj.isSPACE = false;
-                    break;
-                case 'CONTROL':
-                    this.axpObj.penSystem.restorePenModeTemporary('axp_penmode_spuit');
-                    this.axpObj.isCTRL = false;
-                    break;
-                case 'SHIFT':
-                    this.axpObj.isSHIFT = false;
-                    break;
+            const inkey = e.key.toUpperCase();
+            if (this.activeModifiers[inkey]) {
+                const releasedAction = this.activeModifiers[inkey];
+                delete this.activeModifiers[inkey];
+                const stillHeld = Object.values(this.activeModifiers).includes(releasedAction);
+                if (!stillHeld) applyAction(releasedAction, false);
             }
-            // ショートカット「ペンの太さ調整」で押された物理キー
+            switch (inkey) {
+                case ' ': this.axpObj.isSPACE = false; break;
+                case 'CONTROL': this.axpObj.isCTRL = false; break;
+                case 'SHIFT': this.axpObj.isLineMod = false; break;
+                case 'ALT': this.axpObj.isALT = false; break;
+            }
             if (e.code === this.axpObj.codeCHANGE_SIZE_KEY) {
                 this.axpObj.penSystem.modeChangeSizeOff();
             }
         });
-        // キーが押された時（キーボードショートカット）
+
         window.addEventListener('keydown', (e) => {
-
-            // 非表示時は無効
-            if (this.axpObj.isClose) { return };
-
-            // キャンバスタブ以外の画面（設定、投稿）は無効
-            if (!this.axpObj.isCanvasOpen) { return; }
-
-            // モーダルウィンドウ表示中（セーブロード、レイヤー名変更入力時）は無効
-            if (this.axpObj.isModalOpen) { return; }
-
-            // キー入力可能な要素にフォーカス中の場合は無効
-            if (document.activeElement.type === 'number' || document.activeElement.type === 'text') {
-                return;
-            }
-
-            // OS本来の操作を抑止
+            if (this.axpObj.isClose || !this.axpObj.isCanvasOpen || this.axpObj.isModalOpen) return;
+            const tag = document.activeElement.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
             e.preventDefault();
 
-            let inkey = e.key.toUpperCase(); // 入力されたキーを大文字に変換
-            // 描画中は無効
+            const inkey = e.key.toUpperCase();
+
             if (this.axpObj.isDrawing) {
-                if (inkey === 'SHIFT') {
-                    // SHIFTキーで描画途中からでも直線描画モードに移行
-                    this.axpObj.isLine = true;
-                }
+                const action = this.modKeyActions[inkey];
+                if (action === 'line') this.axpObj.isLine = true;
                 return;
             }
 
-            if (e.repeat) {
-                if (
-                    inkey === ' ' ||
-                    inkey === 'CONTROL' ||
-                    inkey === 'ALT' ||
-                    inkey === 'SHIFT'
-                ) {
-                    // 上記のキーは、押しっぱなし入力を無効とする
-                    return;
-                } else {
-                    // その他のキーは、呼び出す機能に応じて、後続の処理で判定を行う
-                }
-            }
+            if (e.repeat && (inkey === ' ' || inkey === 'CONTROL' || inkey === 'ALT' || inkey === 'SHIFT')) return;
 
-            let keyId = inkey;
-            // 記号を文字に変換
-            switch (keyId) {
-                case '*':
-                    keyId = 'ASTERISK';
-                    break;
-                case '+':
-                    keyId = 'PLUS';
-                    break;
-                case ',':
-                    keyId = 'COMMA';
-                    break;
-                case '-':
-                    keyId = 'MINUS';
-                    break;
-                case '.':
-                    keyId = 'DOT';
-                    break;
-                case '/':
-                    keyId = 'SLASH';
-                    break;
-                case ':':
-                    keyId = 'COLON';
-                    break;
-                case ';':
-                    keyId = 'SEMICOLON';
-                    break;
-            }
-            console.log('keyboard:', e.code, e.key, '->', inkey, keyId);
-            // e.code : 物理キーコード
-            // e.key : 入力されたキーコード
-            // keyId : 要素ID用
-            // inkey : 画面表示用キー
-            switch (inkey) {
-                case ' ':
-                    this.axpObj.isSPACE = true;
-                    this.axpObj.penSystem.changePenModeTemporary('axp_penmode_hand');
-                    break;
-                case 'CONTROL':
-                    this.axpObj.isCTRL = true;
-                    this.axpObj.penSystem.changePenModeTemporary('axp_penmode_spuit');
-                    break;
-                case 'ALT':
-                    break;
-                case 'SHIFT':
-                    this.axpObj.isSHIFT = true;
-                    break;
-                default:
-                    this.axpObj.callTask(`axp_config_custom_key${keyId}`, inkey, e.repeat, e.code);
-                    break;
+            const action = this.modKeyActions[inkey];
+            if (action && action !== 'none') {
+                switch (inkey) {
+                    case ' ': this.axpObj.isSPACE = true; break;
+                    case 'CONTROL': this.axpObj.isCTRL = true; break;
+                    case 'SHIFT': this.axpObj.isLineMod = true; break;
+                    case 'ALT': this.axpObj.isALT = true; break;
+                }
+                this.activeModifiers[inkey] = action;
+                applyAction(action, true);
+            } else if (!action) {
+                let keyId = inkey;
+                switch (keyId) {
+                    case '*': keyId = 'ASTERISK'; break;
+                    case '+': keyId = 'PLUS'; break;
+                    case ',': keyId = 'COMMA'; break;
+                    case '-': keyId = 'MINUS'; break;
+                    case '.': keyId = 'DOT'; break;
+                    case '/': keyId = 'SLASH'; break;
+                    case ':': keyId = 'COLON'; break;
+                    case ';': keyId = 'SEMICOLON'; break;
+                }
+                console.log('keyboard:', e.code, e.key, '->', inkey, keyId);
+                this.axpObj.callTask(`axp_config_custom_key${keyId}`, inkey, e.repeat, e.code);
             }
         });
     }

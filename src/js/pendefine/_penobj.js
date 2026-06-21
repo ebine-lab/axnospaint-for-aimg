@@ -153,7 +153,7 @@ export class PenObj {
     // 各種モードの設定
     set_modeflag() {
         this.drawmode = this.axpObj.CONST.DRAW_FREEHAND;
-        if (this.axpObj.isSHIFT) { this.axpObj.isLine = true; } // シフトを押していたら直線モード
+        if (this.axpObj.isLineMod) { this.axpObj.isLine = true; }
         // 描画モード指定
         switch (document.getElementById('axp_pen_select_drawMode').value) {
             case 'option_line':

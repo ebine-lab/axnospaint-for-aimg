@@ -16,7 +16,7 @@ import { ConfigSystem } from './config.js';
 import { PostSystem } from './post.js';
 import { SaveSystem } from './saveload.js';
 import { KeyboardSystem } from './keyboard.js';
-import { UTIL, loadImageWithTimeout, calcDistance, adjustInRange, getFileNameFromURL } from './etc.js';
+import { UTIL, loadImageWithTimeout, calcDistance, adjustInRange, getFileNameFromURL, rotateVector } from './etc.js';
 import { Message } from './message.js';
 import { DebugLog } from './debuglog.js';
 
@@ -168,6 +168,9 @@ export class AXPObj {
     // カメラ座標（ハンドツールでキャンバスを移動させた差分）
     cameraX = 0;
     cameraY = 0;
+
+    // 回転表示角度（度数、[0,360)。あくまで表示の回転であり画像編集ではない）
+    rotation = 0;
 
     // 背景タイルプレビュー表示用
     url_backgroundimage;
@@ -720,9 +723,10 @@ export class AXPObj {
                             };
                             // カメラ位置移動
                             if (this.config('axp_config_form_touchHand') === 'on') {
-
-                                this.cameraX = Math.round(this.baseCameraX + (diffX * 100 / this.scale));
-                                this.cameraY = Math.round(this.baseCameraY + (diffY * 100 / this.scale));
+                                // 画面上のドラッグ差分を -rotation だけ回し、カメラ（非回転）座標系へ変換
+                                const r = rotateVector(diffX, diffY, -this.rotation * Math.PI / 180);
+                                this.cameraX = Math.round(this.baseCameraX + (r.x * 100 / this.scale));
+                                this.cameraY = Math.round(this.baseCameraY + (r.y * 100 / this.scale));
                             };
                             // キャンバス表示更新
                             this.refreshCanvas();
@@ -956,6 +960,17 @@ export class AXPObj {
         const svg = document.getElementById('axp_canvas_svg_grid');
         svg.setAttribute("viewBox", `-0.5, -0.5, ${width}, ${height}`);
 
+        // 回転表示（ビューポート中心を不動点とする）
+        // transform-originをキャンバス要素ローカルでビュー中心に一致させる
+        const originX = (this.x_size / 2 + this.cameraX) * this.scale / 100;
+        const originY = (this.y_size / 2 + this.cameraY) * this.scale / 100;
+        const transformOrigin = `${originX}px ${originY}px`;
+        const transform = this.rotation ? `rotate(${this.rotation}deg)` : '';
+        this.CANVAS.main.style.transformOrigin = transformOrigin;
+        this.CANVAS.main.style.transform = transform;
+        grid.style.transformOrigin = transformOrigin;
+        grid.style.transform = transform;
+
         this.updateGrid();
 
         // 拡大率数値表示
@@ -968,7 +983,12 @@ export class AXPObj {
     }
     // 補助線更新
     updateGrid() {
-        const gridRect = document.getElementById('axp_canvas_div_grid').getBoundingClientRect();
+        // 回転表示中はgetBoundingClientRectが外接矩形を返し格子セルが歪むため、
+        // 非回転の表示サイズ（拡大率適用後）を用いる。
+        const gridRect = {
+            width: this.x_size * this.scale / 100,
+            height: this.y_size * this.scale / 100,
+        };
         const svg = document.getElementById('axp_canvas_svg_grid');
 
         // 作成済み補助線の消去
@@ -1130,6 +1150,16 @@ export class AXPObj {
         // カメラ座標（キャンバス表示位置）を中央にリセット
         this.cameraX = 0;
         this.cameraY = 0;
+        // 回転表示もリセット
+        this.rotation = 0;
+    }
+    /**
+     * 表示の回転角度を相対的に変更する（あくまで表示の回転であり画像編集ではない）
+     * @param {Number} delta 変化量（度数）
+     */
+    rotateView(delta) {
+        this.rotation = ((this.rotation + delta) % 360 + 360) % 360;
+        this.refreshCanvas();
     }
     /**
      * ポインタイベントを受け取り、入力の実座標からscale(尺度)を適用したキャンバス上のx,y座標を計算し、返却する
@@ -1137,12 +1167,20 @@ export class AXPObj {
      * @returns {{x:Number,y:Number}} 座標(x,y)
      */
     calcScaleCoordinates(e) {
-        let clientRect_draw = this.CANVAS.main.getBoundingClientRect();
-        let calcX = Math.floor((e.clientX - clientRect_draw.left) * 100 / this.scale);
-        let calcY = Math.floor((e.clientY - clientRect_draw.top) * 100 / this.scale);
+        // 回転表示に対応するため、キャンバス要素のgetBoundingClientRect（回転時は外接矩形になりズレる）に
+        // 依存せず、非回転の表示エリア(view)中心を不動点として状態から逆算する。
+        const rectView = this.ELEMENT.view.getBoundingClientRect();
+        // ビューポート中心（回転のピボット）
+        const vx = rectView.left + rectView.width / 2;
+        const vy = rectView.top + rectView.height / 2;
+        // ポインタのビュー中心からの相対ベクトルを -rotation だけ回し、非回転状態の座標系に戻す
+        const r = rotateVector(e.clientX - vx, e.clientY - vy, -this.rotation * Math.PI / 180);
+        // 非回転状態でのキャンバス左上からの表示px距離
+        const localX = r.x + (this.x_size / 2 + this.cameraX) * this.scale / 100;
+        const localY = r.y + (this.y_size / 2 + this.cameraY) * this.scale / 100;
         return {
-            x: calcX,
-            y: calcY,
+            x: Math.floor(localX * 100 / this.scale),
+            y: Math.floor(localY * 100 / this.scale),
         };
     }
     /**
@@ -1208,14 +1246,13 @@ export class AXPObj {
         // ポインタ位置を拡大（カメラ位置調整）
         const adjustCamera = () => {
             if (this.scale !== currentScale) {
-                // 表示エリアの中央座標
+                // 表示エリア（ビューポート）中心：回転の不動点
                 const rectView = this.ELEMENT.view.getBoundingClientRect();
-                const centerX = rectView.width / 2;
-                const centerY = rectView.height / 2;
+                const vx = rectView.left + rectView.width / 2;
+                const vy = rectView.top + rectView.height / 2;
 
-                // ポインタ座標が原点からどれだけ離れているか
-                let pointerDX = e.clientX - centerX;
-                let pointerDY = e.clientY - centerY - rectView.top;
+                // ポインタのビュー中心からの相対ベクトルを -rotation だけ回し、非回転座標系に戻す
+                const r = rotateVector(e.clientX - vx, e.clientY - vy, -this.rotation * Math.PI / 180);
 
                 // キャンバス座標が原点からどれだけ離れているか（ポインタがキャンバス外の場合はキャンバス内に補正）
                 let canvasX = adjustInRange(pos.x, 0, this.x_size - 1);
@@ -1223,13 +1260,9 @@ export class AXPObj {
                 let canvasY = adjustInRange(pos.y, 0, this.y_size - 1);
                 let canvasDY = (canvasY - this.y_size / 2) * this.scale / 100;
 
-                // 新しいカメラ位置
-                let cameraX = (canvasDX - pointerDX) * 100 / this.scale;
-                let cameraY = (canvasDY - pointerDY) * 100 / this.scale;
-                this.cameraX = cameraX;
-                this.cameraY = cameraY;
-                //console.log('cameraX:', pointerDX, canvasDX, cameraX);
-                //console.log('cameraY:', pointerDY, canvasDY, cameraY);
+                // 拡大後もポインタ下のキャンバス画素が同じ画面位置に残るようカメラ位置を求める
+                this.cameraX = (canvasDX - r.x) * 100 / this.scale;
+                this.cameraY = (canvasDY - r.y) * 100 / this.scale;
             }
         };
         switch (this.config('axp_config_form_mouseWheelRotate')) {
@@ -1518,6 +1551,14 @@ export class AXPObj {
             // 拡大率とキャンバスの位置をリセットしました。
             this.msg('@INF0002');
             this.refreshCanvas();
+        }
+
+        // 表示回転（動作確認用の暫定割当。後続でジェスチャ/回転アイコンUIに置換する）
+        this.TASK['func_rotate_view_left'] = () => {
+            this.rotateView(-15);
+        }
+        this.TASK['func_rotate_view_right'] = () => {
+            this.rotateView(15);
         }
 
         // ペンツール選択

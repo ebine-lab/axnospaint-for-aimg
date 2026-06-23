@@ -916,9 +916,10 @@ export class PenSystem extends ToolWindow {
             this.axpObj.msg('@CAU5002');
             return;
         }
-        var clientRect_draw = this.axpObj.CANVAS.main.getBoundingClientRect();
-        var x = parseInt((e.clientX - clientRect_draw.left) * 100 / this.axpObj.scale);
-        var y = parseInt((e.clientY - clientRect_draw.top) * 100 / this.axpObj.scale);
+        // 座標変換は中核処理に集約（回転表示にも対応）
+        var pos = this.axpObj.calcScaleCoordinates(e);
+        var x = pos.x;
+        var y = pos.y;
         // 座標のドットを読み取る
         var imagedata = this.axpObj.CANVAS.main_ctx.getImageData(x, y, 1, 1);
         // RGBAの取得

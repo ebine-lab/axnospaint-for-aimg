@@ -16,9 +16,9 @@ const objButtonFunction = [
 const objKeyFunction = [
     ['*', 'ASTERISK', 'none'],
     ['+', 'PLUS', 'func_loupe_up'],
-    [',', 'COMMA', 'none'],
+    [',', 'COMMA', 'func_rotate_view_left'],
     ['-', 'MINUS', 'func_loupe_down'],
-    ['.', 'DOT', 'none'],
+    ['.', 'DOT', 'func_rotate_view_right'],
     ['/', 'SLASH', 'none'],
     ['1', '1', 'none'],
     ['2', '2', 'none'],
@@ -160,6 +160,11 @@ export class ConfigSystem {
         { value: 'func_scroll_down', name: '画面を下スクロール' },
         { value: 'func_scroll_left', name: '画面を左スクロール' },
         { value: 'func_scroll_right', name: '画面を右スクロール' },
+        { value: '/optgroup' },
+        // 表示回転（動作確認用の暫定項目。後続でジェスチャ/回転アイコンUIに置換する）
+        { value: 'optgroup', name: '表示回転（暫定）' },
+        { value: 'func_rotate_view_left', name: '表示を左に回転' },
+        { value: 'func_rotate_view_right', name: '表示を右に回転' },
         { value: '/optgroup' },
         { value: 'optgroup', name: '補助線分割数' },
         { value: 'func_grid_up_h', name: '分割数:横を増やす' },

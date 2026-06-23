@@ -83,6 +83,21 @@ export function calcDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
 /**
+ * ベクトル(dx,dy)を角度rad(ラジアン)だけ回転させる
+ * @param {number} dx
+ * @param {number} dy
+ * @param {number} rad 回転角（ラジアン）
+ * @returns {{x:number,y:number}}
+ */
+export function rotateVector(dx, dy, rad) {
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    return {
+        x: dx * cos - dy * sin,
+        y: dx * sin + dy * cos
+    };
+}
+/**
  * ２点の中点
  * @param {*} p1 
  * @param {*} p2 

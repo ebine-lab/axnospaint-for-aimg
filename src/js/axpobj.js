@@ -55,7 +55,8 @@ export class AXPObj {
         // 回転ジェスチャ
         ROTATE_WALL_VELOCITY: 0.18,     // 0/90/180/270°の壁を突破するのに必要な角速度（度/ミリ秒）
         ROTATE_DRAG_SENSITIVITY: 0.5,   // PC回転操作子の左右ドラッグ感度（度/px）
-        ROTATE_TWIST_NOISE: 4,          // ネジレ判定に使う移動ベクトルの最小長（px）
+        ROTATE_TWIST_NOISE: 4,          // ネジレ判定に使う速度ベクトルの最小長（px）
+        TWIST_HISTORY_LEN: 3,           // 速度ベクトル算出に使うフレーム数
     }
     // 画面表示用キャンバス（※メモリ上のみで使用するcanvasは使用する各クラスで定義）
     CANVAS = {
@@ -198,8 +199,8 @@ export class AXPObj {
     baseCameraY = -1;
 
     // 回転ジェスチャ（ネジレ操作）用
-    baseTouchX2 = -1;       // 2点目(B)の初期座標
-    baseTouchY2 = -1;
+    twistHistA = [];        // 指A(evCache[0])の直近座標履歴（速度ベクトル算出用）
+    twistHistB = [];        // 指B(evCache[1])の直近座標履歴
     prevLineAngle = 0;      // 直近フレームのA→B線分角度（度）
     prevGestureTime = 0;    // 角速度算出用のタイムスタンプ
     isTwisting = false;     // ジェスチャ中の回転ロックフラグ
@@ -478,8 +479,8 @@ export class AXPObj {
                     // 初期距離差分
                     this.baseDiff = calcDistance(this.evCache[0].clientX, this.evCache[0].clientY, this.evCache[1].clientX, this.evCache[1].clientY);
                     // 回転ジェスチャ用の初期状態（A=evCache[0], B=evCache[1]）
-                    this.baseTouchX2 = this.evCache[1].clientX;
-                    this.baseTouchY2 = this.evCache[1].clientY;
+                    this.twistHistA = [{ x: this.evCache[0].clientX, y: this.evCache[0].clientY }];
+                    this.twistHistB = [{ x: this.evCache[1].clientX, y: this.evCache[1].clientY }];
                     this.prevLineAngle = Math.atan2(
                         this.evCache[1].clientY - this.evCache[0].clientY,
                         this.evCache[1].clientX - this.evCache[0].clientX
@@ -740,19 +741,25 @@ export class AXPObj {
                             const ax = this.evCache[0].clientX, ay = this.evCache[0].clientY;
                             const bx = this.evCache[1].clientX, by = this.evCache[1].clientY;
                             const lineAngle = Math.atan2(by - ay, bx - ax) * 180 / Math.PI;
+                            // 各指の座標履歴を更新（速度ベクトル算出用）
+                            this.twistHistA.push({ x: ax, y: ay });
+                            if (this.twistHistA.length > this.CONST.TWIST_HISTORY_LEN) this.twistHistA.shift();
+                            this.twistHistB.push({ x: bx, y: by });
+                            if (this.twistHistB.length > this.CONST.TWIST_HISTORY_LEN) this.twistHistB.shift();
                             // ネジレ判定（一度ネジレと判定したらジェスチャ終了まで維持）
-                            if (!this.isTwisting) {
-                                // 各点の移動ベクトル（ジェスチャ開始時からの変位）
-                                const vax = ax - this.baseTouchX, vay = ay - this.baseTouchY;
-                                const vbx = bx - this.baseTouchX2, vby = by - this.baseTouchY2;
+                            if (!this.isTwisting && this.twistHistA.length >= this.CONST.TWIST_HISTORY_LEN) {
+                                // 直近数フレームの速度ベクトル（累積変位ではなくフレーム間差分）
+                                const oldA = this.twistHistA[0], oldB = this.twistHistB[0];
+                                const vax = ax - oldA.x, vay = ay - oldA.y;
+                                const vbx = bx - oldB.x, vby = by - oldB.y;
                                 const lenA = Math.sqrt(vax * vax + vay * vay);
                                 const lenB = Math.sqrt(vbx * vbx + vby * vby);
                                 if (lenA >= this.CONST.ROTATE_TWIST_NOISE && lenB >= this.CONST.ROTATE_TWIST_NOISE) {
                                     // 線分方向θに対する各点の移動方向の相対角
                                     const relA = normalizeDeg180(Math.atan2(vay, vax) * 180 / Math.PI - lineAngle);
                                     const relB = normalizeDeg180(Math.atan2(vby, vbx) * 180 / Math.PI - lineAngle);
-                                    const inPos = (v) => v >= 60 && v <= 120;
-                                    const inNeg = (v) => v >= -120 && v <= -60;
+                                    const inPos = (v) => v >= 45 && v <= 135;
+                                    const inNeg = (v) => v >= -135 && v <= -45;
                                     if ((inPos(relA) && inNeg(relB)) || (inPos(relB) && inNeg(relA))) {
                                         this.isTwisting = true;
                                     }
@@ -821,6 +828,8 @@ export class AXPObj {
                 // 2点未満になったらネジレ回転ロックを解除
                 if (this.evCache.length < 2) {
                     this.isTwisting = false;
+                    this.twistHistA = [];
+                    this.twistHistB = [];
                 }
             }
             if (e.isPrimary) {
@@ -846,6 +855,8 @@ export class AXPObj {
                 // 2点未満になったらネジレ回転ロックを解除
                 if (this.evCache.length < 2) {
                     this.isTwisting = false;
+                    this.twistHistA = [];
+                    this.twistHistB = [];
                 }
                 // 描画が行われていた時
                 if (this.touchTimerID && this.isDrawn) {
@@ -1286,9 +1297,12 @@ export class AXPObj {
      */
     updateRotateHandle() {
         const handle = document.getElementById('axp_canvas_div_rotateHandle');
+        const mode = this.penSystem.getPenMode();
+        console.log('[RotateHandle] handle=', handle, 'mode=', mode);
         if (!handle) { return; }
-        if (this.penSystem.getPenMode() === 'axp_penmode_hand') {
+        if (mode === 'axp_penmode_hand') {
             UTIL.show(handle);
+            console.log('[RotateHandle] SHOW');
         } else {
             UTIL.hide(handle);
         }

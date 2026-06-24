@@ -30,7 +30,8 @@
 				<div id="axp_canvas_div_penCursor"></div>
 
 				<!-- 回転操作子（ハンドツール時のみ表示。押して左右ドラッグで回転） -->
-				<div id="axp_canvas_div_rotateHandle" class="axpc_NONE"></div>
+				<!-- デバッグ: axpc_NONE を一時的に外して常時表示 -->
+				<div id="axp_canvas_div_rotateHandle"></div>
 
 				<!-- ポインタ座標表示領域 -->
 				<div id="axp_canvas_div_pointerPosition" class="axpc_NONE"></div>

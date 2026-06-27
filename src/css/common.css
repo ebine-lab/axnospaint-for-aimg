@@ -77,3 +77,24 @@
     border-style: solid;
     border-color: #aaa;
 }
+
+/* オーバーレイ操作子共通（キャンバス上に浮かぶ操作ボタン） */
+.axpc_overlay_knob {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 3000;
+    border-radius: 8px;
+    background-color: var(--axp-knob-bg, rgba(85, 85, 85, 0.85));
+    border: 2px solid var(--axp-knob-border, #777);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 26px 26px;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+}
+
+.axpc_overlay_knob:active {
+    cursor: grabbing;
+}

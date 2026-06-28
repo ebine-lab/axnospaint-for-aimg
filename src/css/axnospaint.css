@@ -229,7 +229,8 @@ body {
   gap: 4px;
 }
 
-#axp_canvas_div_rotateGroup > .axpc_overlay_knob {
+#axp_canvas_div_rotateGroup > .axpc_overlay_knob,
+#axp_canvas_div_rotateGroup > .axpc_overlay_btn {
   position: static;
 }
 

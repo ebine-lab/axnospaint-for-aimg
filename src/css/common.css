@@ -78,32 +78,39 @@
     border-color: #aaa;
 }
 
-/* オーバーレイ操作子共通（キャンバス上に浮かぶ操作ボタン） */
-.axpc_overlay_knob {
+/* オーバーレイ操作子共通（キャンバス上に浮かぶUI部品） */
+.axpc_overlay_knob,
+.axpc_overlay_btn {
     position: absolute;
     width: 40px;
     height: 40px;
     z-index: 3000;
     border-radius: 8px;
     background-color: var(--axp-knob-bg, rgba(85, 85, 85, 0.85));
-    border: 2px solid var(--axp-knob-border, #777);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 26px 26px;
-    cursor: grab;
     touch-action: none;
     user-select: none;
 }
 
+/* オーバーレイノブ（ドラッグ操作用） */
+.axpc_overlay_knob {
+    border: 3px solid var(--axp-knob-border, #777);
+    cursor: grab;
+}
+
 .axpc_overlay_knob:active {
-    cursor: grabbing;
+    cursor: all-scroll;
+    background-color: rgba(0, 0, 0, 0.85);
 }
 
-/* タップ専用のオーバーレイ操作子（ドラッグしない） */
-.axpc_overlay_knob_tap {
+/* オーバーレイボタン（タップ操作用） */
+.axpc_overlay_btn {
+    border: 2px solid var(--axp-knob-border, #777);
     cursor: pointer;
 }
 
-.axpc_overlay_knob_tap:active {
-    cursor: pointer;
+.axpc_overlay_btn:active {
+    background-color: rgba(0, 0, 0, 0.85);
 }

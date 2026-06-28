@@ -30,10 +30,10 @@
 				<div id="axp_canvas_div_penCursor"></div>
 
 				<!-- 回転操作子グループ（ハンドツール時のみ表示） -->
-				<div id="axp_canvas_div_rotateGroup">
-					<div id="axp_canvas_div_rotateLeft" class="axpc_overlay_knob axpc_overlay_knob_tap"></div>
+				<div id="axp_canvas_div_rotateGroup" class="axpc_NONE">
+					<div id="axp_canvas_div_rotateLeft" class="axpc_overlay_btn"></div>
 					<div id="axp_canvas_div_rotateHandle" class="axpc_overlay_knob"></div>
-					<div id="axp_canvas_div_rotateRight" class="axpc_overlay_knob axpc_overlay_knob_tap"></div>
+					<div id="axp_canvas_div_rotateRight" class="axpc_overlay_btn"></div>
 				</div>
 
 				<!-- ポインタ座標表示領域 -->

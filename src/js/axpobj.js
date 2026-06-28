@@ -925,12 +925,16 @@ export class AXPObj {
                     prevX = ev.clientX;
                     prevTime = ev.timeStamp;
                 };
-                const onUp = () => {
+                const cleanup = () => {
                     window.removeEventListener('pointermove', onMove);
-                    window.removeEventListener('pointerup', onUp);
+                    window.removeEventListener('pointerup', cleanup);
+                    window.removeEventListener('pointercancel', cleanup);
+                    window.removeEventListener('blur', cleanup);
                 };
                 window.addEventListener('pointermove', onMove);
-                window.addEventListener('pointerup', onUp);
+                window.addEventListener('pointerup', cleanup);
+                window.addEventListener('pointercancel', cleanup);
+                window.addEventListener('blur', cleanup);
             });
         }
 
@@ -1104,8 +1108,8 @@ export class AXPObj {
         // 回転表示中はgetBoundingClientRectが外接矩形を返し格子セルが歪むため、
         // 非回転の表示サイズ（拡大率適用後）を用いる。
         const gridRect = {
-            width: this.x_size * this.scale / 100,
-            height: this.y_size * this.scale / 100,
+            width: Math.round(this.x_size * this.scale / 100),
+            height: Math.round(this.y_size * this.scale / 100),
         };
         const svg = document.getElementById('axp_canvas_svg_grid');
 

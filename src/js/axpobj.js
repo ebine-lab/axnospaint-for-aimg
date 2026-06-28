@@ -1849,6 +1849,9 @@ export class AXPObj {
         this.TASK['func_switch_axp_penmode_move'] = () => {
             switchPenSub('axp_penmode_move');
         }
+        this.TASK['func_switch_axp_penmode_nagenawa'] = () => {
+            switchPenSub('axp_penmode_nagenawa');
+        }
 
         // アンドゥ
         this.TASK['func_undo'] = () => {

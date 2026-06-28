@@ -217,6 +217,10 @@
     background-image: url('../../resource/move.png');
 }
 
+.axpc_penmode_nagenawa {
+    background-image: url('../../resource/nagenawa.png');
+}
+
 .axpc_penmode_spuit {
     background-image: url('../../resource/spuit.png');
 }

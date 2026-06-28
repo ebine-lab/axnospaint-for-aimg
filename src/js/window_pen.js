@@ -24,6 +24,7 @@ import { Spuit } from './pendefine/spuit.js';
 // サブ
 import { Square } from './pendefine/square.js';
 import { Move } from './pendefine/move.js';
+import { Nagenawa } from './pendefine/nagenawa.js';
 import { Dot } from './pendefine/dot.js';
 
 import { Fude } from './pendefine/fude.js';
@@ -127,6 +128,7 @@ export class PenSystem extends ToolWindow {
         // サブ
         this.penObj['axp_penmode_square'] = new Square({ axpObj: this.axpObj, CANVAS: this.CANVAS });
         this.penObj['axp_penmode_move'] = new Move({ axpObj: this.axpObj, CANVAS: this.CANVAS });
+        this.penObj['axp_penmode_nagenawa'] = new Nagenawa({ axpObj: this.axpObj, CANVAS: this.CANVAS });
         this.penObj['axp_penmode_dot'] = new Dot({ axpObj: this.axpObj, CANVAS: this.CANVAS });
         this.penObj['axp_penmode_fude'] = new Fude({ axpObj: this.axpObj, CANVAS: this.CANVAS });
         this.penObj['axp_penmode_crayon'] = new Crayon({ axpObj: this.axpObj, CANVAS: this.CANVAS });

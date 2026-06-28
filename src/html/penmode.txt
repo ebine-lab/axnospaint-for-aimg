@@ -34,6 +34,8 @@
                 data-function="func_switch_axp_penmode_hand" data-msg="@PEN0130"></button>
             <button id="axp_penmode_move" class="axpc_FUNC axpc_penmode_move" data-idx="3"
                 data-function="func_switch_axp_penmode_move" data-msg="@PEN0131"></button>
+            <button id="axp_penmode_nagenawa" class="axpc_FUNC axpc_penmode_nagenawa" data-idx="3"
+                data-function="func_switch_axp_penmode_nagenawa" data-msg="@PEN0132"></button>
         </article>
         <article data-name="${_('@PENGROUP.EYEDROPPER')}">
             <button id="axp_penmode_spuit" class="axpc_penmode_spuit" data-idx="4"></button>

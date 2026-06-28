@@ -111,6 +111,7 @@ export class ConfigSystem {
         { value: 'optgroup', name: 'ツール種別' },
         { value: 'func_switch_axp_penmode_hand', name: 'ツール種別:ハンド' },
         { value: 'func_switch_axp_penmode_move', name: 'ツール種別:移動ツール' },
+        { value: 'func_switch_axp_penmode_nagenawa', name: 'ツール種別:なげなわ' },
         { value: '/optgroup' },
         { value: 'optgroup', name: 'ペンの太さ' },
         { value: 'func_size', name: 'ペンの太さ（値指定）' },

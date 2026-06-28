@@ -1737,19 +1737,24 @@ export class AXPObj {
         // 表示回転
         this.TASK['func_rotate_view_left'] = () => {
             this.rotateView(-15);
+            this.msg('@INF5000');
         }
         this.TASK['func_rotate_view_right'] = () => {
             this.rotateView(15);
+            this.msg('@INF5001');
         }
         this.TASK['func_rotate_view_left_45'] = () => {
             this.rotateView45(-1);
+            this.msg('@INF5002');
         }
         this.TASK['func_rotate_view_right_45'] = () => {
             this.rotateView45(+1);
+            this.msg('@INF5003');
         }
         this.TASK['func_rotate_view_reset'] = () => {
             this.rotation = 0;
             this.refreshCanvas();
+            this.msg('@INF5004');
         }
 
         // ペンツール選択

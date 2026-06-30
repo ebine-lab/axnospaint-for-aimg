@@ -270,6 +270,14 @@ body {
   background-image: url('../../resource/overlay/rotate.svg');
 }
 
+#axp_canvas_div_nagenawaFlip {
+  background-image: url('../../resource/overlay/flip.svg');
+}
+
+#axp_canvas_div_nagenawaDuplicate {
+  background-image: url('../../resource/overlay/duplicate.svg');
+}
+
 #axp_canvas_div_nagenawaFinish {
   background-image: url('../../resource/overlay/check.svg');
 }

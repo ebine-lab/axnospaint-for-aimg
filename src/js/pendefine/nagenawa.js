@@ -34,7 +34,7 @@ export class Nagenawa extends PenObj {
         this.baseCtx = null;
 
         // アフィン変換パラメータ
-        this.affine = { tx: 0, ty: 0, scale: 1, rotation: 0 };
+        this.affine = { tx: 0, ty: 0, scale: 1, rotation: 0, flipX: false };
 
         // ドラッグ用
         this.dragStartX = 0;
@@ -50,6 +50,8 @@ export class Nagenawa extends PenObj {
     setupOverlayEvents() {
         const scaleKnob = document.getElementById('axp_canvas_div_nagenawaScale');
         const rotateKnob = document.getElementById('axp_canvas_div_nagenawaRotate');
+        const flipBtn = document.getElementById('axp_canvas_div_nagenawaFlip');
+        const duplicateBtn = document.getElementById('axp_canvas_div_nagenawaDuplicate');
         const finishBtn = document.getElementById('axp_canvas_div_nagenawaFinish');
 
         if (scaleKnob) {
@@ -99,6 +101,31 @@ export class Nagenawa extends PenObj {
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', cleanup);
                 window.addEventListener('pointercancel', cleanup);
+            });
+        }
+
+        if (flipBtn) {
+            flipBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            flipBtn.addEventListener('click', () => {
+                if (this.state === 'transforming') {
+                    this.affine.flipX = !this.affine.flipX;
+                    this.drawTransformed();
+                }
+            });
+        }
+
+        if (duplicateBtn) {
+            duplicateBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            duplicateBtn.addEventListener('click', () => {
+                if (this.state === 'transforming') {
+                    this.duplicateSelection();
+                }
             });
         }
 
@@ -163,7 +190,7 @@ export class Nagenawa extends PenObj {
                 this.extractRawData();
                 this.computeCentroid();
                 this.clearSelectedRegion();
-                this.affine = { tx: 0, ty: 0, scale: 1, rotation: 0 };
+                this.affine = { tx: 0, ty: 0, scale: 1, rotation: 0, flipX: false };
                 this.drawTransformed();
                 this.showOverlay();
                 this.state = 'transforming';
@@ -296,9 +323,10 @@ export class Nagenawa extends PenObj {
         ctx.drawImage(this.baseCanvas, 0, 0);
 
         ctx.save();
+        const sx = this.affine.flipX ? -this.affine.scale : this.affine.scale;
         ctx.translate(this.centroidX + this.affine.tx, this.centroidY + this.affine.ty);
         ctx.rotate(this.affine.rotation);
-        ctx.scale(this.affine.scale, this.affine.scale);
+        ctx.scale(sx, this.affine.scale);
         ctx.translate(-this.centroidX, -this.centroidY);
         ctx.drawImage(this.rawCanvas, 0, 0);
         ctx.restore();
@@ -311,7 +339,8 @@ export class Nagenawa extends PenObj {
 
             const cos = Math.cos(this.affine.rotation);
             const sin = Math.sin(this.affine.rotation);
-            const s = this.affine.scale;
+            const sxo = this.affine.flipX ? -this.affine.scale : this.affine.scale;
+            const sy = this.affine.scale;
             const cx = this.centroidX;
             const cy = this.centroidY;
             const tx = this.affine.tx;
@@ -321,8 +350,8 @@ export class Nagenawa extends PenObj {
                 const dx = px - cx;
                 const dy = py - cy;
                 return {
-                    x: (cos * dx - sin * dy) * s + cx + tx,
-                    y: (sin * dx + cos * dy) * s + cy + ty,
+                    x: cos * dx * sxo - sin * dy * sy + cx + tx,
+                    y: sin * dx * sxo + cos * dy * sy + cy + ty,
                 };
             };
 
@@ -402,6 +431,47 @@ export class Nagenawa extends PenObj {
         this.hideOverlay();
         this.releaseCanvases();
         this.state = 'idle';
+    }
+    duplicateSelection() {
+        if (this.state !== 'transforming') return;
+        const w = this.axpObj.x_size;
+        const h = this.axpObj.y_size;
+
+        this.drawTransformed(false);
+        const stamped = this.CANVAS.draw_ctx.getImageData(0, 0, w, h);
+
+        this.baseCtx.clearRect(0, 0, w, h);
+        this.baseCtx.putImageData(stamped, 0, 0);
+        this.baseCtx.globalCompositeOperation = 'destination-out';
+        this.baseCtx.save();
+        const sx = this.affine.flipX ? -this.affine.scale : this.affine.scale;
+        this.baseCtx.translate(this.centroidX + this.affine.tx, this.centroidY + this.affine.ty);
+        this.baseCtx.rotate(this.affine.rotation);
+        this.baseCtx.scale(sx, this.affine.scale);
+        this.baseCtx.translate(-this.centroidX, -this.centroidY);
+        this.baseCtx.drawImage(this.maskCanvas, 0, 0);
+        this.baseCtx.restore();
+        this.baseCtx.globalCompositeOperation = 'source-over';
+
+        this.axpObj.layerSystem.write(stamped);
+
+        this.axpObj.undoSystem.setUndo({
+            type: 'draw',
+            detail: 'nagenawa',
+            layerObj: {
+                id: this.axpObj.layerSystem.getId(),
+                index: this.axpObj.layerSystem.getIndex(),
+                mode: this.axpObj.layerSystem.getMode(),
+                alpha: this.axpObj.layerSystem.getAlpha(),
+                checked: this.axpObj.layerSystem.getChecked(),
+                locked: this.axpObj.layerSystem.getLocked(),
+                masked: this.axpObj.layerSystem.getMasked(),
+                name: this.axpObj.layerSystem.getName(),
+                image: stamped,
+            },
+        });
+
+        this.drawTransformed();
     }
     cancelSelection() {
         if (this.state === 'drawing' || this.state === 'transforming') {

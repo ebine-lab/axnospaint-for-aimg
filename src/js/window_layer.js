@@ -182,6 +182,10 @@ export class LayerSystem extends ToolWindow {
     startEvent() {
         // セレクトボックス：レイヤー合成モード
         document.getElementById('axp_layer_select_blendMode').addEventListener('change', (e) => {
+            const nagenawa = this.axpObj.penSystem.penObj['axp_penmode_nagenawa'];
+            if (nagenawa && nagenawa.state === 'transforming') {
+                nagenawa.finalizeSelection();
+            }
             // レイヤー合成モード変更
             this.setBlendMode(e.target.value);
             this.updateCanvas();
@@ -1350,6 +1354,10 @@ export class LayerSystem extends ToolWindow {
     }
     // カレントレイヤー更新
     setCurrentLayer(targetElement) {
+        const nagenawa = this.axpObj.penSystem.penObj['axp_penmode_nagenawa'];
+        if (nagenawa && nagenawa.state === 'transforming') {
+            nagenawa.finalizeSelection();
+        }
         // 引数の要素をカレントレイヤーとし、変更に伴う連動処理を行う
         const layerBoxElements = document.querySelectorAll('#axp_layer_ul_layerBox>li');
         // 一旦、全レイヤーを非選択に

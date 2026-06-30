@@ -443,8 +443,6 @@ export class Nagenawa extends PenObj {
         this.baseCtx.clearRect(0, 0, w, h);
         this.baseCtx.putImageData(stamped, 0, 0);
 
-        this.axpObj.layerSystem.write(stamped);
-
         this.axpObj.undoSystem.setUndo({
             type: 'draw',
             detail: 'nagenawa',
@@ -457,9 +455,12 @@ export class Nagenawa extends PenObj {
                 locked: this.axpObj.layerSystem.getLocked(),
                 masked: this.axpObj.layerSystem.getMasked(),
                 name: this.axpObj.layerSystem.getName(),
-                image: stamped,
+                image: this.axpObj.layerSystem.load(),
             },
         });
+
+        this.axpObj.layerSystem.write(stamped);
+        this.axpObj.layerSystem.save();
 
         this.drawTransformed();
     }

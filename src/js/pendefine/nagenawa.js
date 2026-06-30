@@ -57,17 +57,19 @@ export class Nagenawa extends PenObj {
                 if (this.state !== 'transforming') return;
                 e.preventDefault();
                 e.stopPropagation();
+                this.drawTransformed(false);
                 let prevX = e.clientX;
                 const baseScale = this.affine.scale;
                 const onMove = (ev) => {
                     const dx = ev.clientX - prevX;
                     this.affine.scale = Math.max(0.1, baseScale + dx * SCALE_SENSITIVITY);
-                    this.drawTransformed();
+                    this.drawTransformed(false);
                 };
                 const cleanup = () => {
                     window.removeEventListener('pointermove', onMove);
                     window.removeEventListener('pointerup', cleanup);
                     window.removeEventListener('pointercancel', cleanup);
+                    this.drawTransformed();
                 };
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', cleanup);
@@ -80,17 +82,19 @@ export class Nagenawa extends PenObj {
                 if (this.state !== 'transforming') return;
                 e.preventDefault();
                 e.stopPropagation();
+                this.drawTransformed(false);
                 let prevX = e.clientX;
                 const onMove = (ev) => {
                     const dx = ev.clientX - prevX;
                     this.affine.rotation += dx * ROTATE_SENSITIVITY * Math.PI / 180;
                     prevX = ev.clientX;
-                    this.drawTransformed();
+                    this.drawTransformed(false);
                 };
                 const cleanup = () => {
                     window.removeEventListener('pointermove', onMove);
                     window.removeEventListener('pointerup', cleanup);
                     window.removeEventListener('pointercancel', cleanup);
+                    this.drawTransformed();
                 };
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', cleanup);
@@ -132,6 +136,7 @@ export class Nagenawa extends PenObj {
             this.dragStartY = y;
             this.affineSaved.tx = this.affine.tx;
             this.affineSaved.ty = this.affine.ty;
+            this.drawTransformed(false);
         }
     }
     // 描画中
@@ -143,7 +148,7 @@ export class Nagenawa extends PenObj {
         } else if (this.state === 'transforming' && this.axpObj.isDrawing && !this.axpObj.isDrawCancel) {
             this.affine.tx = this.affineSaved.tx + (x - this.dragStartX);
             this.affine.ty = this.affineSaved.ty + (y - this.dragStartY);
-            this.drawTransformed();
+            this.drawTransformed(false);
         }
     }
     // 描画終了
@@ -169,6 +174,7 @@ export class Nagenawa extends PenObj {
         } else if (this.state === 'transforming') {
             this.axpObj.isDrawing = false;
             this.axpObj.isDrawCancel = false;
+            this.drawTransformed();
         }
     }
     drawLassoTrail() {
@@ -278,7 +284,7 @@ export class Nagenawa extends PenObj {
             this.baseCtx.getImageData(0, 0, w, h)
         );
     }
-    drawTransformed() {
+    drawTransformed(showOutline = true) {
         const ctx = this.CANVAS.draw_ctx;
         const w = this.axpObj.x_size;
         const h = this.axpObj.y_size;
@@ -298,7 +304,7 @@ export class Nagenawa extends PenObj {
         ctx.restore();
 
         // 変形後のパス座標に沿った選択輪郭を描画
-        if (this.lassoPath.length >= 2) {
+        if (showOutline && this.lassoPath.length >= 2) {
             ctx.save();
             ctx.setLineDash([4, 4]);
             ctx.lineWidth = 1;
@@ -364,7 +370,7 @@ export class Nagenawa extends PenObj {
         const w = this.axpObj.x_size;
         const h = this.axpObj.y_size;
 
-        this.drawTransformed();
+        this.drawTransformed(false);
 
         const finalImage = this.CANVAS.draw_ctx.getImageData(0, 0, w, h);
         this.axpObj.layerSystem.isStrokeActive = false;

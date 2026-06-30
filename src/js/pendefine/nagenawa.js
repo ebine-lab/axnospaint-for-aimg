@@ -297,6 +297,58 @@ export class Nagenawa extends PenObj {
         ctx.drawImage(this.rawCanvas, 0, 0);
         ctx.restore();
 
+        // 変形後のパス座標に沿った選択輪郭を描画
+        if (this.lassoPath.length >= 2) {
+            ctx.save();
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1;
+
+            const cos = Math.cos(this.affine.rotation);
+            const sin = Math.sin(this.affine.rotation);
+            const s = this.affine.scale;
+            const cx = this.centroidX;
+            const cy = this.centroidY;
+            const tx = this.affine.tx;
+            const ty = this.affine.ty;
+
+            const transformPoint = (px, py) => {
+                const dx = px - cx;
+                const dy = py - cy;
+                return {
+                    x: (cos * dx - sin * dy) * s + cx + tx,
+                    y: (sin * dx + cos * dy) * s + cy + ty,
+                };
+            };
+
+            // 白ストローク（背景コントラスト用）
+            ctx.lineDashOffset = 4;
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            const p0w = transformPoint(this.lassoPath[0].x, this.lassoPath[0].y);
+            ctx.moveTo(p0w.x, p0w.y);
+            for (let i = 1; i < this.lassoPath.length; i++) {
+                const p = transformPoint(this.lassoPath[i].x, this.lassoPath[i].y);
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            // 黒ストローク
+            ctx.lineDashOffset = 0;
+            ctx.strokeStyle = '#000000';
+            ctx.beginPath();
+            const p0b = transformPoint(this.lassoPath[0].x, this.lassoPath[0].y);
+            ctx.moveTo(p0b.x, p0b.y);
+            for (let i = 1; i < this.lassoPath.length; i++) {
+                const p = transformPoint(this.lassoPath[i].x, this.lassoPath[i].y);
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
         if (this.axpObj.layerSystem.compositeFastPathActive) {
             this.axpObj.layerSystem.drawFast();
         } else {

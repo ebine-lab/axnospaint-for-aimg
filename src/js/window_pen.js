@@ -148,6 +148,9 @@ export class PenSystem extends ToolWindow {
         });
         // 初期ペン
         this.pen_mode = elementsButtonSub[0].id;
+
+        // なげなわオーバーレイのイベント設定
+        this.penObj['axp_penmode_nagenawa'].setupOverlayEvents();
     }
     // id名からアイコン用class名を取得
     getClassIcon(id) {
@@ -771,6 +774,14 @@ export class PenSystem extends ToolWindow {
     }
     // モード更新（引数未指定の場合、変更無しで、ペンツールの再描画を行う）
     changePenMode(mode) {
+        // なげなわ変形中に非ハンドツールへ切り替え → 確定
+        const nagenawa = this.penObj['axp_penmode_nagenawa'];
+        if (nagenawa && nagenawa.state === 'transforming') {
+            const newMode = mode || this.pen_mode;
+            if (newMode !== 'axp_penmode_hand' && newMode !== 'axp_penmode_nagenawa') {
+                nagenawa.finalizeSelection();
+            }
+        }
         if (mode) {
             this.pen_mode = mode;
         }

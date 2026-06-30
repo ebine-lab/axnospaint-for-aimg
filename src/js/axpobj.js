@@ -1340,7 +1340,9 @@ export class AXPObj {
         const group = document.getElementById('axp_canvas_div_rotateGroup');
         const mode = this.penSystem.getPenMode();
         if (!group) { return; }
-        if (mode === 'axp_penmode_hand') {
+        const nagenawa = this.penSystem.penObj['axp_penmode_nagenawa'];
+        const nagenawaTransforming = nagenawa && nagenawa.state === 'transforming';
+        if (mode === 'axp_penmode_hand' && !nagenawaTransforming) {
             UTIL.show(group);
         } else {
             UTIL.hide(group);

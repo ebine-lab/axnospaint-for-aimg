@@ -442,16 +442,6 @@ export class Nagenawa extends PenObj {
 
         this.baseCtx.clearRect(0, 0, w, h);
         this.baseCtx.putImageData(stamped, 0, 0);
-        this.baseCtx.globalCompositeOperation = 'destination-out';
-        this.baseCtx.save();
-        const sx = this.affine.flipX ? -this.affine.scale : this.affine.scale;
-        this.baseCtx.translate(this.centroidX + this.affine.tx, this.centroidY + this.affine.ty);
-        this.baseCtx.rotate(this.affine.rotation);
-        this.baseCtx.scale(sx, this.affine.scale);
-        this.baseCtx.translate(-this.centroidX, -this.centroidY);
-        this.baseCtx.drawImage(this.maskCanvas, 0, 0);
-        this.baseCtx.restore();
-        this.baseCtx.globalCompositeOperation = 'source-over';
 
         this.axpObj.layerSystem.write(stamped);
 

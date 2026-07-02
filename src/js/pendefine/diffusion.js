@@ -7,6 +7,9 @@
 //   引きずり (drag): 運搬色バッファ C_carried を保持し、確定点ごとに
 //     out = (1-α)・canvas + α・carried / carried ← (1-β)・carried + β・canvas
 //     で色を運搬する (移流)。逐次依存のため確定点順に作業バッファへ適用する。
+//     置き付け率・取り込み率はスタンプ間実距離でべき正規化する (弧状ムラ対策)。
+//   硬さ (hardness): 半径方向フォールオフ f(u) = 1 − S(u^k) の指数 k を制御。
+//     プラトーなし・縁で常に強度0 (詳細は _falloff を参照)。
 //
 // ピクセル演算は premultiply → 演算 → unmultiply の順を厳守する
 // (透明ピクセルの RGB を素通しすると黒フリンジが生じるため)。
@@ -20,6 +23,8 @@ const ALPHA_MIN_RATIO = 0.15;  // 筆圧最小時の寄与度 (α_max 比)
 const DWELL_TAU_MS = 300;      // 滞留項の飽和時定数
 const DWELL_BASE = 0.55;       // 滞留 0ms 時の寄与ゲイン (滞留で 1.0 へ飽和)
 const CARRY_BETA = 0.25;       // 引きずりの色取り込み率
+const DRAG_ALPHA_MAX = 0.9;    // 引きずり置き付け率の上限 (1.0=完全置換だと
+                               // 最終スタンプの円盤輪郭が焼き付くため 1 未満に制限)
 const SIGMA_MAX = 16;          // ぼかし σ の上限
 
 // σ に対応する box blur 幅×3 (Gaussian 近似の標準式)
@@ -73,6 +78,9 @@ export class Diffusion extends PixelFilterPenBase {
         this.masked = this.axpObj.layerSystem.getMasked();
         this.dwellMs = 0;
         this.carried = null;
+        // 硬さ→フォールオフ指数 k (1〜10)。ストローク中不変のためキャッシュする
+        // (_pixelfilterpen.js の _gap() と同じマッピングに揃えること)
+        this.kExp = 1 + 9 * Math.min(Math.max(this.hardness, 0), 100) / 100;
 
         // premultiplied スナップショット
         this.basePre = new Uint8ClampedArray(W * H * 4);
@@ -128,7 +136,12 @@ export class Diffusion extends PixelFilterPenBase {
             this._applyDiffusion(cp, r, alphaEff, x0, y0, x1, y1);
         }
         if (this.drag > 0) {
-            this._applyDrag(cp, r, alphaEff, x0, y0, x1, y1);
+            // スタンプ間実距離によるべき正規化係数 (間隔 r/2 を基準 s=1 とする)。
+            // gap を詰めてもスタンプ密度に依らず蓄積量が一定になり、
+            // スタンプ数の離散段差による弧状の濃度ムラを抑える。
+            const spacing = prev ? Math.hypot(cp.x - prev.x, cp.y - prev.y) : this._gap();
+            const sNorm = Math.min(1, Math.max(0.05, spacing / (r / 2)));
+            this._applyDrag(cp, r, alphaEff, sNorm, x0, y0, x1, y1);
             if (this.diffusion > 0) {
                 // 複合時: 引きずり後の見た目を新しいベースとして採用し、
                 // その領域のぼかし画像を局所再計算する。マスクはリセットし、
@@ -144,12 +157,14 @@ export class Diffusion extends PixelFilterPenBase {
 
     // ── フォールオフ ─────────────────────────────
 
-    // 半径方向フォールオフ f(u): u≤h で 1、u>1 で 0、間は smootherstep で滑らかに減衰
+    // 半径方向フォールオフ f(u) = 1 − S(u^k), S(t) = 3t² − 2t³
+    // プラトーを持たず、縁 u=1 で f=0 かつ f'=0 が硬さに依らず常に成立する
+    // (縁に強度が残らないため、引きずり時にスタンプ輪郭の弧が焼き付かない)。
+    // 硬さは指数 k (1〜10) として山の肩の位置・頂上の平坦さを連続制御する。
     _falloff(u) {
-        const h = Math.min(this.hardness, 99) / 100;
-        if (u <= h) return 1;
         if (u >= 1) return 0;
-        const t = (u - h) / (1 - h);
+        if (u <= 0) return 1;
+        const t = Math.pow(u, this.kExp);
         return 1 - t * t * (3 - 2 * t);
     }
 
@@ -190,7 +205,7 @@ export class Diffusion extends PixelFilterPenBase {
 
     // ── 引きずり (drag) ──────────────────────────
 
-    _applyDrag(cp, r, alphaEff, x0, y0, x1, y1) {
+    _applyDrag(cp, r, alphaEff, sNorm, x0, y0, x1, y1) {
         const W = this.W;
         const work = this.work.data;
         const icx = Math.floor(cp.x);
@@ -221,6 +236,9 @@ export class Diffusion extends PixelFilterPenBase {
         const D = this.carriedD;
         const dragRate = this.drag / 100;
         const rr = r * r;
+        // 色の取り込み率は足跡内で一様 (フォールオフを掛けるとセルごとに
+        // 洗い出し速度が変わり、古い色がリング状の残像として焼き付くため)
+        const bUniform = 1 - Math.pow(1 - CARRY_BETA, sNorm);
         for (let y = y0; y <= y1; y++) {
             const fy = y + 0.5 - cp.y;
             const oy = y - icy + R;
@@ -233,7 +251,9 @@ export class Diffusion extends PixelFilterPenBase {
                 if (f <= 0) continue;
                 const ox = x - icx + R;
                 if (ox < 0 || ox >= D) continue;
-                const ad = dragRate * alphaEff * f;
+                // 置き付け率・取り込み率とも sNorm でべき正規化 (逐次合成の飽和対策)
+                const aBase = Math.min(DRAG_ALPHA_MAX, dragRate * alphaEff * f);
+                const ad = 1 - Math.pow(1 - aBase, sNorm);
                 const q = (y * W + x) * 4;
                 const t = (oy * D + ox) * 4;
                 // 現在のキャンバス色 (premultiply)
@@ -250,8 +270,8 @@ export class Diffusion extends PixelFilterPenBase {
                     (1 - ad) * ca + ad * carried[t + 3],
                     this.basePre ? this.basePre[q + 3] : ca
                 );
-                // 色の取り込み (フォールオフで縁ほど取り込みを弱める)
-                const b = CARRY_BETA * f;
+                // 色の取り込み (置き付け前のキャンバス色を一様レートで吸収)
+                const b = bUniform;
                 carried[t] = (1 - b) * carried[t] + b * cr;
                 carried[t + 1] = (1 - b) * carried[t + 1] + b * cg;
                 carried[t + 2] = (1 - b) * carried[t + 2] + b * cb;

@@ -113,14 +113,23 @@ export class PixelFilterPenBase extends DrawingPenBase {
         this.end_common();
     }
 
-    // 確定点間隔: フォールオフ幅 (1-h)・r の半分以下にしてスタンプ間リップルを防ぐ。
+    // 確定点間隔: フォールオフのすそ野幅に連動して詰める。
+    // フォールオフ f(u) = 1−S(u^k) は縁付近で f ≈ 3k²(1−u)² となり、
+    // すそ野幅が約 r/k に縮むため gap = r/(2k) でスタンプ間リップルを防ぐ
+    // (k = 1 + 9·hardness/100。diffusion.js の kExp と同じマッピングに揃えること)。
     // hardness を持たないサブクラスは h=0.5 相当で動作する。
     _gap() {
         const r = Math.max(this._halfWidth(), 0.5);
         const h = (typeof this.hardness === 'number')
-            ? Math.min(this.hardness, 99) / 100
+            ? Math.min(Math.max(this.hardness, 0), 100) / 100
             : 0.5;
-        return Math.max(1, Math.min(r / 2, (1 - h) * r / 2));
+        const k = 1 + 9 * h;
+        let gap = Math.max(1, Math.min(r / 2, r / (2 * k)));
+        // 引きずり使用時は最も柔らかい設定でも r/4 まで締める (逐次合成の安全マージン)
+        if (typeof this.drag === 'number' && this.drag > 0) {
+            gap = Math.min(gap, Math.max(1, r / 4));
+        }
+        return gap;
     }
 
     // 確定点を順に作用させる

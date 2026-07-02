@@ -1833,6 +1833,9 @@ export class AXPObj {
         this.TASK['func_switch_axp_penmode_brush'] = () => {
             switchPenSub('axp_penmode_brush');
         }
+        this.TASK['func_switch_axp_penmode_diffusion'] = () => {
+            switchPenSub('axp_penmode_diffusion');
+        }
         this.TASK['func_switch_axp_penmode_eraser_round'] = () => {
             switchPenSub('axp_penmode_eraser_round');
         }

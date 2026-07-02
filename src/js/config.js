@@ -99,6 +99,7 @@ export class ConfigSystem {
         { value: 'func_switch_axp_penmode_fude', name: 'ペン種別:筆ペン' },
         { value: 'func_switch_axp_penmode_crayon', name: 'ペン種別:クレヨン' },
         { value: 'func_switch_axp_penmode_brush', name: 'ペン種別:エアブラシ' },
+        { value: 'func_switch_axp_penmode_diffusion', name: 'ペン種別:混色ペン' },
         { value: '/optgroup' },
         { value: 'optgroup', name: '消しゴム種別' },
         { value: 'func_switch_axp_penmode_eraser_round', name: '消しゴム種別:消しゴム' },
@@ -1606,6 +1607,18 @@ export class ConfigSystem {
                         pObj[elememtId].radius = Number(value);
                         pObj[elememtId].borderRadius = Number(value);
                         break;
+                    // 硬さ (混色ペン)
+                    case 'P-HRD':
+                        pObj[elememtId].hardness = Number(value);
+                        break;
+                    // 広がり (混色ペン)
+                    case 'P-DIF':
+                        pObj[elememtId].diffusion = Number(value);
+                        break;
+                    // 引きずり (混色ペン)
+                    case 'P-DRG':
+                        pObj[elememtId].drag = Number(value);
+                        break;
                     // 筆圧 ON/OFF (ペン別)。筆圧コントロールを持つペンのみ復元する
                     // (非対応ペンは保存値に関わらず false 維持。古い保存データ対策)
                     case 'P-USP':
@@ -1738,6 +1751,9 @@ export class ConfigSystem {
                 case 'P-TON':
                 case 'P-DEG':
                 case 'P-RAD':
+                case 'P-HRD':
+                case 'P-DIF':
+                case 'P-DRG':
                 case 'P-USP':
                 case 'P-SPA':
                     // 初期化する設定の場合、復元を行わない

@@ -30,6 +30,7 @@ import { Dot } from './pendefine/dot.js';
 import { Fude } from './pendefine/fude.js';
 import { Crayon } from './pendefine/crayon.js';
 import { Brush } from './pendefine/brush.js';
+import { Diffusion } from './pendefine/diffusion.js';
 
 // 共通処理：ペンモード変更時
 export class PenSystem extends ToolWindow {
@@ -133,6 +134,7 @@ export class PenSystem extends ToolWindow {
         this.penObj['axp_penmode_fude'] = new Fude({ axpObj: this.axpObj, CANVAS: this.CANVAS });
         this.penObj['axp_penmode_crayon'] = new Crayon({ axpObj: this.axpObj, CANVAS: this.CANVAS });
         this.penObj['axp_penmode_brush'] = new Brush({ axpObj: this.axpObj, CANVAS: this.CANVAS });
+        this.penObj['axp_penmode_diffusion'] = new Diffusion({ axpObj: this.axpObj, CANVAS: this.CANVAS });
 
         // サブメニューをメインメニューに反映
         let elementsButton = document.querySelectorAll('#axp_pen_div_rightSide>div>button');
@@ -402,6 +404,46 @@ export class PenSystem extends ToolWindow {
             }
         );
 
+        // レンジスライダー：硬さ（混色ペン専用）
+        document.getElementById('axp_pen_form_hardness').addEventListener('input',
+            (e) => {
+                let hardness = Number(e.target.value);
+                this.setHardness(hardness);
+                // %1の硬さ：%2
+                this.axpObj.msg('@AXP5011', this.getName(), hardness);
+                // ペンの太さプレビュー
+                this.previewPenSize();
+                // コンフィグオブジェクトをDBに保存
+                this.axpObj.configSystem.saveConfig('P-HRD_' + this.pen_mode, hardness);
+            }
+        );
+        // レンジスライダー：広がり（混色ペン専用）
+        document.getElementById('axp_pen_form_diffusion').addEventListener('input',
+            (e) => {
+                let diffusion = Number(e.target.value);
+                this.setDiffusion(diffusion);
+                // %1の広がり：%2
+                this.axpObj.msg('@AXP5012', this.getName(), diffusion);
+                // ペンの太さプレビュー
+                this.previewPenSize();
+                // コンフィグオブジェクトをDBに保存
+                this.axpObj.configSystem.saveConfig('P-DIF_' + this.pen_mode, diffusion);
+            }
+        );
+        // レンジスライダー：引きずり（混色ペン専用）
+        document.getElementById('axp_pen_form_drag').addEventListener('input',
+            (e) => {
+                let drag = Number(e.target.value);
+                this.setDrag(drag);
+                // %1の引きずり：%2
+                this.axpObj.msg('@AXP5013', this.getName(), drag);
+                // ペンの太さプレビュー
+                this.previewPenSize();
+                // コンフィグオブジェクトをDBに保存
+                this.axpObj.configSystem.saveConfig('P-DRG_' + this.pen_mode, drag);
+            }
+        );
+
         // チェックボックス: 筆圧 ON/OFF (ペン別)
         document.getElementById('axp_pen_checkbox_usePressure').addEventListener('change',
             (e) => {
@@ -654,6 +696,42 @@ export class PenSystem extends ToolWindow {
             throw new Error('内部エラー：不正な丸み指定です');
         }
     }
+    getHardness() {
+        return (this.penObj[this.pen_mode].hardness !== undefined) ? this.penObj[this.pen_mode].hardness : null;
+    }
+    setHardness(hardness) {
+        // セット可能チェック
+        if (this.penObj[this.pen_mode].hardness !== null) {
+            // 更新
+            this.penObj[this.pen_mode].hardness = Number(hardness);
+        } else {
+            throw new Error('内部エラー：不正な硬さ指定です');
+        }
+    }
+    getDiffusion() {
+        return (this.penObj[this.pen_mode].diffusion !== undefined) ? this.penObj[this.pen_mode].diffusion : null;
+    }
+    setDiffusion(diffusion) {
+        // セット可能チェック
+        if (this.penObj[this.pen_mode].diffusion !== null) {
+            // 更新
+            this.penObj[this.pen_mode].diffusion = Number(diffusion);
+        } else {
+            throw new Error('内部エラー：不正な広がり指定です');
+        }
+    }
+    getDrag() {
+        return (this.penObj[this.pen_mode].drag !== undefined) ? this.penObj[this.pen_mode].drag : null;
+    }
+    setDrag(drag) {
+        // セット可能チェック
+        if (this.penObj[this.pen_mode].drag !== null) {
+            // 更新
+            this.penObj[this.pen_mode].drag = Number(drag);
+        } else {
+            throw new Error('内部エラー：不正な引きずり指定です');
+        }
+    }
     getType() {
         return this.penObj[this.pen_mode].type;
     }
@@ -849,6 +927,21 @@ export class PenSystem extends ToolWindow {
         displaySlider(
             'axp_pen_form_radius',
             this.getRadius(),
+        )
+        // 混色ペンの硬さ
+        displaySlider(
+            'axp_pen_form_hardness',
+            this.getHardness(),
+        )
+        // 混色ペンの広がり
+        displaySlider(
+            'axp_pen_form_diffusion',
+            this.getDiffusion(),
+        )
+        // 混色ペンの引きずり
+        displaySlider(
+            'axp_pen_form_drag',
+            this.getDrag(),
         )
         // トーン濃度
         displaySlider(

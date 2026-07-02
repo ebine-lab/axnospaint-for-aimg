@@ -149,6 +149,7 @@ export class PixelFilterPenBase extends DrawingPenBase {
             return;
         }
         this.axpObj.pendingPenFlush = false;
+        this.beforeFrameFlush();
         this.axpObj.layerSystem.updateCanvas(this.axpObj.layerSystem.getId());
     }
 
@@ -157,6 +158,9 @@ export class PixelFilterPenBase extends DrawingPenBase {
     startPixelStroke() { }
     // 確定点ごとのカーネル適用 (cp: {x, y, pressure, t}, prev: 直前の確定点 or null)
     applyPoint() { }
+    // フレーム反映 (updateCanvas) 直前に呼ばれる。確定点ごとに行うと高コストな
+    // 処理をフレーム単位にまとめて実行するためのフック
+    beforeFrameFlush() { }
     // ストローク終了時のバッファ解放
     endPixelStroke() { }
 }

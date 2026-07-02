@@ -193,6 +193,10 @@
     background-image: url('../../resource/brush.png');
 }
 
+.axpc_penmode_diffusion {
+    background-image: url('../../resource/bokasi.png');
+}
+
 .axpc_penmode_eraser_round {
     background-image: url('../../resource/eraser.png');
 }
